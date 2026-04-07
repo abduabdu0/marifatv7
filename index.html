@@ -1090,6 +1090,8 @@ function loadDateMoment() {
     }
 }
 
+let musicPausedForApp = false;
+
 window.addEventListener("load", () => {
     document.getElementById("music").play(); // музыка сразу после загрузки
     setTimeout(() => {
@@ -1102,6 +1104,20 @@ window.addEventListener("load", () => {
     }, 2000);
 });
 
+function updateBackgroundMusic(section) {
+    const bgMusic = document.getElementById("music");
+    if (!bgMusic) return;
+
+    if (section === "music-fullscreen") {
+        if (!bgMusic.paused) {
+            bgMusic.pause();
+            musicPausedForApp = true;
+        }
+    } else if (musicPausedForApp) {
+        bgMusic.play().catch(() => {});
+        musicPausedForApp = false;
+    }
+}
 
 function showSection(section) {
     const sections = document.querySelectorAll('[id^="section-"], #final, #games-menu, #love, #main, #app-gallery, #music-fullscreen, #photos-fullscreen, #calendar-fullscreen, #notes-fullscreen, #weather-fullscreen, #messages-fullscreen');
@@ -1115,6 +1131,8 @@ function showSection(section) {
         element.classList.remove("hidden");
         element.classList.add("visible");
     }
+
+    updateBackgroundMusic(section);
 }
 
 function backToMenu() {
