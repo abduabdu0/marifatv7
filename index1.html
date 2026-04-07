@@ -1,0 +1,1809 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>С Днём Рождения, Маърифат 💖</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --rose: #c9697a;
+    --rose-light: #f5d0d8;
+    --rose-dark: #8b3a47;
+    --gold: #c9a96e;
+    --gold-light: #f0e2c8;
+    --deep: #1a0a0f;
+    --cream: #fdf5f0;
+    --petal: #f7e4ec;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--deep);
+    color: var(--cream);
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    position: fixed;
+    width: 12px;
+    height: 12px;
+    background: var(--rose-light);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s ease, width 0.3s, height 0.3s, opacity 0.3s;
+    mix-blend-mode: screen;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 36px;
+    height: 36px;
+    border: 1px solid rgba(201,169,110,0.5);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.15s ease;
+  }
+
+  /* Canvas for petals */
+  #petals-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* ===== HERO ===== */
+  #hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem;
+    overflow: hidden;
+  }
+
+  .stars-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(139,58,71,0.3) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 50%, rgba(201,105,122,0.2) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 20%, rgba(201,169,110,0.15) 0%, transparent 40%),
+      #1a0a0f;
+    animation: bgPulse 8s ease-in-out infinite;
+  }
+
+  @keyframes bgPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.85; }
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+  }
+
+  .subtitle-top {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 200;
+    font-size: clamp(0.7rem, 2vw, 0.85rem);
+    letter-spacing: 0.4em;
+    color: var(--gold);
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeUp 1.2s ease forwards 0.5s;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-name {
+    font-size: clamp(3.5rem, 12vw, 8rem);
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.0;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #f5d0d8 0%, #c9697a 40%, #c9a96e 80%, #f5d0d8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    opacity: 0;
+    animation: fadeUp 1.2s ease forwards 0.9s;
+    margin-bottom: 0.5rem;
+  }
+
+  .hero-date {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 200;
+    font-size: clamp(0.75rem, 2vw, 0.9rem);
+    letter-spacing: 0.5em;
+    color: rgba(201,169,110,0.7);
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeUp 1.2s ease forwards 1.3s;
+    margin-bottom: 3rem;
+  }
+
+  .hero-divider {
+    width: 120px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+    margin: 0 auto 3rem;
+    opacity: 0;
+    animation: fadeIn 1.5s ease forwards 1.7s;
+  }
+
+  .hero-poem {
+    font-size: clamp(1.1rem, 3vw, 1.5rem);
+    font-style: italic;
+    font-weight: 300;
+    line-height: 1.8;
+    color: rgba(253,245,240,0.85);
+    max-width: 600px;
+    margin: 0 auto;
+    opacity: 0;
+    animation: fadeUp 1.2s ease forwards 2s;
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 0;
+    animation: fadeIn 1.5s ease forwards 3s;
+    z-index: 2;
+  }
+  .scroll-hint span {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    color: rgba(201,169,110,0.5);
+    text-transform: uppercase;
+  }
+  .scroll-arrow {
+    width: 20px;
+    height: 20px;
+    border-right: 1px solid rgba(201,169,110,0.4);
+    border-bottom: 1px solid rgba(201,169,110,0.4);
+    transform: rotate(45deg);
+    animation: bounce 2s ease-in-out infinite;
+  }
+
+  /* ===== SECTIONS ===== */
+  section {
+    position: relative;
+    z-index: 2;
+    padding: clamp(4rem, 10vw, 8rem) clamp(1.5rem, 8vw, 6rem);
+  }
+
+  .section-label {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 200;
+    font-size: 0.7rem;
+    letter-spacing: 0.5em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 2rem;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .section-label.visible { opacity: 1; transform: translateY(0); }
+
+  /* ===== LOVE SECTION ===== */
+  #love {
+    background: linear-gradient(to bottom, transparent, rgba(139,58,71,0.08), transparent);
+    text-align: center;
+  }
+
+  .love-heading {
+    font-size: clamp(2.5rem, 8vw, 5rem);
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.1;
+    margin-bottom: 3rem;
+    background: linear-gradient(135deg, #f5d0d8, #c9697a, #c9a96e);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 1s ease, transform 1s ease;
+  }
+  .love-heading.visible { opacity: 1; transform: translateY(0); }
+
+  .reasons-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .reason-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(201,105,122,0.2);
+    border-radius: 2px;
+    padding: 2rem 1.5rem;
+    text-align: left;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease, border-color 0.3s;
+    cursor: default;
+  }
+  .reason-card:hover {
+    border-color: rgba(201,169,110,0.5);
+    background: rgba(255,255,255,0.06);
+  }
+  .reason-card.visible { opacity: 1; transform: translateY(0); }
+
+  .reason-num {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    margin-bottom: 0.75rem;
+  }
+  .reason-text {
+    font-size: 1.1rem;
+    font-style: italic;
+    line-height: 1.7;
+    color: rgba(253,245,240,0.8);
+    font-weight: 300;
+  }
+
+  /* ===== POEM SECTION ===== */
+  #poem {
+    text-align: center;
+    background: linear-gradient(to bottom, transparent, rgba(26,10,15,0.8), transparent);
+  }
+
+  .poem-container {
+    max-width: 680px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .poem-container::before, .poem-container::after {
+    content: '';
+    display: block;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(201,169,110,0.4), transparent);
+    margin: 3rem 0;
+  }
+
+  .poem-stanza {
+    font-size: clamp(1.1rem, 3vw, 1.4rem);
+    font-style: italic;
+    font-weight: 300;
+    line-height: 2;
+    color: rgba(253,245,240,0.85);
+    margin-bottom: 2rem;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.9s ease, transform 0.9s ease;
+  }
+  .poem-stanza.visible { opacity: 1; transform: translateY(0); }
+
+  .poem-highlight {
+    color: var(--rose);
+    font-style: italic;
+  }
+
+  /* ===== PHOTO SECTION ===== */
+  #photos {
+    text-align: center;
+  }
+
+  .photos-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    max-width: 800px;
+    margin: 2rem auto 0;
+  }
+
+  .photo-frame {
+    aspect-ratio: 3/4;
+    background: rgba(201,105,122,0.08);
+    border: 1px solid rgba(201,105,122,0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity 0.8s ease, transform 0.8s ease, border-color 0.3s;
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+  }
+  .photo-frame:hover {
+    border-color: rgba(201,169,110,0.5);
+    transform: scale(1.02) !important;
+  }
+  .photo-frame.visible { opacity: 1; transform: scale(1); }
+
+  .photo-icon {
+    font-size: 2rem;
+    opacity: 0.4;
+  }
+  .photo-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(201,169,110,0.5);
+  }
+  .photo-shimmer {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent 40%, rgba(201,169,110,0.05) 50%, transparent 60%);
+    animation: shimmer 3s ease-in-out infinite;
+  }
+  @keyframes shimmer {
+    0%, 100% { transform: translateX(-100%); }
+    50% { transform: translateX(100%); }
+  }
+
+  /* ===== FINAL MESSAGE ===== */
+  #final {
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 4rem 2rem;
+  }
+
+  .final-message {
+    font-size: clamp(1.5rem, 5vw, 2.5rem);
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.6;
+    max-width: 700px;
+    background: linear-gradient(135deg, #f5d0d8, #c9697a 40%, #c9a96e);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 1.2s ease, transform 1.2s ease;
+    margin-bottom: 3rem;
+  }
+  .final-message.visible { opacity: 1; transform: translateY(0); }
+
+  .final-sig {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 200;
+    font-size: 0.8rem;
+    letter-spacing: 0.4em;
+    color: rgba(201,169,110,0.6);
+    text-transform: uppercase;
+    opacity: 0;
+    transition: opacity 1.2s ease 0.4s;
+  }
+  .final-sig.visible { opacity: 1; }
+
+  /* ===== HEART PULSE ===== */
+  .heart-container {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    margin: 3rem auto;
+    opacity: 0;
+    transition: opacity 1s ease;
+  }
+  .heart-container.visible { opacity: 1; }
+
+  .heart-svg {
+    width: 100%;
+    height: 100%;
+    animation: heartbeat 1.4s ease-in-out infinite;
+  }
+
+  @keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    14% { transform: scale(1.12); }
+    28% { transform: scale(1); }
+    42% { transform: scale(1.08); }
+    56% { transform: scale(1); }
+  }
+
+  /* ===== MUSIC PLAYER ===== */
+  .music-player {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(26,10,15,0.9);
+    border: 1px solid rgba(201,105,122,0.3);
+    padding: 0.75rem 1.25rem;
+    backdrop-filter: blur(20px);
+    animation: fadeIn 1.5s ease forwards 4s;
+    opacity: 0;
+  }
+
+  .music-btn {
+    width: 36px;
+    height: 36px;
+    background: none;
+    border: 1px solid rgba(201,169,110,0.4);
+    border-radius: 50%;
+    cursor: none;
+    color: var(--gold);
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .music-btn:hover {
+    background: rgba(201,169,110,0.1);
+    border-color: var(--gold);
+  }
+
+  .music-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .music-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--cream);
+    text-transform: uppercase;
+  }
+  .music-sub {
+    font-size: 0.75rem;
+    font-style: italic;
+    color: rgba(201,169,110,0.6);
+  }
+
+  .music-wave {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    height: 20px;
+  }
+  .wave-bar {
+    width: 3px;
+    background: var(--rose);
+    border-radius: 2px;
+    animation: wave 1.2s ease-in-out infinite;
+  }
+  .wave-bar:nth-child(1) { animation-delay: 0s; height: 8px; }
+  .wave-bar:nth-child(2) { animation-delay: 0.15s; height: 14px; }
+  .wave-bar:nth-child(3) { animation-delay: 0.3s; height: 10px; }
+  .wave-bar:nth-child(4) { animation-delay: 0.45s; height: 16px; }
+  .wave-bar:nth-child(5) { animation-delay: 0.6s; height: 8px; }
+  .wave-bar.paused { animation-play-state: paused; }
+
+  @keyframes wave {
+    0%, 100% { transform: scaleY(1); }
+    50% { transform: scaleY(0.3); }
+  }
+
+  /* ===== UTILITIES ===== */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes bounce {
+    0%, 100% { transform: rotate(45deg) translateY(0); }
+    50% { transform: rotate(45deg) translateY(6px); }
+  }
+
+  /* ===== SPARKLE ===== */
+  .sparkle {
+    position: fixed;
+    pointer-events: none;
+    z-index: 50;
+    border-radius: 50%;
+    animation: sparkleFade 0.8s ease forwards;
+  }
+  @keyframes sparkleFade {
+    0% { opacity: 1; transform: scale(1) translateY(0); }
+    100% { opacity: 0; transform: scale(0) translateY(-30px); }
+  }
+
+  @media (max-width: 600px) {
+    .photos-grid { grid-template-columns: repeat(2, 1fr); }
+    .photos-grid .photo-frame:last-child { display: none; }
+  }
+
+  /* ===== АДАПТАЦИЯ ДЛЯ ТЕЛЕФОНА ===== */
+@media (max-width: 768px) {
+
+  /* Курсор — отключить на телефоне */
+  .cursor, .cursor-ring { display: none; }
+  body { cursor: default; }
+
+  /* Герой */
+  .hero-name { font-size: clamp(3rem, 18vw, 5rem); }
+  .hero-poem { font-size: 1rem; padding: 0 1rem; }
+
+  /* Секции — меньше отступы */
+  section { padding: 3rem 1.25rem; }
+
+  /* Карточки причин — 1 колонка */
+  .reasons-grid { grid-template-columns: 1fr; }
+
+  /* Слайдер — кнопки внутрь */
+  #slider { overflow: hidden; }
+
+  /* Таймер — уменьшить */
+  #t-days, #t-hours, #t-mins, #t-secs {
+    font-size: clamp(2rem, 10vw, 3rem) !important;
+  }
+  #t-ms { font-size: 1.2rem !important; }
+
+  /* Таймер блоки — меньше padding */
+  #t-days, #t-hours, #t-mins, #t-secs {
+    padding: 0.75rem 1rem !important;
+    min-width: 60px !important;
+  }
+
+  /* Двоеточия таймера */
+  #timer-sep { font-size: 1.5rem !important; }
+
+  /* Звёздное небо — высота меньше */
+  #star-sky { height: 320px !important; }
+
+  /* Галерея настроений — 2 колонки */
+  #mood-grid { grid-template-columns: repeat(2, 1fr) !important; }
+
+  /* Фото сетка — 2 колонки */
+  .photos-grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* Музыкальный плеер — снизу по центру */
+  .music-player {
+    right: 50%;
+    transform: translateX(50%);
+    bottom: 1rem;
+    padding: 0.6rem 1rem;
+  }
+
+  /* Финальный текст */
+  .final-message { font-size: 1.3rem !important; }
+
+  /* Конверт письма */
+  #letter { padding: 1.5rem !important; }
+  #letter p { font-size: 1rem !important; }
+
+  /* Секретные карточки — 2 колонки */
+  #secret-cards { grid-template-columns: repeat(2, 1fr) !important; }
+
+  /* Клятвы — 1 колонка */
+  #vows-grid { grid-template-columns: 1fr !important; }
+
+  /* Кнопки слайдера */
+  #slider-prev { left: 5px !important; }
+  #slider-next { right: 5px !important; }
+
+  /* Скролл подсказка */
+  .scroll-hint { bottom: 1.5rem; }
+}
+
+/* Маленькие телефоны */
+@media (max-width: 400px) {
+  .hero-name { font-size: 15vw; }
+  .reasons-grid, #mood-grid { grid-template-columns: 1fr !important; }
+  #t-days { display: block !important; font-size: 1.4rem !important; }
+}
+
+/* Оптимизация для мобильных M- */
+@media (max-width: 520px) {
+  #hero { padding: 1.5rem 1rem; }
+  .hero-name { font-size: clamp(2.7rem, 16vw, 4.5rem); }
+  .hero-date, .subtitle-top, .hero-poem { padding: 0 0.5rem; }
+  .scroll-hint { bottom: 1rem; }
+
+  section { padding: 2rem 1rem; }
+  .hero-divider { width: 100px; margin-bottom: 2rem; }
+
+  .photos-grid, #mood-grid, .reasons-grid, #secret-cards, #vows-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .photo-frame, .reason-card, .secret-card, .vow-card {
+    width: 100%;
+  }
+
+  .music-player {
+    right: 50%;
+    transform: translateX(50%);
+    bottom: 0.8rem;
+    padding: 0.5rem 0.9rem;
+  }
+
+  #letter { padding: 1rem !important; }
+  #letter p { font-size: 0.95rem !important; }
+  #timer-sep { font-size: 1.25rem !important; }
+  #t-days, #t-hours, #t-mins, #t-secs { padding: 0.65rem 0.8rem !important; }
+
+  .final-message { font-size: 1.1rem !important; }
+  .hero-poem { font-size: 0.95rem; line-height: 1.7; }
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<canvas id="petals-canvas"></canvas>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="stars-bg"></div>
+  <div class="hero-content">
+    <p class="subtitle-top">С любовью, в твой особенный день</p>
+    <h1 class="hero-name">Маърифат</h1>
+    <p class="hero-date">С Днём Рождения</p>
+    <div class="hero-divider"></div>
+    <p class="hero-poem">
+      Ты — свет, что согревает мою душу,<br>
+      улыбка, без которой мир тускнеет.
+    </p>
+  </div>
+  <div class="scroll-hint">
+    <span>Листай вниз</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+<!-- LOVE REASONS -->
+<section id="love">
+  <p class="section-label">Причины моей любви</p>
+  <h2 class="love-heading">Почему я люблю тебя</h2>
+  <div class="reasons-grid">
+    <div class="reason-card">
+      <p class="reason-num">01</p>
+      <p class="reason-text">За твои глаза — в них целый мир, который я хочу изучать бесконечно.</p>
+    </div>
+    <div class="reason-card">
+      <p class="reason-num">02</p>
+      <p class="reason-text">За твою улыбку — она освещает любую комнату и моё сердце.</p>
+    </div>
+    <div class="reason-card">
+      <p class="reason-num">03</p>
+      <p class="reason-text">За то, что ты принимаешь меня таким, какой я есть.</p>
+    </div>
+    <div class="reason-card">
+      <p class="reason-num">04</p>
+      <p class="reason-text">За твою нежность и заботу, которые делают каждый день особенным.</p>
+    </div>
+    <div class="reason-card">
+      <p class="reason-num">05</p>
+      <p class="reason-text">За смех, который мы делим — он звучит как моя любимая музыка.</p>
+    </div>
+    <div class="reason-card">
+      <p class="reason-num">06</p>
+      <p class="reason-text">За то, что ты — это ты. Неповторимая, удивительная, моя.</p>
+    </div>
+  </div>
+</section>
+
+<!-- POEM -->
+<section id="poem">
+  <p class="section-label">Слова для тебя</p>
+  <div class="poem-container">
+    <div class="poem-stanza">
+      Ты входишь — и весна приходит в дом,<br>
+      Как будто солнце скрылось где-то там,<br>
+      И вдруг — <span class="poem-highlight">твоя улыбка</span>, и кругом<br>
+      Всё наполняется цветущим светом.
+    </div>
+    <div class="poem-stanza">
+      Я б мог писать о красоте твоей<br>
+      До самого рассвета, бесконечно —<br>
+      Но лучше, <span class="poem-highlight">Маърифат</span>, скажу верней:<br>
+      Люблю тебя — глубоко, нежно, вечно.
+    </div>
+    <div class="poem-stanza">
+      В твой день рождения желаю я<br>
+      Тебе лишь счастья — море, небо, звёзды,<br>
+      Пусть жизнь твоя сияет, как заря,<br>
+      И сбудутся все <span class="poem-highlight">самые заветные</span> грёзы.
+    </div>
+  </div>
+</section>
+
+<!-- PHOTOS -->
+<section id="photos">
+  <p class="section-label">Наши воспоминания</p>
+  <h2 class="love-heading" style="font-size:clamp(2rem,6vw,3.5rem); max-width:500px; margin:0 auto 2rem;">Моменты, которые я храню</h2>
+  <div class="photos-grid">
+    <div class="photo-frame">
+      <div class="photo-shimmer"></div>
+      <span class="photo-icon">🌸</span>
+      <span class="photo-label">Наша фотография</span>
+    </div>
+    <div class="photo-frame">
+      <div class="photo-shimmer"></div>
+      <span class="photo-icon"><img src="photo2.jpeg" width="200" height="256" alt="#"></span>
+      <span class="photo-label">Наш момент</span>
+    </div>
+    <div class="photo-frame">
+      <div class="photo-shimmer"></div>
+      <span class="photo-icon">💫</span>
+      <span class="photo-label">Вместе</span>
+    </div>
+  </div>
+  <p style="font-family:'Montserrat',sans-serif; font-size:0.7rem; letter-spacing:0.2em; color:rgba(201,169,110,0.4); text-transform:uppercase; margin-top:2rem;">Скоро здесь появятся наши фото ✦</p>
+</section>
+
+<!-- FINAL -->
+<section id="final">
+  <div class="heart-container">
+    <svg class="heart-svg" viewBox="0 0 100 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M50 80 C50 80 10 55 10 30 C10 15 22 5 35 5 C42 5 47 9 50 14 C53 9 58 5 65 5 C78 5 90 15 90 30 C90 55 50 80 50 80Z" fill="#c9697a" opacity="0.9"/>
+      <path d="M50 80 C50 80 10 55 10 30 C10 15 22 5 35 5 C42 5 47 9 50 14 C53 9 58 5 65 5 C78 5 90 15 90 30 C90 55 50 80 50 80Z" fill="none" stroke="#f5d0d8" stroke-width="1" opacity="0.5"/>
+      <path d="M30 28 Q35 20 45 25" stroke="rgba(253,245,240,0.4)" stroke-width="2" stroke-linecap="round" fill="none"/>
+    </svg>
+  </div>
+  <p class="final-message">
+    С каждым днём ты становишься для меня<br>
+    всё более особенной.<br><br>
+    Пусть этот день рождения будет<br>
+    началом твоего самого счастливого года.
+  </p>
+  <p class="final-sig">Всегда твой &nbsp;✦&nbsp; С любовью</p>
+</section>
+
+<!-- -->
+<!-- ===== КАРТОЧКИ С ПРОЛИСТЫВАНИЕМ ===== -->
+<section id="gallery-cards" style="padding: clamp(4rem,10vw,8rem) clamp(1.5rem,8vw,6rem); text-align:center; position:relative; z-index:2;">
+
+  <p style="font-family:'Montserrat',sans-serif; font-weight:200; font-size:0.7rem; letter-spacing:0.5em; text-transform:uppercase; color:#c9a96e; margin-bottom:2rem;">Наши моменты</p>
+  <h2 style="font-size:clamp(2rem,6vw,4rem); font-weight:300; font-style:italic; background:linear-gradient(135deg,#f5d0d8,#c9697a,#c9a96e); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:3rem;">Листай и вспоминай</h2>
+
+  <!-- СЛАЙДЕР -->
+  <div style="position:relative; max-width:500px; margin:0 auto;">
+    <div id="slider" style="overflow:hidden; border:1px solid rgba(201,105,122,0.25); position:relative;">
+      <div id="slides" style="display:flex; transition:transform 0.6s cubic-bezier(0.77,0,0.18,1);">
+
+        <!-- Слайд 1 -->
+        <div style="min-width:100%; aspect-ratio:4/3; background:rgba(201,105,122,0.08); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1rem; padding:2rem;">
+          <span style="font-size:3rem;">🌸</span>
+          <p style="font-style:italic; font-size:1.2rem; color:rgba(253,245,240,0.85); line-height:1.6;">Первый раз когда я увидел тебя — я уже знал, что ты особенная</p>
+          <span style="font-family:'Montserrat',sans-serif; font-size:0.6rem; letter-spacing:0.3em; color:rgba(201,169,110,0.5); text-transform:uppercase;">Момент 01</span>
+        </div>
+
+        <!-- Слайд 2 -->
+        <div style="min-width:100%; aspect-ratio:4/3; background:rgba(201,169,110,0.06); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1rem; padding:2rem;">
+          <span style="font-size:3rem;">🌙</span>
+          <p style="font-style:italic; font-size:1.2rem; color:rgba(253,245,240,0.85); line-height:1.6;">Каждый вечер рядом с тобой — лучший вечер в моей жизни</p>
+          <span style="font-family:'Montserrat',sans-serif; font-size:0.6rem; letter-spacing:0.3em; color:rgba(201,169,110,0.5); text-transform:uppercase;">Момент 02</span>
+        </div>
+
+        <!-- Слайд 3 -->
+        <div style="min-width:100%; aspect-ratio:4/3; background:rgba(139,58,71,0.1); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1rem; padding:2rem;">
+          <span style="font-size:3rem;">✨</span>
+          <p style="font-style:italic; font-size:1.2rem; color:rgba(253,245,240,0.85); line-height:1.6;">Твой смех — это звук, который я хочу слышать всю жизнь</p>
+          <span style="font-family:'Montserrat',sans-serif; font-size:0.6rem; letter-spacing:0.3em; color:rgba(201,169,110,0.5); text-transform:uppercase;">Момент 03</span>
+        </div>
+
+        <!-- Слайд 4 — сюда вставь фото -->
+        <div style="min-width:100%; aspect-ratio:4/3; background:rgba(201,105,122,0.05); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1rem; padding:2rem;">
+          <span style="font-size:3rem;">💖</span>
+          <p style="font-style:italic; font-size:1.2rem; color:rgba(253,245,240,0.85); line-height:1.6;">Я люблю тебя не потому что ты идеальна — а потому что ты моя</p>
+          <span style="font-family:'Montserrat',sans-serif; font-size:0.6rem; letter-spacing:0.3em; color:rgba(201,169,110,0.5); text-transform:uppercase;">Момент 04</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- было: left:-20px -->
+    <!-- стало: -->
+    <button onclick="changeSlide(-1)" style="position:absolute; left:8px; top:50%; ">‹</button>
+    <button onclick="changeSlide(1)"  style="position:absolute; right:8px; top:50%; ">›</button>
+
+    <!-- Точки -->
+    <div id="dots" style="display:flex; justify-content:center; gap:8px; margin-top:1.5rem;">
+      <span onclick="goSlide(0)" style="width:6px; height:6px; border-radius:50%; background:#c9697a; cursor:pointer; transition:all 0.3s;"></span>
+      <span onclick="goSlide(1)" style="width:6px; height:6px; border-radius:50%; background:rgba(201,105,122,0.3); cursor:pointer; transition:all 0.3s;"></span>
+      <span onclick="goSlide(2)" style="width:6px; height:6px; border-radius:50%; background:rgba(201,105,122,0.3); cursor:pointer; transition:all 0.3s;"></span>
+      <span onclick="goSlide(3)" style="width:6px; height:6px; border-radius:50%; background:rgba(201,105,122,0.3); cursor:pointer; transition:all 0.3s;"></span>
+    </div>
+  </div>
+</section>
+
+<!-- ===== КЛЯТВЫ ЛЮБВИ ===== -->
+<section style="padding: clamp(4rem,10vw,8rem) clamp(1.5rem,8vw,6rem); text-align:center; position:relative; z-index:2; background:linear-gradient(to bottom, transparent, rgba(139,58,71,0.08), transparent);">
+
+  <p style="font-family:'Montserrat',sans-serif; font-weight:200; font-size:0.7rem; letter-spacing:0.5em; text-transform:uppercase; color:#c9a96e; margin-bottom:2rem;">Моё обещание</p>
+  <h2 style="font-size:clamp(2rem,6vw,4rem); font-weight:300; font-style:italic; background:linear-gradient(135deg,#f5d0d8,#c9697a,#c9a96e); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:3rem;">Клятвы для тебя</h2>
+
+  <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:1.5rem; max-width:900px; margin:0 auto;">
+
+    <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(201,105,122,0.2); padding:2rem 1.5rem; text-align:left; transition:border-color 0.3s;" onmouseover="this.style.borderColor='rgba(201,169,110,0.5)'" onmouseout="this.style.borderColor='rgba(201,105,122,0.2)'">
+      <p style="font-size:1.8rem; margin-bottom:1rem;">🌹</p>
+      <p style="font-family:'Montserrat',sans-serif; font-size:0.65rem; letter-spacing:0.3em; color:#c9a96e; margin-bottom:0.75rem;">КЛЯТВА 01</p>
+      <p style="font-style:italic; font-size:1.05rem; line-height:1.7; color:rgba(253,245,240,0.8);">Я обещаю всегда быть рядом — в радости и в грусти, утром и вечером.</p>
+    </div>
+
+    <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(201,105,122,0.2); padding:2rem 1.5rem; text-align:left; transition:border-color 0.3s;" onmouseover="this.style.borderColor='rgba(201,169,110,0.5)'" onmouseout="this.style.borderColor='rgba(201,105,122,0.2)'">
+      <p style="font-size:1.8rem; margin-bottom:1rem;">💫</p>
+      <p style="font-family:'Montserrat',sans-serif; font-size:0.65rem; letter-spacing:0.3em; color:#c9a96e; margin-bottom:0.75rem;">КЛЯТВА 02</p>
+      <p style="font-style:italic; font-size:1.05rem; line-height:1.7; color:rgba(253,245,240,0.8);">Я обещаю никогда не переставать удивлять тебя и делать тебя счастливой.</p>
+    </div>
+
+    <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(201,105,122,0.2); padding:2rem 1.5rem; text-align:left; transition:border-color 0.3s;" onmouseover="this.style.borderColor='rgba(201,169,110,0.5)'" onmouseout="this.style.borderColor='rgba(201,105,122,0.2)'">
+      <p style="font-size:1.8rem; margin-bottom:1rem;">🌙</p>
+      <p style="font-family:'Montserrat',sans-serif; font-size:0.65rem; letter-spacing:0.3em; color:#c9a96e; margin-bottom:0.75rem;">КЛЯТВА 03</p>
+      <p style="font-style:italic; font-size:1.05rem; line-height:1.7; color:rgba(253,245,240,0.8);">Я обещаю любить тебя каждый день сильнее, чем вчера.</p>
+    </div>
+
+    <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(201,105,122,0.2); padding:2rem 1.5rem; text-align:left; transition:border-color 0.3s;" onmouseover="this.style.borderColor='rgba(201,169,110,0.5)'" onmouseout="this.style.borderColor='rgba(201,105,122,0.2)'">
+      <p style="font-size:1.8rem; margin-bottom:1rem;">✨</p>
+      <p style="font-family:'Montserrat',sans-serif; font-size:0.65rem; letter-spacing:0.3em; color:#c9a96e; margin-bottom:0.75rem;">КЛЯТВА 04</p>
+      <p style="font-style:italic; font-size:1.05rem; line-height:1.7; color:rgba(253,245,240,0.8);">Я обещаю, что ты никогда не будешь одна — пока я рядом.</p>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ===== СКРИПТЫ ===== -->
+<script>
+// Слайдер
+let current = 0;
+const total = 4;
+function changeSlide(dir) {
+  current = (current + dir + total) % total;
+  updateSlider();
+}
+function goSlide(n) {
+  current = n;
+  updateSlider();
+}
+function updateSlider() {
+  document.getElementById('slides').style.transform = `translateX(-${current * 100}%)`;
+  document.querySelectorAll('#dots span').forEach((d, i) => {
+    d.style.background = i === current ? '#c9697a' : 'rgba(201,105,122,0.3)';
+    d.style.width = i === current ? '20px' : '6px';
+    d.style.borderRadius = '4px';
+  });
+}
+// Автопрокрутка
+setInterval(() => changeSlide(1), 4000);
+
+</script>
+
+<!--  -->
+<!-- ===== СЕКРЕТНОЕ ПОСЛАНИЕ ===== -->
+<section style="padding: clamp(4rem,10vw,8rem) clamp(1.5rem,8vw,6rem); text-align:center; position:relative; z-index:2;">
+
+  <p style="font-family:'Montserrat',sans-serif; font-weight:200; font-size:0.7rem; letter-spacing:0.5em; text-transform:uppercase; color:#c9a96e; margin-bottom:2rem;">Только для тебя</p>
+  <h2 style="font-size:clamp(2rem,6vw,4rem); font-weight:300; font-style:italic; background:linear-gradient(135deg,#f5d0d8,#c9697a,#c9a96e); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:3rem;">Секретное послание</h2>
+
+  <div style="max-width:600px; margin:0 auto; display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:1rem;">
+
+    <!-- Карточка 1 -->
+    <div onclick="flipCard(this)" style="aspect-ratio:3/4; cursor:pointer; perspective:1000px;">
+      <div style="width:100%; height:100%; position:relative; transform-style:preserve-3d; transition:transform 0.7s cubic-bezier(0.77,0,0.18,1);">
+        <!-- Лицо -->
+        <div style="position:absolute; inset:0; backface-visibility:hidden; background:rgba(201,105,122,0.08); border:1px solid rgba(201,105,122,0.3); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.75rem;">
+          <span style="font-size:2rem;">🔒</span>
+          <p style="font-family:'Montserrat',sans-serif; font-size:0.6rem; letter-spacing:0.3em; color:rgba(201,169,110,0.6); text-transform:uppercase;">Нажми</p>
+        </div>
+        <!-- Обратная сторона -->
+        <div style="position:absolute; inset:0; backface-visibility:hidden; transform:rotateY(180deg); background:rgba(139,58,71,0.2); border:1px solid rgba(201,169,110,0.4); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:1.5rem;">
+          <p style="font-style:italic; font-size:1rem; line-height:1.7; color:rgba(253,245,240,0.9);">Ты — первая мысль с которой я просыпаюсь каждое утро 🌅</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Карточка 2 -->
+    <div onclick="flipCard(this)" style="aspect-ratio:3/4; cursor:pointer; perspective:1000px;">
+      <div style="width:100%; height:100%; position:relative; transform-style:preserve-3d; transition:transform 0.7s cubic-bezier(0.77,0,0.18,1);">
+        <div style="position:absolute; inset:0; backface-visibility:hidden; background:rgba(201,105,122,0.08); border:1px solid rgba(201,105,122,0.3); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.75rem;">
+          <span style="font-size:2rem;">💌</span>
+          <p style="font-family:'Montserrat',sans-serif; font-size:0.6rem; letter-spacing:0.3em; color:rgba(201,169,110,0.6); text-transform:uppercase;">Нажми</p>
+        </div>
+        <div style="position:absolute; inset:0; backface-visibility:hidden; transform:rotateY(180deg); background:rgba(139,58,71,0.2); border:1px solid rgba(201,169,110,0.4); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:1.5rem;">
+          <p style="font-style:italic; font-size:1rem; line-height:1.7; color:rgba(253,245,240,0.9);">Когда ты смеёшься — всё вокруг становится лучше 🌸</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Карточка 3 -->
+    <div onclick="flipCard(this)" style="aspect-ratio:3/4; cursor:pointer; perspective:1000px;">
+      <div style="width:100%; height:100%; position:relative; transform-style:preserve-3d; transition:transform 0.7s cubic-bezier(0.77,0,0.18,1);">
+        <div style="position:absolute; inset:0; backface-visibility:hidden; background:rgba(201,105,122,0.08); border:1px solid rgba(201,105,122,0.3); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.75rem;">
+          <span style="font-size:2rem;">🌙</span>
+          <p style="font-family:'Montserrat',sans-serif; font-size:0.6rem; letter-spacing:0.3em; color:rgba(201,169,110,0.6); text-transform:uppercase;">Нажми</p>
+        </div>
+        <div style="position:absolute; inset:0; backface-visibility:hidden; transform:rotateY(180deg); background:rgba(139,58,71,0.2); border:1px solid rgba(201,169,110,0.4); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:1.5rem;">
+          <p style="font-style:italic; font-size:1rem; line-height:1.7; color:rgba(253,245,240,0.9);">Каждую ночь я благодарю судьбу за то, что ты есть ✨</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Карточка 4 -->
+    <div onclick="flipCard(this)" style="aspect-ratio:3/4; cursor:pointer; perspective:1000px;">
+      <div style="width:100%; height:100%; position:relative; transform-style:preserve-3d; transition:transform 0.7s cubic-bezier(0.77,0,0.18,1);">
+        <div style="position:absolute; inset:0; backface-visibility:hidden; background:rgba(201,105,122,0.08); border:1px solid rgba(201,105,122,0.3); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.75rem;">
+          <span style="font-size:2rem;">💫</span>
+          <p style="font-family:'Montserrat',sans-serif; font-size:0.6rem; letter-spacing:0.3em; color:rgba(201,169,110,0.6); text-transform:uppercase;">Нажми</p>
+        </div>
+        <div style="position:absolute; inset:0; backface-visibility:hidden; transform:rotateY(180deg); background:rgba(139,58,71,0.2); border:1px solid rgba(201,169,110,0.4); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:1.5rem;">
+          <p style="font-style:italic; font-size:1rem; line-height:1.7; color:rgba(253,245,240,0.9);">С тобой даже тишина звучит как музыка 💖</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== ЗВЁЗДНОЕ НЕБО ===== -->
+<section style="padding: clamp(4rem,10vw,8rem) clamp(1.5rem,8vw,6rem); text-align:center; position:relative; z-index:2; background:linear-gradient(to bottom, transparent, rgba(26,10,15,0.6), transparent);">
+
+  <p style="font-family:'Montserrat',sans-serif; font-weight:200; font-size:0.7rem; letter-spacing:0.5em; text-transform:uppercase; color:#c9a96e; margin-bottom:2rem;">Наши моменты на небе</p>
+  <h2 style="font-size:clamp(2rem,6vw,4rem); font-weight:300; font-style:italic; background:linear-gradient(135deg,#f5d0d8,#c9697a,#c9a96e); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:1rem;">Наше звёздное небо</h2>
+  <p style="font-style:italic; color:rgba(253,245,240,0.5); font-size:0.9rem; margin-bottom:3rem;">Нажми на звезду — узнай наш момент</p>
+
+  <div style="position:relative; max-width:700px; margin:0 auto; height:400px; background:radial-gradient(ellipse at center, rgba(139,58,71,0.15) 0%, rgba(26,10,15,0.8) 70%); border:1px solid rgba(201,105,122,0.15); overflow:hidden;">
+
+    <!-- Звёзды-моменты -->
+    <div class="star-moment" onclick="showMoment(this)" data-text="Первый раз когда наши глаза встретились ✨" style="position:absolute; left:15%; top:20%; cursor:pointer;">
+      <div style="width:14px; height:14px; background:#f5d0d8; border-radius:50%; box-shadow:0 0 10px rgba(245,208,216,0.8), 0 0 20px rgba(245,208,216,0.4); animation:starPulse 2s ease-in-out infinite;"></div>
+      <p style="font-family:'Montserrat',sans-serif; font-size:0.55rem; letter-spacing:0.15em; color:rgba(201,169,110,0.7); text-transform:uppercase; margin-top:6px; white-space:nowrap;">Начало</p>
+    </div>
+
+    <div class="star-moment" onclick="showMoment(this)" data-text="Первый раз когда ты улыбнулась мне 🌸" style="position:absolute; left:40%; top:12%; cursor:pointer;">
+      <div style="width:10px; height:10px; background:#c9a96e; border-radius:50%; box-shadow:0 0 8px rgba(201,169,110,0.8), 0 0 16px rgba(201,169,110,0.4); animation:starPulse 2.5s ease-in-out infinite 0.5s;"></div>
+      <p style="font-family:'Montserrat',sans-serif; font-size:0.55rem; letter-spacing:0.15em; color:rgba(201,169,110,0.7); text-transform:uppercase; margin-top:6px; white-space:nowrap;">Улыбка</p>
+    </div>
+
+    <div class="star-moment" onclick="showMoment(this)" data-text="Первый раз когда я понял что влюблён в тебя 💖" style="position:absolute; left:68%; top:18%; cursor:pointer;">
+      <div style="width:16px; height:16px; background:#c9697a; border-radius:50%; box-shadow:0 0 12px rgba(201,105,122,0.9), 0 0 24px rgba(201,105,122,0.5); animation:starPulse 1.8s ease-in-out infinite 0.2s;"></div>
+      <p style="font-family:'Montserrat',sans-serif; font-size:0.55rem; letter-spacing:0.15em; color:rgba(201,169,110,0.7); text-transform:uppercase; margin-top:6px; white-space:nowrap;">Любовь</p>
+    </div>
+
+    <div class="star-moment" onclick="showMoment(this)" data-text="Первый вечер когда мы говорили до рассвета 🌙" style="position:absolute; left:25%; top:50%; cursor:pointer;">
+      <div style="width:12px; height:12px; background:#f5d0d8; border-radius:50%; box-shadow:0 0 9px rgba(245,208,216,0.8), 0 0 18px rgba(245,208,216,0.4); animation:starPulse 3s ease-in-out infinite 1s;"></div>
+      <p style="font-family:'Montserrat',sans-serif; font-size:0.55rem; letter-spacing:0.15em; color:rgba(201,169,110,0.7); text-transform:uppercase; margin-top:6px; white-space:nowrap;">Ночь</p>
+    </div>
+
+    <div class="star-moment" onclick="showMoment(this)" data-text="Момент когда я впервые сказал тебе — люблю 🌹" style="position:absolute; left:60%; top:48%; cursor:pointer;">
+      <div style="width:18px; height:18px; background:#c9697a; border-radius:50%; box-shadow:0 0 14px rgba(201,105,122,1), 0 0 28px rgba(201,105,122,0.6); animation:starPulse 2.2s ease-in-out infinite 0.8s;"></div>
+      <p style="font-family:'Montserrat',sans-serif; font-size:0.55rem; letter-spacing:0.15em; color:rgba(201,169,110,0.7); text-transform:uppercase; margin-top:6px; white-space:nowrap;">Признание</p>
+    </div>
+
+    <div class="star-moment" onclick="showMoment(this)" data-text="Сегодня — твой день рождения. Самый особенный день 🎂" style="position:absolute; left:45%; top:65%; cursor:pointer;">
+      <div style="width:20px; height:20px; background:#f5d0d8; border-radius:50%; box-shadow:0 0 16px rgba(245,208,216,1), 0 0 32px rgba(245,208,216,0.7), 0 0 48px rgba(245,208,216,0.3); animation:starPulse 1.5s ease-in-out infinite;"></div>
+      <p style="font-family:'Montserrat',sans-serif; font-size:0.55rem; letter-spacing:0.15em; color:rgba(201,169,110,0.7); text-transform:uppercase; margin-top:6px; white-space:nowrap;">Сегодня ✦</p>
+    </div>
+
+    <!-- Маленькие фоновые звёзды -->
+    <div style="position:absolute; left:8%; top:35%; width:4px; height:4px; background:rgba(245,208,216,0.3); border-radius:50%;"></div>
+    <div style="position:absolute; left:52%; top:30%; width:3px; height:3px; background:rgba(201,169,110,0.25); border-radius:50%;"></div>
+    <div style="position:absolute; left:80%; top:60%; width:5px; height:5px; background:rgba(245,208,216,0.2); border-radius:50%;"></div>
+    <div style="position:absolute; left:35%; top:80%; width:3px; height:3px; background:rgba(201,105,122,0.3); border-radius:50%;"></div>
+    <div style="position:absolute; left:72%; top:35%; width:4px; height:4px; background:rgba(245,208,216,0.2); border-radius:50%;"></div>
+    <div style="position:absolute; left:88%; top:25%; width:3px; height:3px; background:rgba(201,169,110,0.2); border-radius:50%;"></div>
+
+    <!-- Всплывающий текст -->
+    <div id="moment-popup" style="position:absolute; bottom:0; left:0; right:0; background:rgba(26,10,15,0.95); border-top:1px solid rgba(201,169,110,0.3); padding:1.25rem 2rem; transform:translateY(100%); transition:transform 0.4s ease; text-align:center;">
+      <p id="moment-text" style="font-style:italic; font-size:1.05rem; line-height:1.6; color:rgba(253,245,240,0.9);"></p>
+    </div>
+  </div>
+
+</section>
+
+<!-- ===== СКРИПТЫ ===== -->
+<style>
+@keyframes starPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 0.7; }
+}
+</style>
+
+<script>
+// Флип карточки
+function flipCard(wrapper) {
+  const inner = wrapper.querySelector('div');
+  const isFlipped = inner.style.transform === 'rotateY(180deg)';
+  inner.style.transform = isFlipped ? 'rotateY(0deg)' : 'rotateY(180deg)';
+}
+
+// Звёздное небо
+let popupOpen = false;
+function showMoment(star) {
+  const popup = document.getElementById('moment-popup');
+  const text = document.getElementById('moment-text');
+  const msg = star.getAttribute('data-text');
+  if (popupOpen && text.textContent === msg) {
+    popup.style.transform = 'translateY(100%)';
+    popupOpen = false;
+  } else {
+    text.textContent = msg;
+    popup.style.transform = 'translateY(0)';
+    popupOpen = true;
+  }
+}
+</script>
+
+
+<!----                     -->
+<!-- ГАЛЕРЕЯ НАСТРОЕНИЙ -->
+<section style="padding: clamp(4rem,10vw,8rem) clamp(1.5rem,8vw,6rem); text-align:center; position:relative; z-index:2;">
+
+  <p style="font-family:'Montserrat',sans-serif; font-weight:200; font-size:0.7rem; letter-spacing:0.5em; text-transform:uppercase; color:#c9a96e; margin-bottom:2rem;">Наши эмоции</p>
+  <h2 style="font-size:clamp(2rem,6vw,4rem); font-weight:300; font-style:italic; background:linear-gradient(135deg,#f5d0d8,#c9697a,#c9a96e); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:1rem;">Галерея настроений</h2>
+  <p style="font-style:italic; color:rgba(253,245,240,0.4); font-size:0.9rem; margin-bottom:3rem;">Нажми на момент — почувствуй его</p>
+
+  <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:1rem; max-width:800px; margin:0 auto 2rem;">
+
+    <div onclick="showMood(this)" data-msg="Когда ты смеёшься — мир становится лучше 😂💖" data-bg="rgba(201,105,122,0.15)" style="background:rgba(255,255,255,0.03); border:1px solid rgba(201,105,122,0.2); padding:1.75rem 1rem; cursor:pointer; transition:all 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+      <p style="font-size:2.5rem; margin-bottom:0.75rem;">😂</p>
+      <p style="font-family:'Montserrat',sans-serif; font-size:0.6rem; letter-spacing:0.2em; color:rgba(201,169,110,0.6); text-transform:uppercase;">Смех</p>
+    </div>
+
+    <div onclick="showMood(this)" data-msg="Этот взгляд... я таю каждый раз 🥰" data-bg="rgba(245,208,216,0.1)" style="background:rgba(255,255,255,0.03); border:1px solid rgba(201,105,122,0.2); padding:1.75rem 1rem; cursor:pointer; transition:all 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+      <p style="font-size:2.5rem; margin-bottom:0.75rem;">🥰</p>
+      <p style="font-family:'Montserrat',sans-serif; font-size:0.6rem; letter-spacing:0.2em; color:rgba(201,169,110,0.6); text-transform:uppercase;">Нежность</p>
+    </div>
+
+    <div onclick="showMood(this)" data-msg="Вечера с тобой — лучшее время суток 🌙✨" data-bg="rgba(139,58,71,0.15)" style="background:rgba(255,255,255,0.03); border:1px solid rgba(201,105,122,0.2); padding:1.75rem 1rem; cursor:pointer; transition:all 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+      <p style="font-size:2.5rem; margin-bottom:0.75rem;">🌙</p>
+      <p style="font-family:'Montserrat',sans-serif; font-size:0.6rem; letter-spacing:0.2em; color:rgba(201,169,110,0.6); text-transform:uppercase;">Вечер</p>
+    </div>
+
+    <div onclick="showMood(this)" data-msg="Твоя улыбка — моё солнце каждое утро 🌸" data-bg="rgba(201,169,110,0.1)" style="background:rgba(255,255,255,0.03); border:1px solid rgba(201,105,122,0.2); padding:1.75rem 1rem; cursor:pointer; transition:all 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+      <p style="font-size:2.5rem; margin-bottom:0.75rem;">🌸</p>
+      <p style="font-family:'Montserrat',sans-serif; font-size:0.6rem; letter-spacing:0.2em; color:rgba(201,169,110,0.6); text-transform:uppercase;">Весна</p>
+    </div>
+
+    <div onclick="showMood(this)" data-msg="Скучаю по тебе даже когда ты рядом 💭" data-bg="rgba(201,105,122,0.1)" style="background:rgba(255,255,255,0.03); border:1px solid rgba(201,105,122,0.2); padding:1.75rem 1rem; cursor:pointer; transition:all 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+      <p style="font-size:2.5rem; margin-bottom:0.75rem;">💭</p>
+      <p style="font-family:'Montserrat',sans-serif; font-size:0.6rem; letter-spacing:0.2em; color:rgba(201,169,110,0.6); text-transform:uppercase;">Мечты</p>
+    </div>
+
+    <div onclick="showMood(this)" data-msg="С тобой я дома — где бы мы ни были 🏠💖" data-bg="rgba(240,226,200,0.1)" style="background:rgba(255,255,255,0.03); border:1px solid rgba(201,105,122,0.2); padding:1.75rem 1rem; cursor:pointer; transition:all 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+      <p style="font-size:2.5rem; margin-bottom:0.75rem;">🏠</p>
+      <p style="font-family:'Montserrat',sans-serif; font-size:0.6rem; letter-spacing:0.2em; color:rgba(201,169,110,0.6); text-transform:uppercase;">Дом</p>
+    </div>
+
+  </div>
+
+  <!-- Попап настроения -->
+  <div id="mood-popup" style="max-width:500px; margin:0 auto; padding:1.75rem 2rem; background:rgba(255,255,255,0.03); border:1px solid rgba(201,169,110,0.3); opacity:0; transform:translateY(10px); transition:all 0.4s ease; pointer-events:none;">
+    <p id="mood-text" style="font-style:italic; font-size:1.15rem; line-height:1.7; color:rgba(253,245,240,0.9);"></p>
+  </div>
+
+</section>
+
+<script>
+function showMood(card) {
+  const popup = document.getElementById('mood-popup');
+  const text = document.getElementById('mood-text');
+  text.textContent = card.getAttribute('data-msg');
+  popup.style.opacity = '1';
+  popup.style.transform = 'translateY(0)';
+  popup.style.pointerEvents = 'auto';
+  popup.style.background = card.getAttribute('data-bg') || 'rgba(255,255,255,0.03)';
+}
+</script>
+
+<!--   -->
+
+<!-- ФЕЙЕРВЕРК ПРИ ОТКРЫТИИ -->
+<canvas id="fw-canvas" style="position:fixed; inset:0; width:100%; height:100%; pointer-events:none; z-index:999;"></canvas>
+
+<script>
+const fwCanvas = document.getElementById('fw-canvas');
+const fwCtx = fwCanvas.getContext('2d');
+fwCanvas.width = window.innerWidth;
+fwCanvas.height = window.innerHeight;
+
+const particles = [];
+const colors = ['#f5d0d8','#c9697a','#c9a96e','#f0e2c8','#ffffff','#f7e4ec'];
+
+function createBurst(x, y) {
+  for (let i = 0; i < 80; i++) {
+    const angle = (Math.PI * 2 / 80) * i;
+    const speed = 2 + Math.random() * 5;
+    particles.push({
+      x, y,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed,
+      alpha: 1,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      size: 2 + Math.random() * 3,
+      decay: 0.012 + Math.random() * 0.01
+    });
+  }
+}
+
+function animFW() {
+  fwCtx.clearRect(0, 0, fwCanvas.width, fwCanvas.height);
+  for (let i = particles.length - 1; i >= 0; i--) {
+    const p = particles[i];
+    p.x += p.vx; p.y += p.vy;
+    p.vy += 0.08;
+    p.vx *= 0.98;
+    p.alpha -= p.decay;
+    if (p.alpha <= 0) { particles.splice(i, 1); continue; }
+    fwCtx.globalAlpha = p.alpha;
+    fwCtx.fillStyle = p.color;
+    fwCtx.beginPath();
+    fwCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    fwCtx.fill();
+  }
+  fwCtx.globalAlpha = 1;
+  requestAnimationFrame(animFW);
+}
+animFW();
+
+// Запуск фейерверков при открытии
+const fwPositions = [
+  [0.2, 0.3], [0.5, 0.2], [0.8, 0.3],
+  [0.3, 0.5], [0.7, 0.4], [0.5, 0.5]
+];
+fwPositions.forEach(([xr, yr], i) => {
+  setTimeout(() => {
+    createBurst(fwCanvas.width * xr, fwCanvas.height * yr);
+  }, i * 400);
+});
+
+// Скрыть canvas после анимации
+setTimeout(() => {
+  fwCanvas.style.transition = 'opacity 1s';
+  fwCanvas.style.opacity = '0';
+  setTimeout(() => fwCanvas.style.display = 'none', 1000);
+}, 4000);
+</script>
+<!--    -->
+
+<!-- ПИСЬМО В БУДУЩЕЕ -->
+<section style="padding: clamp(4rem,10vw,8rem) clamp(1.5rem,8vw,6rem); text-align:center; position:relative; z-index:2; background:linear-gradient(to bottom, transparent, rgba(139,58,71,0.08), transparent);">
+
+  <p style="font-family:'Montserrat',sans-serif; font-weight:200; font-size:0.7rem; letter-spacing:0.5em; text-transform:uppercase; color:#c9a96e; margin-bottom:2rem;">Через год</p>
+  <h2 style="font-size:clamp(2rem,6vw,4rem); font-weight:300; font-style:italic; background:linear-gradient(135deg,#f5d0d8,#c9697a,#c9a96e); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:3rem;">Письмо в будущее</h2>
+
+  <div style="max-width:620px; margin:0 auto; position:relative;">
+
+    <!-- Конверт -->
+    <div id="envelope" onclick="openEnvelope()" style="cursor:pointer; position:relative; margin-bottom:2rem;">
+
+      <!-- Тело конверта -->
+      <div style="background:rgba(201,105,122,0.06); border:1px solid rgba(201,105,122,0.25); padding:3rem 2rem 2rem; position:relative; overflow:hidden;">
+
+        <!-- Клапан сверху -->
+        <div id="env-flap" style="position:absolute; top:0; left:0; right:0; height:0; border-left:310px solid transparent; border-right:310px solid transparent; border-top:100px solid rgba(139,58,71,0.15); transform-origin:top center; transition:transform 0.6s ease; pointer-events:none;"></div>
+
+        <div style="position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; gap:1rem;">
+          <div style="width:50px; height:50px; border:1px solid rgba(201,169,110,0.4); display:flex; align-items:center; justify-content:center; font-size:1.5rem;">💌</div>
+          <p style="font-family:'Montserrat',sans-serif; font-size:0.65rem; letter-spacing:0.3em; color:rgba(201,169,110,0.6); text-transform:uppercase;">Открыть через год</p>
+          <p style="font-style:italic; color:rgba(253,245,240,0.3); font-size:0.85rem;">Нажми чтобы прочитать</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Письмо (скрыто) -->
+    <div id="letter" style="display:none; background:rgba(255,255,255,0.02); border:1px solid rgba(201,169,110,0.2); padding:2.5rem; text-align:left; opacity:0; transform:translateY(20px); transition:all 0.8s ease;">
+      <p style="font-family:'Montserrat',sans-serif; font-size:0.6rem; letter-spacing:0.3em; color:rgba(201,169,110,0.5); text-transform:uppercase; margin-bottom:1.5rem;">Моя любимая Маърифат,</p>
+      <p style="font-style:italic; font-size:1.1rem; line-height:2; color:rgba(253,245,240,0.8); margin-bottom:1.5rem;">
+        Когда ты читаешь эти строки — прошёл целый год.<br>
+        Год смеха, тепла, и моментов которые я буду помнить вечно.
+      </p>
+      <p style="font-style:italic; font-size:1.1rem; line-height:2; color:rgba(253,245,240,0.8); margin-bottom:1.5rem;">
+        Я написал это письмо в твой день рождения — чтобы ты знала:<br>
+        тогда, сейчас и через год — я люблю тебя одинаково сильно.
+      </p>
+      <p style="font-style:italic; font-size:1.1rem; line-height:2; color:rgba(253,245,240,0.8); margin-bottom:2rem;">
+        Спасибо за каждый день рядом.<br>
+        С любовью — всегда твой. 🌹
+      </p>
+      <div style="height:1px; background:linear-gradient(to right, transparent, rgba(201,169,110,0.3), transparent); margin-bottom:1.5rem;"></div>
+      <p style="font-family:'Montserrat',sans-serif; font-size:0.6rem; letter-spacing:0.2em; color:rgba(201,169,110,0.4); text-align:right;">написано с любовью ✦</p>
+    </div>
+  </div>
+
+</section>
+
+<!-- ===== ПОЖЕЛАНИЯ С ЭФФЕКТОМ ПЕЧАТАНИЯ ===== -->
+<section style="padding: clamp(4rem,10vw,8rem) clamp(1.5rem,8vw,6rem); text-align:center; position:relative; z-index:2; background:linear-gradient(to bottom, transparent, rgba(139,58,71,0.08), transparent);">
+
+  <p style="font-family:'Montserrat',sans-serif; font-weight:200; font-size:0.7rem; letter-spacing:0.5em; text-transform:uppercase; color:#c9a96e; margin-bottom:2rem;"></p>
+  <h2 style="font-size:clamp(2rem,6vw,4rem); font-weight:300; font-style:italic; background:linear-gradient(135deg,#f5d0d8,#c9697a,#c9a96e); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:1rem;">10 пожеланий для тебя</h2>
+  <p style="font-style:italic; color:rgba(253,245,240,0.4); font-size:0.9rem; margin-bottom:3.5rem;">читай медленно — каждое слово</p>
+
+  <!-- Чат-пузырь -->
+  <div style="max-width:620px; margin:0 auto;">
+
+    <!-- Индикатор печатания -->
+    <div id="typing-indicator" style="display:flex; align-items:center; gap:10px; margin-bottom:1.5rem; opacity:0; transition:opacity 0.3s;">
+      <div style="display:flex; gap:5px; background:rgba(255,255,255,0.04); border:1px solid rgba(201,105,122,0.2); padding:0.75rem 1rem;">
+        <span class="dot" style="width:7px; height:7px; background:#c9697a; border-radius:50%; animation:dotBounce 1.2s ease-in-out infinite;"></span>
+        <span class="dot" style="width:7px; height:7px; background:#c9697a; border-radius:50%; animation:dotBounce 1.2s ease-in-out infinite 0.2s;"></span>
+        <span class="dot" style="width:7px; height:7px; background:#c9697a; border-radius:50%; animation:dotBounce 1.2s ease-in-out infinite 0.4s;"></span>
+      </div>
+      <p style="font-family:'Montserrat',sans-serif; font-size:0.6rem; letter-spacing:0.2em; color:rgba(201,169,110,0.5); text-transform:uppercase;">пишет...</p>
+    </div>
+
+    <!-- Сообщения появляются здесь -->
+    <div id="messages-container" style="display:flex; flex-direction:column; gap:1rem;"></div>
+
+    <!-- Кнопка следующего -->
+    <div style="margin-top:2.5rem;">
+      <button id="next-btn" onclick="showNextWish()" style="background:none; border:1px solid rgba(201,169,110,0.4); color:#c9a96e; font-family:'Montserrat',sans-serif; font-size:0.65rem; letter-spacing:0.3em; text-transform:uppercase; padding:0.9rem 2rem; cursor:pointer; transition:all 0.3s; display:none;" onmouseover="this.style.background='rgba(201,169,110,0.08)'" onmouseout="this.style.background='none'">
+        следующее пожелание →
+      </button>
+      <p id="done-msg" style="display:none; font-style:italic; font-size:1rem; color:rgba(201,105,122,0.7);">все пожелания прочитаны ✦ с любовью</p>
+    </div>
+
+  </div>
+</section>
+
+<style>
+@keyframes dotBounce {
+  0%, 100% { transform: translateY(0); opacity: 0.4; }
+  50% { transform: translateY(-5px); opacity: 1; }
+}
+@keyframes msgAppear {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.wish-bubble {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(201,105,122,0.2);
+  padding: 1.5rem 1.75rem;
+  text-align: left;
+  animation: msgAppear 0.5s ease forwards;
+  position: relative;
+}
+.wish-num {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.55rem;
+  letter-spacing: 0.35em;
+  color: rgba(201,169,110,0.5);
+  text-transform: uppercase;
+  margin-bottom: 0.6rem;
+}
+.wish-text {
+  font-style: italic;
+  font-size: clamp(1rem, 2.5vw, 1.15rem);
+  line-height: 1.8;
+  color: rgba(253,245,240,0.88);
+  font-weight: 300;
+}
+.wish-sub {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.65rem;
+  color: rgba(201,169,110,0.45);
+  margin-top: 0.75rem;
+  font-style: normal;
+  letter-spacing: 0.05em;
+}
+.cursor-blink {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  background: #c9697a;
+  margin-left: 2px;
+  vertical-align: middle;
+  animation: cursorBlink 0.7s step-end infinite;
+}
+@keyframes cursorBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+</style>
+
+<script>
+const wishes = [
+  {
+    num: "01",
+    text: "Я желаю тебе однажды проснуться и понять, что ты уже живёшь той жизнью, о которой мечтала.",
+    sub: "Пусть это будет не просто мечта, а реальность, которая уже рядом."
+  },
+  {
+    num: "02",
+    text: "Пусть твой организм всегда успевает за твоими желаниями.",
+    sub: "Здоровье — это не просто отсутствие болезней, а когда ты чувствуешь себя живой и полной сил."
+  },
+  {
+    num: "03",
+    text: "Пусть у тебя всегда будет один человек, которому можно позвонить среди ночи и услышать: я рядом.",
+    sub: "Это может быть я, это может быть кто-то другой — но пусть этот человек всегда будет рядом."
+  },
+  {
+    num: "04",
+    text: "Желаю, чтобы у тебя было не больше дел, чем сил.",
+    sub: "Пусть твоя жизнь будет наполнена тем, что приносит радость, а не просто занятостью."
+  },
+  {
+    num: "05",
+    text: "Хочу, чтобы ты никогда не перепутала комфорт и счастье.",
+    sub: "Комфорт — это когда всё привычно и безопасно. Счастье — это когда ты чувствуешь, что живёшь по-настоящему, даже если это иногда неудобно."
+  },
+  {
+    num: "06",
+    text: "Пусть у тебя будет причина просыпаться без будильника.",
+    sub: "Это может быть кто-то, это может быть что-то — но пусть это будет то, что заставляет твоё сердце биться чуть быстрее каждое утро."
+  },
+  {
+    num: "07",
+    text: "Желаю тебе живых дней — с ошибками, радостью, моментами, которые остаются в памяти.",
+    sub: "Пусть твоя жизнь будет полна настоящих эмоций, а не просто серией отмеренных дней."
+  },
+  {
+    num: "08",
+    text: "Пусть твои деньги всегда догоняют твои желания.",
+    sub: "Пусть у тебя всегда будет достаточно, чтобы позволить себе то, что делает тебя счастливой."
+  },
+  {
+    num: "09",
+    text: "Желаю друзей, которые будут гордиться тобой даже когда ты сама не сможешь.",
+    sub: "Пусть эти люди будут твоей опорой и поддержкой, даже в те моменты, когда ты сомневаешься в себе."
+  },
+  {
+    num: "10",
+    text: "Пусть в тебе всегда живёт чувство, что впереди ещё лучше.",
+    sub: "Пусть это чувство будет твоим топливом, твоим вдохновением и твоей надеждой, которая никогда не угасает."
+  }
+];
+
+let currentWish = 0;
+let isTyping = false;
+
+// Запуск при попадании в зону видимости
+const wishSection = document.querySelector('#messages-container').closest('section');
+const wishObserver = new IntersectionObserver(entries => {
+  if (entries[0].isIntersecting) {
+    wishObserver.disconnect();
+    setTimeout(() => showNextWish(), 800);
+  }
+}, { threshold: 0.3 });
+wishObserver.observe(wishSection);
+
+function showNextWish() {
+  if (isTyping || currentWish >= wishes.length) return;
+  isTyping = true;
+
+  const btn = document.getElementById('next-btn');
+  btn.style.display = 'none';
+
+  const indicator = document.getElementById('typing-indicator');
+  indicator.style.opacity = '1';
+
+  const wish = wishes[currentWish];
+  const typingDelay = 800 + wish.text.length * 18;
+
+  setTimeout(() => {
+    indicator.style.opacity = '0';
+
+    setTimeout(() => {
+      const container = document.getElementById('messages-container');
+
+      const bubble = document.createElement('div');
+      bubble.className = 'wish-bubble';
+      bubble.innerHTML = `
+        <p class="wish-num">Пожелание ${wish.num}</p>
+        <p class="wish-text"><span id="typed-${currentWish}"></span><span class="cursor-blink"></span></p>
+        <p class="wish-sub" style="opacity:0; transition:opacity 0.6s;" id="sub-${currentWish}">${wish.sub}</p>
+      `;
+      container.appendChild(bubble);
+
+      // Плавный скролл к новому сообщению
+      setTimeout(() => bubble.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
+
+      // Эффект печатания
+      typeText(`typed-${currentWish}`, wish.text, () => {
+        // Убрать курсор
+        bubble.querySelector('.cursor-blink').style.display = 'none';
+
+        // Показать подпись
+        setTimeout(() => {
+          document.getElementById(`sub-${currentWish}`).style.opacity = '1';
+        }, 300);
+
+        currentWish++;
+        isTyping = false;
+
+        if (currentWish < wishes.length) {
+          setTimeout(() => {
+            btn.style.display = 'inline-block';
+          }, 600);
+        } else {
+          setTimeout(() => {
+            document.getElementById('done-msg').style.display = 'block';
+          }, 800);
+        }
+      });
+
+    }, 300);
+  }, typingDelay);
+}
+
+function typeText(elementId, text, onDone) {
+  const el = document.getElementById(elementId);
+  let i = 0;
+  const speed = 28;
+  function type() {
+    if (i < text.length) {
+      el.textContent += text[i];
+      i++;
+      setTimeout(type, speed + Math.random() * 20);
+    } else {
+      if (onDone) onDone();
+    }
+  }
+  type();
+}
+</script>
+
+
+<script>
+let envelopeOpened = false;
+function openEnvelope() {
+  if (envelopeOpened) return;
+  envelopeOpened = true;
+  const flap = document.getElementById('env-flap');
+  const letter = document.getElementById('letter');
+  flap.style.transform = 'rotateX(180deg)';
+  setTimeout(() => {
+    letter.style.display = 'block';
+    setTimeout(() => {
+      letter.style.opacity = '1';
+      letter.style.transform = 'translateY(0)';
+    }, 50);
+  }, 600);
+}
+</script>
+
+
+<!--   -->
+<!-- ФИНАЛЬНЫЙ ЭКРАН С КОНФЕТТИ -->
+<section id="final" style="min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:4rem 2rem; position:relative; z-index:2; overflow:hidden;">
+
+  <canvas id="confetti-canvas" style="position:absolute; inset:0; width:100%; height:100%; pointer-events:none;"></canvas>
+
+  <div id="final-content" style="position:relative; z-index:2;">
+    <p style="font-family:'Montserrat',sans-serif; font-weight:200; font-size:0.7rem; letter-spacing:0.5em; text-transform:uppercase; color:#c9a96e; margin-bottom:2rem; opacity:0; animation:fadeUp 1s ease forwards 0.3s;">С любовью</p>
+
+    <div style="width:80px; height:80px; margin:0 auto 2.5rem;">
+      <svg viewBox="0 0 100 90" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%; animation:heartbeat 1.4s ease-in-out infinite;">
+        <path d="M50 80 C50 80 10 55 10 30 C10 15 22 5 35 5 C42 5 47 9 50 14 C53 9 58 5 65 5 C78 5 90 15 90 30 C90 55 50 80 50 80Z" fill="#c9697a" opacity="0.9"/>
+        <path d="M30 28 Q35 20 45 25" stroke="rgba(253,245,240,0.4)" stroke-width="2" stroke-linecap="round" fill="none"/>
+      </svg>
+    </div>
+
+    <h2 style="font-size:clamp(2rem,7vw,4rem); font-weight:300; font-style:italic; background:linear-gradient(135deg,#f5d0d8,#c9697a,#c9a96e); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:1.5rem; opacity:0; animation:fadeUp 1s ease forwards 0.6s; line-height:1.3;">
+      С Днём Рождения,<br>Маърифат
+    </h2>
+
+    <p style="font-style:italic; font-size:clamp(1rem,3vw,1.3rem); line-height:1.8; color:rgba(253,245,240,0.7); max-width:500px; margin:0 auto 3rem; opacity:0; animation:fadeUp 1s ease forwards 0.9s;">
+      Пусть этот год будет самым счастливым,<br>
+      а каждый день — как праздник.
+    </p>
+
+    <button onclick="launchConfetti()" style="background:none; border:1px solid rgba(201,169,110,0.5); color:#c9a96e; font-family:'Montserrat',sans-serif; font-size:0.7rem; letter-spacing:0.3em; text-transform:uppercase; padding:1rem 2.5rem; cursor:pointer; transition:all 0.3s; opacity:0; animation:fadeUp 1s ease forwards 1.2s;" onmouseover="this.style.background='rgba(201,169,110,0.1)'" onmouseout="this.style.background='none'">
+      🎉 Запустить праздник
+    </button>
+  </div>
+
+</section>
+
+<script>
+const confCanvas = document.getElementById('confetti-canvas');
+const confCtx = confCanvas.getContext('2d');
+let confPieces = [];
+let confRunning = false;
+
+function resizeConf() {
+  confCanvas.width = confCanvas.offsetWidth;
+  confCanvas.height = confCanvas.offsetHeight;
+}
+resizeConf();
+
+function launchConfetti() {
+  resizeConf();
+  confPieces = [];
+  const colors = ['#f5d0d8','#c9697a','#c9a96e','#f0e2c8','#ffffff','#f7e4ec','#8b3a47'];
+  for (let i = 0; i < 200; i++) {
+    confPieces.push({
+      x: Math.random() * confCanvas.width,
+      y: -10 - Math.random() * 300,
+      w: 6 + Math.random() * 8,
+      h: 10 + Math.random() * 6,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      rot: Math.random() * Math.PI * 2,
+      rotSpeed: (Math.random() - 0.5) * 0.15,
+      vx: (Math.random() - 0.5) * 3,
+      vy: 2 + Math.random() * 3,
+      alpha: 1
+    });
+  }
+  if (!confRunning) animConfetti();
+  confRunning = true;
+}
+
+function animConfetti() {
+  confCtx.clearRect(0, 0, confCanvas.width, confCanvas.height);
+  let alive = false;
+  confPieces.forEach(p => {
+    if (p.y < confCanvas.height + 20) alive = true;
+    p.x += p.vx; p.y += p.vy;
+    p.vy += 0.05;
+    p.rot += p.rotSpeed;
+    if (p.y > confCanvas.height * 0.7) p.alpha -= 0.015;
+    if (p.alpha <= 0) return;
+    confCtx.save();
+    confCtx.globalAlpha = Math.max(0, p.alpha);
+    confCtx.translate(p.x, p.y);
+    confCtx.rotate(p.rot);
+    confCtx.fillStyle = p.color;
+    confCtx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+    confCtx.restore();
+  });
+  if (alive) requestAnimationFrame(animConfetti);
+  else confRunning = false;
+}
+</script>
+
+
+
+
+<!---->
+<!-- ===== ТАЙМЕР ЛЮБВИ ===== -->
+<section style="padding: clamp(4rem,10vw,8rem) clamp(1.5rem,8vw,6rem); text-align:center; position:relative; z-index:2;">
+
+  <p style="font-family:'Montserrat',sans-serif; font-weight:200; font-size:0.7rem; letter-spacing:0.5em; text-transform:uppercase; color:#c9a96e; margin-bottom:2rem;">Наша история</p>
+  <h2 style="font-size:clamp(2rem,6vw,4rem); font-weight:300; font-style:italic; background:linear-gradient(135deg,#f5d0d8,#c9697a,#c9a96e); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:1rem;">Мы вместе уже</h2>
+  <p style="font-style:italic; color:rgba(253,245,240,0.4); font-size:0.9rem; margin-bottom:3.5rem;">каждая секунда — бесценна</p>
+
+  <!-- Основной таймер -->
+  <div style="display:flex; justify-content:center; align-items:flex-end; gap:clamp(0.5rem,3vw,2rem); flex-wrap:wrap; margin-bottom:1rem;">
+
+    <!-- Дни -->
+    <div style="display:flex; flex-direction:column; align-items:center; gap:0.5rem;">
+      <div style="position:relative;">
+        <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(201,105,122,0.25); padding:clamp(1rem,3vw,1.75rem) clamp(1.2rem,4vw,2rem); min-width:clamp(70px,15vw,110px);">
+          <p id="t-days" style="font-size:clamp(2.5rem,8vw,5rem); font-weight:300; font-family:'Cormorant Garamond',serif; background:linear-gradient(180deg,#f5d0d8 0%,#c9697a 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; line-height:1; letter-spacing:-0.02em;">000</p>
+        </div>
+        <div style="position:absolute; left:0; right:0; top:50%; height:1px; background:rgba(201,105,122,0.15); pointer-events:none;"></div>
+      </div>
+      <p style="font-family:'Montserrat',sans-serif; font-size:0.6rem; letter-spacing:0.4em; color:rgba(201,169,110,0.6); text-transform:uppercase;">Дней</p>
+    </div>
+
+    <p style="font-size:clamp(2rem,6vw,4rem); color:rgba(201,105,122,0.3); font-weight:300; padding-bottom:1.8rem; font-family:'Cormorant Garamond',serif;">:</p>
+
+    <!-- Часы -->
+    <div style="display:flex; flex-direction:column; align-items:center; gap:0.5rem;">
+      <div style="position:relative;">
+        <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(201,105,122,0.25); padding:clamp(1rem,3vw,1.75rem) clamp(1.2rem,4vw,2rem); min-width:clamp(70px,15vw,110px);">
+          <p id="t-hours" style="font-size:clamp(2.5rem,8vw,5rem); font-weight:300; font-family:'Cormorant Garamond',serif; background:linear-gradient(180deg,#f5d0d8 0%,#c9697a 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; line-height:1; letter-spacing:-0.02em;">00</p>
+        </div>
+        <div style="position:absolute; left:0; right:0; top:50%; height:1px; background:rgba(201,105,122,0.15); pointer-events:none;"></div>
+      </div>
+      <p style="font-family:'Montserrat',sans-serif; font-size:0.6rem; letter-spacing:0.4em; color:rgba(201,169,110,0.6); text-transform:uppercase;">Часов</p>
+    </div>
+
+    <p style="font-size:clamp(2rem,6vw,4rem); color:rgba(201,105,122,0.3); font-weight:300; padding-bottom:1.8rem; font-family:'Cormorant Garamond',serif;">:</p>
+
+    <!-- Минуты -->
+    <div style="display:flex; flex-direction:column; align-items:center; gap:0.5rem;">
+      <div style="position:relative;">
+        <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(201,105,122,0.25); padding:clamp(1rem,3vw,1.75rem) clamp(1.2rem,4vw,2rem); min-width:clamp(70px,15vw,110px);">
+          <p id="t-mins" style="font-size:clamp(2.5rem,8vw,5rem); font-weight:300; font-family:'Cormorant Garamond',serif; background:linear-gradient(180deg,#f5d0d8 0%,#c9697a 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; line-height:1; letter-spacing:-0.02em;">00</p>
+        </div>
+        <div style="position:absolute; left:0; right:0; top:50%; height:1px; background:rgba(201,105,122,0.15); pointer-events:none;"></div>
+      </div>
+      <p style="font-family:'Montserrat',sans-serif; font-size:0.6rem; letter-spacing:0.4em; color:rgba(201,169,110,0.6); text-transform:uppercase;">Минут</p>
+    </div>
+
+    <p style="font-size:clamp(2rem,6vw,4rem); color:rgba(201,105,122,0.3); font-weight:300; padding-bottom:1.8rem; font-family:'Cormorant Garamond',serif;">:</p>
+
+    <!-- Секунды -->
+    <div style="display:flex; flex-direction:column; align-items:center; gap:0.5rem;">
+      <div style="position:relative;">
+        <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(201,169,110,0.3); padding:clamp(1rem,3vw,1.75rem) clamp(1.2rem,4vw,2rem); min-width:clamp(70px,15vw,110px);">
+          <p id="t-secs" style="font-size:clamp(2.5rem,8vw,5rem); font-weight:300; font-family:'Cormorant Garamond',serif; background:linear-gradient(180deg,#f0e2c8 0%,#c9a96e 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; line-height:1; letter-spacing:-0.02em;">00</p>
+        </div>
+        <div style="position:absolute; left:0; right:0; top:50%; height:1px; background:rgba(201,169,110,0.15); pointer-events:none;"></div>
+      </div>
+      <p style="font-family:'Montserrat',sans-serif; font-size:0.6rem; letter-spacing:0.4em; color:rgba(201,169,110,0.6); text-transform:uppercase;">Секунд</p>
+    </div>
+
+  </div>
+
+  <!-- Миллисекунды — отдельная строка -->
+  <div style="display:flex; align-items:center; justify-content:center; gap:1rem; margin-top:1.5rem;">
+    <div style="height:1px; width:60px; background:linear-gradient(to right, transparent, rgba(201,169,110,0.3));"></div>
+    <div style="display:flex; flex-direction:column; align-items:center; gap:0.4rem;">
+      <p id="t-ms" style="font-size:clamp(1.5rem,4vw,2.5rem); font-weight:300; font-family:'Cormorant Garamond',serif; font-style:italic; color:rgba(201,169,110,0.5); letter-spacing:0.05em; line-height:1; min-width:80px; text-align:center;">000</p>
+      <p style="font-family:'Montserrat',sans-serif; font-size:0.55rem; letter-spacing:0.4em; color:rgba(201,169,110,0.35); text-transform:uppercase;">Миллисекунд</p>
+    </div>
+    <div style="height:1px; width:60px; background:linear-gradient(to left, transparent, rgba(201,169,110,0.3));"></div>
+  </div>
+
+  <!-- Подпись -->
+  <p style="font-family:'Montserrat',sans-serif; font-size:0.65rem; letter-spacing:0.25em; color:rgba(201,169,110,0.3); margin-top:2.5rem; font-style:italic;"></p>
+
+</section>
+
+<script>
+// ⬇️ ИЗМЕНИ ЭТУ ДАТУ на дату начала ваших отношений
+const loveStart = new Date('2026-01-11T11:47:53');
+
+function pad(n, len) { return String(n).padStart(len, '0'); }
+
+function updateLoveTimer() {
+  const now = new Date();
+  const diff = now - loveStart;
+
+  const ms    = diff % 1000;
+  const secs  = Math.floor(diff / 1000) % 60;
+  const mins  = Math.floor(diff / (1000 * 60)) % 60;
+  const hours = Math.floor(diff / (1000 * 60 * 60)) % 24;
+  const days  = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+  document.getElementById('t-days').textContent  = pad(days, 3);
+  document.getElementById('t-hours').textContent = pad(hours, 2);
+  document.getElementById('t-mins').textContent  = pad(mins, 2);
+  document.getElementById('t-secs').textContent  = pad(secs, 2);
+  document.getElementById('t-ms').textContent    = pad(ms, 3);
+}
+
+updateLoveTimer();
+setInterval(updateLoveTimer, 50);
+</script>
+
+
+<!-- MUSIC PLAYER (visual only) -->
+<div class="music-player" onclick="const a=document.getElementById('bg-music'); a.paused ? a.play() : a.pause()">
+  <div class="music-wave">
+    <div class="wave-bar"></div>
+    <div class="wave-bar"></div>
+    <div class="wave-bar"></div>
+    <div class="wave-bar"></div>
+    <div class="wave-bar"></div>
+  </div>
+  <div class="music-info">
+    <span class="music-title">С Днём Рождения</span>
+    <span class="music-sub">Маърифат ♡</span>
+  </div>
+</div>
+
+<script>
+// Custom cursor
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+});
+function animRing() {
+  rx += (mx - rx) * 0.12;
+  ry += (my - ry) *.12;
+  ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+  requestAnimationFrame(animRing);
+}
+animRing();
+
+// Sparkles on click
+document.addEventListener('click', e => {
+  for (let i = 0; i < 6; i++) {
+    const s = document.createElement('div');
+    s.className = 'sparkle';
+    const size = 4 + Math.random() * 6;
+    const colors = ['#f5d0d8','#c9697a','#c9a96e','#f0e2c8'];
+    s.style.cssText = `width:${size}px;height:${size}px;background:${colors[Math.floor(Math.random()*colors.length)]};left:${e.clientX + (Math.random()-0.5)*40}px;top:${e.clientY + (Math.random()-0.5)*40}px;`;
+    document.body.appendChild(s);
+    setTimeout(() => s.remove(), 800);
+  }
+});
+
+// Falling petals
+const canvas = document.getElementById('petals-canvas');
+const ctx = canvas.getContext('2d');
+let petals = [];
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+function createPetal() {
+  return {
+    x: Math.random() * canvas.width,
+    y: -20,
+    size: 4 + Math.random() * 8,
+    speed: 0.5 + Math.random() * 1.2,
+    drift: (Math.random() - 0.5) * 0.8,
+    rot: Math.random() * Math.PI * 2,
+    rotSpeed: (Math.random() - 0.5) * 0.04,
+    opacity: 0.3 + Math.random() * 0.5,
+    color: Math.random() > 0.5 ? '#c9697a' : '#c9a96e'
+  };
+}
+
+for (let i = 0; i < 20; i++) {
+  const p = createPetal();
+  p.y = Math.random() * canvas.height;
+  petals.push(p);
+}
+
+function drawPetal(p) {
+  ctx.save();
+  ctx.translate(p.x, p.y);
+  ctx.rotate(p.rot);
+  ctx.globalAlpha = p.opacity;
+  ctx.fillStyle = p.color;
+  ctx.beginPath();
+  ctx.ellipse(0, 0, p.size, p.size * 0.6, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+}
+
+function animPetals() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  petals.forEach(p => {
+    p.y += p.speed;
+    p.x += p.drift;
+    p.rot += p.rotSpeed;
+    if (p.y > canvas.height + 20) {
+      Object.assign(p, createPetal());
+    }
+    drawPetal(p);
+  });
+  if (petals.length < 25 && Math.random() < 0.02) petals.push(createPetal());
+  requestAnimationFrame(animPetals);
+}
+animPetals();
+
+// Scroll reveal
+const observer = new IntersectionObserver(entries => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('visible'), 100);
+    }
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.section-label, .love-heading, .reason-card, .poem-stanza, .photo-frame, .final-message, .final-sig, .heart-container').forEach((el, i) => {
+  observer.observe(el);
+});
+
+// Stagger cards
+document.querySelectorAll('.reason-card').forEach((card, i) => {
+  card.style.transitionDelay = (i * 0.1) + 's';
+});
+</script>
+<audio id="bg-music" src="Ludovico Einaudi - Experience (Official Visualizer).mp3" loop autoplay></audio>
+</body>
+</html>

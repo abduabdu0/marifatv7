@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Photos App</title>
+<style>
+* { box-sizing: border-box; }
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    min-height: 100vh;
+    background: #000;
+    color: #fff;
+}
+.phone {
+    max-width: 430px;
+    margin: 0 auto;
+    min-height: 100vh;
+    padding: 10px 10px 20px;
+}
+.top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    opacity: 0.95;
+    font-size: 12px;
+    margin-bottom: 8px;
+    padding: 0 4px;
+}
+.card {
+    background: #0b0b0b;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 18px;
+    padding: 12px;
+}
+.title {
+    margin: 0;
+    font-size: 31px;
+    font-weight: 700;
+}
+.subtitle {
+    margin: 2px 0 10px;
+    opacity: 0.72;
+    font-size: 13px;
+}
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+.album {
+    font-size: 13px;
+    opacity: 0.78;
+}
+.actions {
+    display: flex;
+    gap: 10px;
+}
+.search {
+    width: 120px;
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 8px;
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    padding: 7px 8px;
+    font-size: 12px;
+}
+.btn {
+    border: 0;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.14);
+    color: #fff;
+    padding: 7px 10px;
+    font-size: 13px;
+    cursor: pointer;
+}
+.list-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+.count {
+    font-size: 12px;
+    opacity: 0.85;
+}
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
+    max-height: 64vh;
+    overflow: auto;
+    padding-right: 2px;
+}
+.thumb {
+    border: 0;
+    padding: 0;
+    border-radius: 8px;
+    overflow: hidden;
+    aspect-ratio: 1 / 1;
+    background: rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    position: relative;
+}
+.thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+.thumb video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+.thumb.active::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 2px solid #7fc2ff;
+    border-radius: 8px;
+}
+.status {
+    margin-top: 8px;
+    min-height: 16px;
+    font-size: 12px;
+    opacity: 0.85;
+}
+
+.lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.96);
+    display: none;
+    flex-direction: column;
+    z-index: 50;
+}
+.lightbox.show {
+    display: flex;
+}
+.lightbox-top {
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 12px;
+}
+.lightbox-title {
+    font-size: 14px;
+    opacity: 0.95;
+}
+.lightbox-img {
+    flex: 1;
+    width: 100%;
+    object-fit: contain;
+    background: #000;
+}
+.lightbox-video {
+    flex: 1;
+    width: 100%;
+    background: #000;
+    display: none;
+}
+.lightbox-controls {
+    height: 66px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+}
+</style>
+</head>
+<body>
+<div class="phone">
+    <div class="top">
+        <span id="clock">00:00</span>
+        <span>📶 🔋</span>
+    </div>
+
+    <div class="card">
+        <h1 class="title">Photos</h1>
+        <p class="subtitle">Галерея как в телефоне</p>
+
+        <div class="toolbar">
+            <span class="album">Альбом: img</span>
+            <div class="actions">
+                <input id="searchInput" class="search" placeholder="Поиск">
+                <button class="btn" id="slideBtn">Слайд-шоу</button>
+                <button class="btn" id="refreshBtn">Обновить</button>
+            </div>
+        </div>
+
+        <div class="list-head">
+            <strong>Недавние</strong>
+            <span id="photoCount" class="count">0 фото</span>
+        </div>
+        <div id="galleryGrid" class="gallery-grid"></div>
+        <div id="status" class="status"></div>
+    </div>
+</div>
+
+<div id="lightbox" class="lightbox">
+    <div class="lightbox-top">
+        <span id="lightboxTitle" class="lightbox-title">Фото</span>
+        <button class="btn" onclick="closeLightbox()">Закрыть</button>
+    </div>
+    <img id="lightboxImg" class="lightbox-img" alt="Просмотр фото">
+    <video id="lightboxVideo" class="lightbox-video" controls playsinline></video>
+    <div class="lightbox-controls">
+        <button class="btn" id="prevBtn">⏮ Назад</button>
+        <button class="btn" id="nextBtn">Вперед ⏭</button>
+    </div>
+</div>
+
+<script src="photos-list.js"></script>
+<script>
+const fallbackPhotos = [];
+
+let photos = [];
+let index = 0;
+let filtered = [];
+let slideshow = null;
+const favKey = "photoFavoritesV1";
+let favorites = JSON.parse(localStorage.getItem(favKey) || "[]");
+
+const galleryGrid = document.getElementById("galleryGrid");
+const photoCount = document.getElementById("photoCount");
+const statusEl = document.getElementById("status");
+const lightbox = document.getElementById("lightbox");
+const lightboxImg = document.getElementById("lightboxImg");
+const lightboxVideo = document.getElementById("lightboxVideo");
+const lightboxTitle = document.getElementById("lightboxTitle");
+const searchInput = document.getElementById("searchInput");
+const slideBtn = document.getElementById("slideBtn");
+
+function isVideo(src) {
+    return /\.(mp4|webm|ogg|mov)$/i.test(src || "");
+}
+
+function setStatus(text) {
+    statusEl.innerText = text;
+}
+
+function renderList() {
+    galleryGrid.innerHTML = "";
+    const q = (searchInput.value || "").toLowerCase().trim();
+    filtered = photos
+        .map((p, i) => ({ ...p, _i: i }))
+        .filter(p => !q || p.title.toLowerCase().includes(q) || p.src.toLowerCase().includes(q));
+    photoCount.innerText = filtered.length + " / " + photos.length;
+    filtered.forEach((item) => {
+        const btn = document.createElement("button");
+        btn.className = "thumb" + (item._i === index ? " active" : "");
+        btn.onclick = () => {
+            index = item._i;
+            openLightbox();
+        };
+        const favMark = favorites.includes(item.src) ? "★" : "";
+        if (isVideo(item.src)) {
+            btn.innerHTML = `<video src="${item.src}" muted preload="metadata" title="${item.title} ${favMark}"></video>`;
+        } else {
+            btn.innerHTML = `<img src="${item.src}" alt="${item.title}" title="${item.title} ${favMark}">`;
+        }
+        galleryGrid.appendChild(btn);
+    });
+}
+
+function showCurrent() {
+    if (!photos.length) {
+        renderList();
+        return;
+    }
+
+    const item = photos[index];
+    if (isVideo(item.src)) {
+        lightboxImg.style.display = "none";
+        lightboxVideo.style.display = "block";
+        lightboxVideo.src = item.src;
+    } else {
+        lightboxVideo.pause();
+        lightboxVideo.removeAttribute("src");
+        lightboxVideo.style.display = "none";
+        lightboxImg.style.display = "block";
+        lightboxImg.src = item.src;
+    }
+    lightboxTitle.innerText = item.title;
+    renderList();
+}
+
+function nextPhoto() {
+    if (!photos.length) return;
+    index = (index + 1) % photos.length;
+    showCurrent();
+}
+
+function prevPhoto() {
+    if (!photos.length) return;
+    index = (index - 1 + photos.length) % photos.length;
+    showCurrent();
+}
+
+function openLightbox() {
+    showCurrent();
+    lightbox.classList.add("show");
+}
+
+function closeLightbox() {
+    lightboxVideo.pause();
+    lightbox.classList.remove("show");
+}
+
+async function loadPhotos() {
+    setStatus("Загрузка фото...");
+    if (Array.isArray(window.PHOTOS_DATA) && window.PHOTOS_DATA.length) {
+        photos = window.PHOTOS_DATA;
+        index = 0;
+        renderList();
+        setStatus("Готово: " + photos.length + " фото.");
+        return;
+    }
+
+    try {
+        const response = await fetch("photos-list.json?ts=" + Date.now(), { cache: "no-store" });
+        if (!response.ok) throw new Error("no photos list");
+        const data = await response.json();
+        photos = Array.isArray(data) && data.length ? data : fallbackPhotos;
+    } catch (error) {
+        photos = fallbackPhotos;
+    }
+    index = 0;
+    renderList();
+    setStatus(photos.length ? ("Готово: " + photos.length + " фото.") : "Нет фото. Проверь папку img и обнови список.");
+}
+
+document.getElementById("nextBtn").addEventListener("click", nextPhoto);
+document.getElementById("prevBtn").addEventListener("click", prevPhoto);
+document.getElementById("refreshBtn").addEventListener("click", loadPhotos);
+searchInput.addEventListener("input", renderList);
+slideBtn.addEventListener("click", () => {
+    if (slideshow) {
+        clearInterval(slideshow);
+        slideshow = null;
+        slideBtn.innerText = "Слайд-шоу";
+        return;
+    }
+    openLightbox();
+    slideBtn.innerText = "Стоп";
+    slideshow = setInterval(nextPhoto, 2200);
+});
+lightboxImg.addEventListener("dblclick", () => {
+    if (!photos.length) return;
+    const src = photos[index].src;
+    if (favorites.includes(src)) favorites = favorites.filter(x => x !== src);
+    else favorites.push(src);
+    localStorage.setItem(favKey, JSON.stringify(favorites));
+    setStatus(favorites.includes(src) ? "Добавлено в избранное" : "Удалено из избранного");
+    renderList();
+});
+
+function updateClock() {
+    const now = new Date();
+    document.getElementById("clock").innerText =
+        String(now.getHours()).padStart(2, "0") + ":" +
+        String(now.getMinutes()).padStart(2, "0");
+}
+
+setInterval(updateClock, 1000);
+updateClock();
+loadPhotos();
+</script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weather App</title>
+<style>
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:linear-gradient(180deg,#3562be,#6ca3ff);color:#fff}
+.wrap{max-width:430px;margin:0 auto;min-height:100vh;padding:10px}
+.top{display:flex;justify-content:space-between;font-size:12px;opacity:.96;margin-bottom:8px}
+.card{background:rgba(255,255,255,.17);border:1px solid rgba(255,255,255,.26);border-radius:18px;padding:14px;backdrop-filter:blur(10px)}
+h1{margin:0;font-size:32px}.city{opacity:.92}.temp{font-size:70px;line-height:1;margin:10px 0 4px}
+.desc{opacity:.92;margin-bottom:12px}.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.cell{background:rgba(255,255,255,.16);border-radius:12px;padding:10px;font-size:13px}
+</style>
+</head>
+<body>
+<div class="wrap"><div class="top"><span id="clock">00:00</span><span>📶 🔋</span></div><div class="card">
+<h1>Weather</h1><div class="city">Tashkent</div><div class="temp" id="temp">26°</div><div class="desc" id="desc">Солнечно</div>
+<div class="row"><div class="cell">Влажность: <b id="hum">45%</b></div><div class="cell">Ветер: <b id="wind">3 м/с</b></div><div class="cell">Ощущается: <b id="feel">27°</b></div><div class="cell">Дождь: <b id="rain">0%</b></div></div>
+</div></div>
+<script>
+function setClock(){const n=new Date();document.getElementById("clock").textContent=String(n.getHours()).padStart(2,"0")+":"+String(n.getMinutes()).padStart(2,"0");}
+function fallback(){const h=new Date().getHours();let t=26,d="Солнечно",hum=45,wind=3,r=0;if(h>=18||h<6){t=20;d="Ясно";hum=52;wind=2;}if(h>=6&&h<10){t=22;d="Свежо";hum=58;wind=2;}
+document.getElementById("temp").textContent=Math.round(t)+"°";document.getElementById("desc").textContent=d;document.getElementById("hum").textContent=hum+"%";document.getElementById("wind").textContent=wind+" м/с";document.getElementById("feel").textContent=Math.round(t+1)+"°";document.getElementById("rain").textContent=r+"%";}
+async function loadWeather(lat,lon){
+  const url=`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,rain`;
+  const res=await fetch(url); if(!res.ok) throw new Error("weather");
+  const c=(await res.json()).current; const t=c.temperature_2m, hum=c.relative_humidity_2m, wind=c.wind_speed_10m, rain=c.rain||0;
+  document.getElementById("temp").textContent=Math.round(t)+"°";
+  document.getElementById("desc").textContent=t>28?"Жарко":(t>18?"Комфортно":"Прохладно");
+  document.getElementById("hum").textContent=Math.round(hum)+"%";
+  document.getElementById("wind").textContent=Math.round(wind)+" м/с";
+  document.getElementById("feel").textContent=Math.round(t+1)+"°";
+  document.getElementById("rain").textContent=Math.round(rain)+" мм";
+}
+function init(){
+  setClock();
+  if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(p=>loadWeather(p.coords.latitude,p.coords.longitude).catch(fallback),fallback,{timeout:6000});
+  }else fallback();
+}
+setInterval(setClock,1000);setInterval(init,120000);init();
+</script>
+</body>
+</html>

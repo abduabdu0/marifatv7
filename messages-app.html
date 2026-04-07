@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Messages App</title>
+<style>
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:#000;color:#fff}
+.wrap{max-width:430px;margin:0 auto;height:100dvh;display:flex;flex-direction:column;padding-bottom:8px}
+.top{display:flex;justify-content:space-between;font-size:12px;padding:8px 12px}
+.header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:6px 12px;border-bottom:1px solid rgba(255,255,255,.12)}
+.peer{display:flex;align-items:center;gap:10px}
+.avatar{width:32px;height:32px;border-radius:999px;background:linear-gradient(135deg,#64d66a,#3db14b);display:grid;place-items:center}
+.name{font-weight:600}.state{font-size:12px;opacity:.7}
+.tools{display:flex;gap:6px}
+.tool{border:0;border-radius:10px;background:#1d1d1d;color:#fff;padding:6px 8px;font-size:11px}
+.chat{flex:1;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:8px}
+.msg{max-width:78%;padding:8px 12px;border-radius:16px;font-size:14px;line-height:1.35}
+.in{align-self:flex-start;background:#252525}
+.out{align-self:flex-end;background:#34c759;color:#06210f}
+.time{display:block;font-size:10px;opacity:.7;margin-top:3px}
+.typing{font-size:12px;opacity:.7;padding:0 12px 8px;display:none}
+.quick{display:flex;gap:6px;overflow:auto;padding:6px 10px;border-top:1px solid rgba(255,255,255,.08)}
+.chip{border:0;border-radius:12px;background:#161616;color:#ddd;padding:6px 10px;font-size:12px;white-space:nowrap}
+.bar{display:flex;gap:8px;padding:10px;border-top:1px solid rgba(255,255,255,.12);background:#0f0f0f}
+input{flex:1;border-radius:16px;border:1px solid rgba(255,255,255,.2);background:#1a1a1a;color:#fff;padding:10px 12px}
+button{border:0;border-radius:14px;background:#0a84ff;color:#fff;padding:10px 12px;font-weight:600}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><span id="clock">00:00</span><span>📶 🔋</span></div>
+  <div class="header">
+    <div class="peer"><div class="avatar">💚</div><div><div class="name">Любимая</div><div class="state" id="state">iMessage · online</div></div></div>
+    <div class="tools"><button class="tool" id="clearBtn">Очистить</button><button class="tool" id="exportBtn">Экспорт</button></div>
+  </div>
+  <div class="chat" id="chat"></div>
+  <div class="typing" id="typing">Печатает...</div>
+  <div class="quick" id="quick">
+    <button class="chip">Привет ❤️</button>
+    <button class="chip">Как ты?</button>
+    <button class="chip">Где ты?</button>
+    <button class="chip">Люблю тебя</button>
+  </div>
+  <div class="bar"><input id="txt" placeholder="iMessage"><button id="send" type="button">Отправить</button></div>
+</div>
+<script>
+const key="myMessagesAppV3",chat=document.getElementById("chat"),txt=document.getElementById("txt");
+const typing=document.getElementById("typing"),state=document.getElementById("state");
+function loadMessages(){
+  try{
+    const raw = localStorage.getItem(key);
+    if(!raw) return [{t:"Привет ❤️",me:false,ts:Date.now()}];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [{t:"Привет ❤️",me:false,ts:Date.now()}];
+  }catch(error){
+    return [{t:"Привет ❤️",me:false,ts:Date.now()}];
+  }
+}
+let data=loadMessages();
+function persist(){localStorage.setItem(key,JSON.stringify(data));}
+function tm(ts){const d=new Date(ts);return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");}
+function render(){chat.innerHTML="";data.forEach(m=>{const d=document.createElement("div");d.className="msg "+(m.me?"out":"in");d.innerHTML=`${m.t}<span class="time">${tm(m.ts||Date.now())}</span>`;chat.appendChild(d);});chat.scrollTop=chat.scrollHeight;}
+function botReply(input){
+  const s=input.toLowerCase();
+  const packs = {
+    love: [
+      "Я тебя тоже люблю бесконечно, сильно, нежно и каждый день все больше. 💖",
+      "Твоя любовь делает меня спокойнее, счастливее и смелее, спасибо тебе за это. ❤️",
+      "Когда ты рядом, даже обычный день становится праздником и красивой историей. ✨",
+      "Ты мой самый любимый человек, мое вдохновение, моя поддержка и моя радость. 💫",
+      "Я ценю каждое твое слово, каждый взгляд, каждую минуту рядом с тобой. 💌",
+      "Люблю тебя не за что-то одно, а за то, какой ты целиком и полностью. 🌸",
+      "Ты мой дом, моя тишина, мой смех и мой лучший случай в жизни. 🫶",
+      "С тобой я учусь быть лучше, мягче, теплее и добрее к миру. 💕",
+      "Я выбираю тебя снова и снова: утром, днем, вечером и в каждом будущем дне. 🤍",
+      "Твое сердце для меня самое красивое место, где всегда хочется оставаться. 💞",
+      "Иногда мне не хватает слов, чтобы описать, насколько ты дорог мне на самом деле. 💓",
+      "Если бы можно было измерить любовь, моя к тебе давно вышла бы за все границы. 🌹"
+    ],
+    where: [
+      "Я рядом, в твоем сердце, в твоих мыслях и в каждом теплом воспоминании. ❤️",
+      "Я здесь, мысленно обнимаю тебя крепко и очень нежно прямо сейчас. 🤗",
+      "Я недалеко: открой улыбку, и ты сразу меня почувствуешь рядом. ✨",
+      "Я в сообщениях, в музыке, в фото и в каждой нашей красивой детали. 📱",
+      "Я там, где тебе спокойно, тепло и уютно, потому что это наше место. 🕊️",
+      "Я с тобой даже на расстоянии, потому что связь у нас сердцем. 💫",
+      "Я рядом в этом моменте, в этом дне и в твоем хорошем настроении. 🌤️",
+      "Я у тебя в душе, и мне там очень хорошо и безопасно. 💖"
+    ],
+    mood: [
+      "У меня все хорошо, особенно когда получаю сообщение от тебя. 😍",
+      "Настроение прекрасное, потому что ты есть в моей жизни и в моем дне. ✨",
+      "Все отлично, я спокойна и счастлива, а ты как себя чувствуешь? 💬",
+      "Сегодня хороший день, и ты сделал его еще лучше своим сообщением. 🌸",
+      "Я в порядке, работаю, мечтаю и думаю о нашей следующей встрече. 💫",
+      "Чувствую себя тепло и уютно, когда мы общаемся вот так. ❤️",
+      "Все замечательно, спасибо, что спросил. Ты очень заботливый. 🤍",
+      "Настроение солнечное, даже если за окном облака. ☀️"
+    ],
+    hello: [
+      "Привет-привет! Я рада тебя видеть здесь. 😍",
+      "Привет, любимый человек! Как проходит твой день? 💖",
+      "Привет! Я как раз думала о тебе. ✨",
+      "Привет, мой хороший. Напиши, чем сейчас занимаешься. 💬",
+      "Приветик! Обнимаю тебя мысленно крепко-крепко. 🤗",
+      "Привет, солнышко. Твое сообщение сделало мой день лучше. ☀️",
+      "Привет! Давай сделаем этот день очень теплым и красивым. 🌸",
+      "Привет, рада тебя слышать. Как твое настроение? 💫"
+    ],
+    weather: [
+      "Погода сейчас будто зовет на прогулку: свежо, спокойно и красиво. ☀️",
+      "Кажется, сегодня идеальный день выйти на воздух и подышать вместе. 🌤️",
+      "Погода хорошая, давай выберем уютный маршрут и прогуляемся. 🚶",
+      "Даже если облачно, с тобой всегда солнечно и тепло. 💛",
+      "Сегодняшняя погода создана для хорошего настроения и красивых фото. 📸",
+      "Можем проверить Weather app и выбрать лучшее время для прогулки. 🌦️",
+      "Погода неплохая, а вместе она вообще становится идеальной. ✨",
+      "Если хочешь, можем устроить мини-пикник и просто отдохнуть. 🧺"
+    ],
+    music: [
+      "Включай Music app, там уже ждет наш любимый плейлист. 🎵",
+      "Давай послушаем что-то нежное и спокойное, чтобы вечер был уютным. 🎶",
+      "Музыка с тобой звучит иначе: глубже, теплее и по-настоящему красиво. 💖",
+      "Выбери трек, а я подпою тебе в сообщениях. 😄",
+      "Можно включить что-то ритмичное и сделать настроение еще лучше. ⚡",
+      "Хочешь, соберем новый плейлист из наших любимых песен? 🎧",
+      "Поставь музыку, закрой глаза и почувствуй, как становится легче. 🌙",
+      "С тобой даже случайный трек звучит как любимая песня. ✨"
+    ],
+    support: [
+      "Ты справишься, я в тебя очень верю и всегда рядом. 💪",
+      "Если устал, сделай паузу, вдохни глубоко, а потом шаг за шагом. 🌿",
+      "Я горжусь тобой, потому что ты стараешься и не сдаешься. 🤍",
+      "Все получится, даже если сейчас кажется сложно и непонятно. 💫",
+      "Ты уже проделал большой путь, не забывай это. 🌟",
+      "Иногда медленно - тоже хорошо, главное продолжать двигаться. 🚶",
+      "Я рядом, можешь опереться на меня в любой момент. 🫶",
+      "У тебя достаточно силы, терпения и ума, чтобы дойти до цели. ✅"
+    ],
+    plans: [
+      "Давай вечером посмотрим фильм, выпьем чай и просто побудем рядом. 🍵",
+      "Можем сделать мини-план на неделю и добавить туда приятные дела. 🗓️",
+      "Хочу выбрать день для прогулки, фото и вкусного кофе. ☕",
+      "Давай запишем идеи в Notes app, чтобы ничего не потерялось. 📝",
+      "Можно устроить творческий вечер: музыка, фото и хорошие разговоры. 🎨",
+      "Предлагаю маленькое свидание, даже если просто дома и уютно. 🕯️",
+      "Сделаем список желаний и начнем исполнять по одному пункту. 🌠",
+      "Как насчет совместного плейлиста и прогулки под любимые треки? 🎧"
+    ],
+    thanks: [
+      "Спасибо тебе за заботу, внимание и добрые слова, это очень ценно. 💖",
+      "Я благодарна тебе за терпение и нежность, которые ты мне даришь. 🤍",
+      "Спасибо, что рядом, даже когда день непростой и шумный. 🌿",
+      "Мне очень приятно, что ты думаешь обо мне и пишешь мне. ✨",
+      "Спасибо за твою искренность, с тобой я чувствую себя безопасно. 🫶",
+      "Я ценю все, что ты делаешь, даже маленькие и тихие поступки. 🌸",
+      "Спасибо за поддержку, она помогает мне двигаться вперед. 💫",
+      "Ты делаешь мою жизнь теплее, и за это я очень благодарна. 🌹"
+    ],
+    generic: [
+      "Приняла сообщение. Расскажи чуть подробнее, мне интересно тебя слушать. 💬",
+      "Я с тобой на связи. Хочешь обсудить это шаг за шагом? ✨",
+      "Звучит интересно. Давай продолжим, я внимательно читаю. 👀",
+      "Хорошая мысль. Можем вместе придумать лучший вариант. 💡",
+      "Я рядом и готова отвечать сколько угодно долго. 🤍",
+      "Мне нравится, как ты формулируешь мысли. Продолжай. 🌟",
+      "Я услышала тебя. Если хочешь, могу помочь выбрать решение. ✅",
+      "Давай сделаем так, чтобы это было удобно и красиво. 🎯"
+    ]
+  };
+
+  function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+  if(s.includes("люб") || s.includes("серд")) return pick(packs.love);
+  if(s.includes("где") || s.includes("рядом")) return pick(packs.where);
+  if(s.includes("дела") || s.includes("настро")) return pick(packs.mood);
+  if(s.includes("привет") || s.includes("здрав")) return pick(packs.hello);
+  if(s.includes("погод") || s.includes("дожд") || s.includes("солн")) return pick(packs.weather);
+  if(s.includes("музык") || s.includes("песн") || s.includes("трек")) return pick(packs.music);
+  if(s.includes("тяж") || s.includes("устал") || s.includes("сложно") || s.includes("бою")) return pick(packs.support);
+  if(s.includes("план") || s.includes("встр") || s.includes("куда")) return pick(packs.plans);
+  if(s.includes("спасиб") || s.includes("благодар")) return pick(packs.thanks);
+  return pick(packs.generic);
+}
+function fakeTyping(on){typing.style.display=on?"block":"none";state.textContent=on?"iMessage · печатает...":"iMessage · online";}
+function send(textOverride){
+  const v=(textOverride ?? txt.value).trim(); if(!v) return;
+  data.push({t:v,me:true,ts:Date.now()}); txt.value=""; persist(); render();
+  fakeTyping(true);
+  setTimeout(()=>{data.push({t:botReply(v),me:false,ts:Date.now()});fakeTyping(false);persist();render();},700+Math.random()*700);
+}
+txt.addEventListener("keydown",e=>{if(e.key==="Enter")send();});
+document.getElementById("send").addEventListener("click", () => send());
+document.getElementById("send").addEventListener("touchend", (e) => { e.preventDefault(); send(); }, { passive: false });
+document.querySelectorAll(".chip").forEach(c=>c.addEventListener("click",()=>send(c.textContent)));
+document.getElementById("clearBtn").onclick=()=>{data=[];persist();render();};
+document.getElementById("exportBtn").onclick=()=>{
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="messages-export.json";a.click();URL.revokeObjectURL(a.href);
+};
+function tick(){const n=new Date();document.getElementById("clock").textContent=String(n.getHours()).padStart(2,"0")+":"+String(n.getMinutes()).padStart(2,"0");}
+setInterval(tick,1000);tick();render();
+</script>
+</body>
+</html>

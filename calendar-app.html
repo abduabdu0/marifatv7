@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calendar App</title>
+<style>
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:#000;color:#fff}
+.wrap{max-width:430px;margin:0 auto;min-height:100vh;padding:10px}
+.top{display:flex;justify-content:space-between;font-size:12px;opacity:.92;margin-bottom:8px}
+.card{background:#111;border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:12px}
+h1{margin:0;font-size:32px}.sub{opacity:.7;margin:2px 0 10px;font-size:13px}
+.head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.btn{border:0;border-radius:10px;background:rgba(255,255,255,.14);color:#fff;padding:8px 10px}
+.month{font-weight:700;text-transform:capitalize}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.w{font-size:11px;opacity:.65;text-align:center}
+.d{aspect-ratio:1/1;border-radius:10px;background:#1a1a1a;border:1px solid rgba(255,255,255,.08);display:grid;place-items:center;font-size:13px}
+.d.today{background:#ff453a;font-weight:700}
+.d.sel{outline:2px solid #0a84ff}
+.events{margin-top:10px;background:#1a1a1a;border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:8px}
+.events input{width:90%;margin-top:6px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:#111;color:#fff;padding:8px}
+.events button{margin-top:6px;border:0;border-radius:8px;background:#0a84ff;color:#fff;padding:8px 10px}
+.ev{font-size:13px;margin-top:6px;padding:6px;background:#121212;border-radius:8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="top"><span id="clock">00:00</span><span>📶 🔋</span></div>
+<div class="card">
+<h1>Calendar</h1><p class="sub">Месяц</p>
+<div class="head"><button class="btn" id="prev">‹</button><span class="month" id="monthLabel"></span><button class="btn" id="next">›</button></div>
+<div class="grid" id="week"></div><div class="grid" id="days"></div>
+<div class="events"><div id="selLabel">Выбери дату</div><input id="evInput" placeholder="Событие"><button id="saveEv">Сохранить событие</button><div id="evList"></div></div>
+</div></div>
+<script>
+const week=["Пн","Вт","Ср","Чт","Пт","Сб","Вс"];const weekEl=document.getElementById("week");week.forEach(w=>{const e=document.createElement("div");e.className="w";e.textContent=w;weekEl.appendChild(e);});
+const daysEl=document.getElementById("days"),label=document.getElementById("monthLabel");let cur=new Date();
+const key="calendarEventsV1";const events=JSON.parse(localStorage.getItem(key)||"{}");let selected=null;
+function dateKey(y,m,d){return `${y}-${String(m+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;}
+function renderEvents(){const box=document.getElementById("evList"),lab=document.getElementById("selLabel");box.innerHTML="";if(!selected){lab.textContent="Выбери дату";return;}lab.textContent="Дата: "+selected; (events[selected]||[]).forEach(v=>{const d=document.createElement("div");d.className="ev";d.textContent=v;box.appendChild(d);});}
+function draw(){daysEl.innerHTML="";const y=cur.getFullYear(),m=cur.getMonth();label.textContent=cur.toLocaleDateString("ru-RU",{month:"long",year:"numeric"});
+const first=(new Date(y,m,1).getDay()+6)%7, cnt=new Date(y,m+1,0).getDate();for(let i=0;i<first;i++){daysEl.appendChild(document.createElement("div"));}
+const t=new Date();for(let d=1;d<=cnt;d++){const e=document.createElement("div");e.className="d";const k=dateKey(y,m,d);if(d===t.getDate()&&m===t.getMonth()&&y===t.getFullYear())e.classList.add("today");if(k===selected)e.classList.add("sel");e.textContent=d;e.onclick=()=>{selected=k;draw();renderEvents();};daysEl.appendChild(e);}
+}
+document.getElementById("prev").onclick=()=>{cur.setMonth(cur.getMonth()-1);draw();};
+document.getElementById("next").onclick=()=>{cur.setMonth(cur.getMonth()+1);draw();};
+document.getElementById("saveEv").onclick=()=>{if(!selected)return;const v=document.getElementById("evInput").value.trim();if(!v)return;(events[selected]??=[]).push(v);localStorage.setItem(key,JSON.stringify(events));document.getElementById("evInput").value="";renderEvents();};
+function tick(){const n=new Date();document.getElementById("clock").textContent=String(n.getHours()).padStart(2,"0")+":"+String(n.getMinutes()).padStart(2,"0");}
+setInterval(tick,1000);tick();draw();renderEvents();
+</script>
+</body>
+</html>

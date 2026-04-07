@@ -1,0 +1,42 @@
+@keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-8px); }
+    50% { transform: translateX(8px); }
+    75% { transform: translateX(-8px); }
+    100% { transform: translateX(0); }
+}
+
+.shake {
+    animation: shake 0.4s;
+}
+
+.event {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    margin: 15px;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    transition: 0.3s;
+}
+
+.event:hover {
+    transform: scale(1.03);
+}
+
+#nav {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: rgba(0,0,0,0.3);
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+}
+
+#nav button {
+    background: none;
+    color: white;
+    font-size: 20px;
+}
