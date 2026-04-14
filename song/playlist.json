@@ -5,6 +5,11 @@
         "src":  "song/Muboriz_Usmonov_Rustam_Azimi_-_Surayo_79991422.mp3"
     },
     {
+        "title": "Kerim_ve_Yıldız_klip_Омид_Амери_Дивоне_Манам_Omid_Ameri_Divane_Manam",
+        "artist": "Kerim_ve_Yıldız",
+        "src": "song/Kerim_ve_Yıldız_klip_Омид_Амери_Дивоне_Манам_Omid_Ameri_Divane_Manam.mp3"
+    },
+    {
         "title":  "Rustam_Azimi_-_Ajab_Tozai_79762391",
         "artist":  "Rustam_Azimi",
         "src":  "song/Rustam_Azimi_-_Ajab_Tozai_79762391.mp3"
