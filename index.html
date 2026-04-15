@@ -179,29 +179,24 @@ body {
     width: 100%;
     max-width: none;
     margin: 0;
-    padding: 0;
-    background: #0b1020;
+    padding: 14px 0 0;
+    background: radial-gradient(circle at top, rgba(38, 47, 76, 0.92), rgba(10, 14, 28, 0.98));
     z-index: 900;
-}
-
-.music-fullscreen-top {
-    height: 50px;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
-    font-weight: bold;
-    background: rgba(0, 0, 0, 0.25);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
 }
 
 .music-fullscreen-frame {
-    width: 100%;
-    height: calc(100% - 50px);
+    width: calc(100% - 24px);
+    flex: 1;
     min-height: 0;
     border: 0;
-    border-radius: 0;
+    border-radius: 24px;
     background: #0f1220;
-    box-shadow: none;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.28);
 }
 
 @keyframes appOpen {
@@ -682,7 +677,6 @@ img {
 </div>
 
 <div id="music-fullscreen" class="hidden screen-section music-fullscreen">
-    <div class="music-fullscreen-top">🎵 Music</div>
     <iframe
         id="musicFullscreenFrame"
         class="music-fullscreen-frame"
@@ -693,7 +687,6 @@ img {
 </div>
 
 <div id="photos-fullscreen" class="hidden screen-section music-fullscreen">
-    <div class="music-fullscreen-top">🖼️ Photos</div>
     <iframe
         id="photosFullscreenFrame"
         class="music-fullscreen-frame"
@@ -704,22 +697,18 @@ img {
 </div>
 
 <div id="calendar-fullscreen" class="hidden screen-section music-fullscreen">
-    <div class="music-fullscreen-top">📅 Calendar</div>
     <iframe id="calendarFullscreenFrame" class="music-fullscreen-frame" src="about:blank" title="Calendar app fullscreen" loading="lazy"></iframe>
 </div>
 
 <div id="notes-fullscreen" class="hidden screen-section music-fullscreen">
-    <div class="music-fullscreen-top">📝 Notes</div>
     <iframe id="notesFullscreenFrame" class="music-fullscreen-frame" src="about:blank" title="Notes app fullscreen" loading="lazy"></iframe>
 </div>
 
 <div id="weather-fullscreen" class="hidden screen-section music-fullscreen">
-    <div class="music-fullscreen-top">☀️ Weather</div>
     <iframe id="weatherFullscreenFrame" class="music-fullscreen-frame" src="about:blank" title="Weather app fullscreen" loading="lazy"></iframe>
 </div>
 
 <div id="messages-fullscreen" class="hidden screen-section music-fullscreen">
-    <div class="music-fullscreen-top">💬 Messages</div>
     <iframe id="messagesFullscreenFrame" class="music-fullscreen-frame" src="about:blank" title="Messages app fullscreen" loading="lazy"></iframe>
 </div>
 
