@@ -159,11 +159,41 @@ body {
     display: none;
 }
 .lightbox-controls {
-    height: 66px;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: auto;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    gap: 12px;
+    padding: 0 20px;
+    pointer-events: none;
+    z-index: 10;
+    transform: translateY(-50%);
+}
+.lightbox-controls .btn {
+    pointer-events: auto;
+    width: 50px;
+    height: 50px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 50%;
+    backdrop-filter: blur(10px);
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+.lightbox-controls .btn:hover {
+    background: rgba(255, 255, 255, 0.4);
+    transform: scale(1.1);
+}
+.lightbox-controls .btn:active {
+    transform: scale(0.95);
+    background: rgba(255, 255, 255, 0.3);
 }
 </style>
 </head>
@@ -203,8 +233,8 @@ body {
     <img id="lightboxImg" class="lightbox-img" alt="Просмотр фото">
     <video id="lightboxVideo" class="lightbox-video" controls playsinline></video>
     <div class="lightbox-controls">
-        <button class="btn" id="prevBtn">⏮ Назад</button>
-        <button class="btn" id="nextBtn">Вперед ⏭</button>
+        <button class="btn" id="prevBtn">←</button>
+        <button class="btn" id="nextBtn">→</button>
     </div>
 </div>
 
@@ -363,6 +393,28 @@ function updateClock() {
 setInterval(updateClock, 1000);
 updateClock();
 loadPhotos();
+
+// Свайп для переключения фотографий
+let touchStartX = 0;
+let touchEndX = 0;
+
+function handleSwipe() {
+    if (touchEndX < touchStartX - 50) {
+        nextPhoto();
+    }
+    if (touchEndX > touchStartX + 50) {
+        prevPhoto();
+    }
+}
+
+lightbox.addEventListener('touchstart', e => {
+    touchStartX = e.changedTouches[0].screenX;
+}, false);
+
+lightbox.addEventListener('touchend', e => {
+    touchEndX = e.changedTouches[0].screenX;
+    handleSwipe();
+}, false);
 </script>
 </body>
 </html>

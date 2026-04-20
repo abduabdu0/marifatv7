@@ -32,7 +32,7 @@ button{border:0;border-radius:14px;background:#0a84ff;color:#fff;padding:10px 12
   <div class="top"><span id="clock">00:00</span><span>📶 🔋</span></div>
   <div class="header">
     <div class="peer"><div class="avatar">💚</div><div><div class="name">Любимая</div><div class="state" id="state">iMessage · online</div></div></div>
-    <div class="tools"><button class="tool" id="clearBtn">Очистить</button><button class="tool" id="exportBtn">Экспорт</button></div>
+    <div class="tools"><button class="tool" id="langBtn">TJ</button><button class="tool" id="clearBtn">Очистить</button><button class="tool" id="exportBtn">Экспорт</button></div>
   </div>
   <div class="chat" id="chat"></div>
   <div class="typing" id="typing">Печатает...</div>
@@ -47,6 +47,7 @@ button{border:0;border-radius:14px;background:#0a84ff;color:#fff;padding:10px 12
 <script>
 const key="myMessagesAppV3",chat=document.getElementById("chat"),txt=document.getElementById("txt");
 const typing=document.getElementById("typing"),state=document.getElementById("state");
+let lang="ru";
 function loadMessages(){
   try{
     const raw = localStorage.getItem(key);
@@ -63,6 +64,72 @@ function tm(ts){const d=new Date(ts);return String(d.getHours()).padStart(2,"0")
 function render(){chat.innerHTML="";data.forEach(m=>{const d=document.createElement("div");d.className="msg "+(m.me?"out":"in");d.innerHTML=`${m.t}<span class="time">${tm(m.ts||Date.now())}</span>`;chat.appendChild(d);});chat.scrollTop=chat.scrollHeight;}
 function botReply(input){
   const s=input.toLowerCase();
+  const packs_tj = {
+    love: [
+      "Ман ҳам та'рифи нокурд шумро дӯст медорам, аз байни ҳама одам дӯстам. 💖",
+      "Ваҳши шумо ғалат ман мо миқдоре хушнуд мекунад ки баён намеяванд. ❤️",
+      "Вақте ки шумо пас шумо ҳардуш рӯз хуб мешавад ва борани навоиш меёбад. ✨",
+      "Шумо одами махсусам, илҳомифи мон, ёрии мон ва хушияирави мон. 💫",
+      "Ман ҳар сўзи шуморо, ҳар ниғоҳи шумо, ҳам дақиқаҳои шуморо қадр мекунам. 💌",
+      "Ман шумаро нафарм кашидани якто, балки барои онкӣ ки шумо кистан. 🌸",
+      "Шумо ҳай хонаи мон, орамии мон, аллакай мон ва беҳтарин ишомати мон. 🫶",
+      "Бо шумо ман ёд мегирам, ки беҳтар, нармтар, хонавритир ва меҳнборанимар шавам. 💕"
+    ],
+    where: [
+      "Ман дар ӯ қара ҳастам, дар роҳи шуморо дар ҳар ёди хушнуд. ❤️",
+      "Ман инҷо ҳастам, андишаён маҳко дор мекунам ва охнин шаб супош. 🤗",
+      "Ман наздик ҳастам: муҳро кунед, ва ман шуморо ҳис мекунам. ✨",
+      "Ман дар пайғом, дар сўз, дар сакал ва дар ҳар момати қишимонӣ. 📱"
+    ],
+    mood: [
+      "Ҳама чиз хуб аст, махсусан вақте ки пайғом аз шумо гирифтам. 😍",
+      "Ҳолаи дилам беҳтар аст, зеро ки шумо дар ғимти мон ҳастед. ✨",
+      "Ҳама чиз розанадорӣ аст, ман оромам, бахшем, ту чӣ? 💬",
+      "Имрўз рўзи хуб аст ва шумо онро бештар бехш кардед. 🌸"
+    ],
+    hello: [
+      "Салом-салом! Рўи шуморо дидани хусалем. 😍",
+      "Салом, одами азизӣ! Рўзи шумо чӣ хос? 💖",
+      "Салом! Ман танҳо аз шумо фикр мекунам. ✨",
+      "Салом, одами хубам, кӣ сўҳбат кунам? 💬"
+    ],
+    weather: [
+      "Ҳавои амрўз талақат: хунук, оромӣ ва хуб. ☀️",
+      "Ин рўз беҳтарин рўз буд, барои гўлзории шумо. 🌤️",
+      "Ҳавои хуб аст, бирўем ва баъзе маслак интихоб кунем. 🚶",
+      "Ҳатто агар облот бошад, бо шумо юм офтобӣ ва гарм. 💛"
+    ],
+    music: [
+      "Music app дошт ва плейлист монтазари шумо. 🎵",
+      "Бирўем чизи нарм ва орам шунавем. 🎶",
+      "Музика бо шумо гуни дигар: чунани, гармитар ва хубтар. 💖",
+      "Трек интихоб кун, ман пайғомот колуйам. 😄"
+    ],
+    support: [
+      "Шумо бо монем, таҳамало ба шумо. 💪",
+      "Агар хостед, вотимарез, онгоҳ бор. 🌿",
+      "Ман аҳ шумо афтихор мекунам, кӣ кӯшиш мекунед. 🤍",
+      "Ҳама чи мумкин аст, ҳатто агар сахт ба назар расад. 💫"
+    ],
+    plans: [
+      "Шоми ин ҷо, чой ва орамро кунем. 🍵",
+      "План ҳафтаҷо кунем ва корҳои хушро илова кунем. 🗓️",
+      "Рўз, аксҳо ва қаҳваи хуб интихоб кун. ☕",
+      "Идея Notes app ва хулоса дохилимон. 📝"
+    ],
+    thanks: [
+      "Шумаро шукрон, барои мӯҳоб, диққат ва сўзи хуб. 💖",
+      "Ман шомро қадир мекунам, бар сабри ва нармӣ. 🤍",
+      "Спасибо ки инҷо, ҳатто рўзи сахт. 🌿",
+      "Хушнуд болишҷ, ту аз мо дўстдор. ✨"
+    ],
+    generic: [
+      "Пайғом гирифтам, бе бетари сўхан. 💬",
+      "Ман боҳам ҳастам, кӣ қадам гирем? ✨",
+      "Ҷильо аст, ин зиёдтар. 👀",
+      "Ғай ва кӣ вобаста. 💡"
+    ]
+  };
   const packs = {
     love: [
       "Я тебя тоже люблю бесконечно, сильно, нежно и каждый день все больше. 💖",
@@ -172,29 +239,45 @@ function botReply(input){
 
   function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
 
-  if(s.includes("люб") || s.includes("серд")) return pick(packs.love);
-  if(s.includes("где") || s.includes("рядом")) return pick(packs.where);
-  if(s.includes("дела") || s.includes("настро")) return pick(packs.mood);
-  if(s.includes("привет") || s.includes("здрав")) return pick(packs.hello);
-  if(s.includes("погод") || s.includes("дожд") || s.includes("солн")) return pick(packs.weather);
-  if(s.includes("музык") || s.includes("песн") || s.includes("трек")) return pick(packs.music);
-  if(s.includes("тяж") || s.includes("устал") || s.includes("сложно") || s.includes("бою")) return pick(packs.support);
-  if(s.includes("план") || s.includes("встр") || s.includes("куда")) return pick(packs.plans);
-  if(s.includes("спасиб") || s.includes("благодар")) return pick(packs.thanks);
-  return pick(packs.generic);
+  const p = lang === "tj" ? packs_tj : packs;
+
+  if(lang === "tj") {
+    if(s.includes("дўст") || s.includes("дил")) return pick(p.love);
+    if(s.includes("қаҷа") || s.includes("дер")) return pick(p.where);
+    if(s.includes("кор") || s.includes("ҳол")) return pick(p.mood);
+    if(s.includes("салом")) return pick(p.hello);
+    if(s.includes("ҳаво") || s.includes("облат")) return pick(p.weather);
+    if(s.includes("музик") || s.includes("трек")) return pick(p.music);
+    if(s.includes("сахт") || s.includes("хост")) return pick(p.support);
+    if(s.includes("план") || s.includes("ҷой")) return pick(p.plans);
+    if(s.includes("спасиб") || s.includes("шукр")) return pick(p.thanks);
+    return pick(p.generic);
+  }
+
+  if(s.includes("люб") || s.includes("серд")) return pick(p.love);
+  if(s.includes("где") || s.includes("рядом")) return pick(p.where);
+  if(s.includes("дела") || s.includes("настро")) return pick(p.mood);
+  if(s.includes("привет") || s.includes("здрав")) return pick(p.hello);
+  if(s.includes("погод") || s.includes("дожд") || s.includes("солн")) return pick(p.weather);
+  if(s.includes("музык") || s.includes("песн") || s.includes("трек")) return pick(p.music);
+  if(s.includes("тяж") || s.includes("устал") || s.includes("сложно") || s.includes("бою")) return pick(p.support);
+  if(s.includes("план") || s.includes("встр") || s.includes("куда")) return pick(p.plans);
+  if(s.includes("спасиб") || s.includes("благодар")) return pick(p.thanks);
+  return pick(p.generic);
 }
 function fakeTyping(on){typing.style.display=on?"block":"none";state.textContent=on?"iMessage · печатает...":"iMessage · online";}
 function send(textOverride){
   const v=(textOverride ?? txt.value).trim(); if(!v) return;
   data.push({t:v,me:true,ts:Date.now()}); txt.value=""; persist(); render();
   fakeTyping(true);
-  setTimeout(()=>{data.push({t:botReply(v),me:false,ts:Date.now()});fakeTyping(false);persist();render();},700+Math.random()*700);
+  setTimeout(()=>{data.push({t:botReply(v),me:false,ts:Date.now()});fakeTyping(false);persist();render();},7000+Math.random()*7000);
 }
 txt.addEventListener("keydown",e=>{if(e.key==="Enter")send();});
 document.getElementById("send").addEventListener("click", () => send());
 document.getElementById("send").addEventListener("touchend", (e) => { e.preventDefault(); send(); }, { passive: false });
 document.querySelectorAll(".chip").forEach(c=>c.addEventListener("click",()=>send(c.textContent)));
 document.getElementById("clearBtn").onclick=()=>{data=[];persist();render();};
+document.getElementById("langBtn").onclick=()=>{lang=lang==="ru"?"tj":"ru";document.getElementById("langBtn").textContent=lang==="ru"?"TJ":"RU";};
 document.getElementById("exportBtn").onclick=()=>{
   const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
   const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="messages-export.json";a.click();URL.revokeObjectURL(a.href);

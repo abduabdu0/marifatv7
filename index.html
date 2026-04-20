@@ -87,7 +87,7 @@ body {
 
 .apps-grid {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 14px 10px;
     margin-bottom: 16px;
 }
@@ -445,7 +445,7 @@ img {
 
 .login-button {
     width: 100%;
-    max-width: 240px;
+    max-width: 275px;
     padding: 12px 0;
     margin: 0 auto;
     border-radius: 16px;
@@ -580,8 +580,8 @@ img {
 </div>
 <!-- Fixed Bottom Navigation -->
 <div id="nav">
-    <button onclick="showSection('main')">🏠</button>
-    <button onclick="showSection('app-gallery')">📱</button>
+    <button onclick="closeAllFullscreen(); showSection('main')">🏠</button>
+    <button onclick="closeAllFullscreen(); showSection('app-gallery')">📱</button>
     
 </div>
 
@@ -664,6 +664,10 @@ img {
                 <span class="app-icon" style="background:linear-gradient(135deg,#65c7ff,#2ea2ff);">☀️</span>
                 <span class="app-name">Weather</span>
             </button>
+            <button class="app-tile" onclick="openCardsApp()">
+                <span class="app-icon" style="background:linear-gradient(135deg,#ff9f43,#ee5a24);">🃏</span>
+                <span class="app-name">Cards</span>
+            </button>
         </div>
     </div>
 
@@ -706,6 +710,10 @@ img {
 
 <div id="weather-fullscreen" class="hidden screen-section music-fullscreen">
     <iframe id="weatherFullscreenFrame" class="music-fullscreen-frame" src="about:blank" title="Weather app fullscreen" loading="lazy"></iframe>
+</div>
+
+<div id="cards-fullscreen" class="hidden screen-section music-fullscreen">
+    <iframe id="cardsFullscreenFrame" class="music-fullscreen-frame" src="about:blank" title="Cards app fullscreen" loading="lazy"></iframe>
 </div>
 
 <div id="messages-fullscreen" class="hidden screen-section music-fullscreen">
@@ -1108,8 +1116,16 @@ function updateBackgroundMusic(section) {
     }
 }
 
+function closeAllFullscreen() {
+    const fullscreens = document.querySelectorAll('#music-fullscreen, #photos-fullscreen, #calendar-fullscreen, #notes-fullscreen, #weather-fullscreen, #messages-fullscreen, #cards-fullscreen');
+    fullscreens.forEach(el => {
+        el.classList.add('hidden');
+        el.classList.remove('visible');
+    });
+}
+
 function showSection(section) {
-    const sections = document.querySelectorAll('[id^="section-"], #final, #games-menu, #love, #main, #app-gallery, #music-fullscreen, #photos-fullscreen, #calendar-fullscreen, #notes-fullscreen, #weather-fullscreen, #messages-fullscreen');
+    const sections = document.querySelectorAll('[id^="section-"], #final, #games-menu, #love, #main, #app-gallery, #music-fullscreen, #photos-fullscreen, #calendar-fullscreen, #notes-fullscreen, #weather-fullscreen, #messages-fullscreen, #cards-fullscreen');
     sections.forEach(s => {
         s.classList.add("hidden");
         s.classList.remove("visible");
@@ -1168,6 +1184,12 @@ function openWeatherApp() {
     const frame = document.getElementById("weatherFullscreenFrame");
     if (frame) frame.src = "weather-app.html";
     showSection("weather-fullscreen");
+}
+
+function openCardsApp() {
+    const frame = document.getElementById("cardsFullscreenFrame");
+    if (frame) frame.src = "cards-app.html";
+    showSection("cards-fullscreen");
 }
 
 function openMessagesApp() {

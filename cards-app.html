@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-sans); }
+
+  .gallery-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem 2.5rem;
+    min-height: 560px;
+    user-select: none;
+  }
+
+  .subtitle {
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.04em;
+  }
+
+  .stack {
+    position: relative;
+    width: 300px;
+    height: 400px;
+    touch-action: none;
+  }
+
+  .card {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    overflow: hidden;
+    cursor: grab;
+    will-change: transform;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    transition: box-shadow 0.2s;
+  }
+
+  .card:active { cursor: grabbing; }
+
+  .card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    pointer-events: none;
+    draggable: false;
+  }
+
+  .card .overlay {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 1.25rem 1.25rem 1rem;
+    background: linear-gradient(transparent, rgba(0,0,0,0.55));
+    color: #fff;
+  }
+
+  .card .overlay .loc {
+    font-size: 13px;
+    opacity: 0.75;
+    margin-bottom: 4px;
+  }
+
+  .card .overlay .name {
+    font-size: 18px;
+    font-weight: 500;
+  }
+
+  .hint-arrows {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-top: 2rem;
+  }
+
+  .arrow-btn {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    border: 0.5px solid var(--color-border-secondary);
+    background: var(--color-background-primary);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-size: 20px;
+    transition: background 0.15s, transform 0.1s;
+    color: var(--color-text-primary);
+  }
+
+  .arrow-btn:hover { background: var(--color-background-secondary); }
+  .arrow-btn:active { transform: scale(0.93); }
+
+  .dots {
+    display: flex;
+    gap: 8px;
+    margin-top: 1.25rem;
+  }
+
+  .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--color-border-secondary);
+    transition: background 0.3s, transform 0.3s;
+  }
+
+  .dot.active {
+    background: var(--color-text-primary);
+    transform: scale(1.3);
+  }
+
+
+</style>
+
+<div class="gallery-wrap">
+  <p class="subtitle">Свайпайте или нажимайте стрелки</p>
+
+  <div class="stack" id="stack"></div>
+
+  <div class="dots" id="dots"></div>
+
+  <div class="hint-arrows">
+    <button class="arrow-btn" id="btnLeft">←</button>
+    <button class="arrow-btn" id="btnRight">→</button>
+  </div>
+</div>
+
+<script>
+const photos = [
+  { src: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80", name: "Доломитовые Альпы", loc: "Италия" },
+  { src: "https://images.unsplash.com/photo-1493246507139-91e8fad9978e?w=600&q=80", name: "Озеро на рассвете", loc: "Норвегия" },
+  { src: "https://images.unsplash.com/photo-1518495973542-4542c06a5843?w=600&q=80", name: "Сквозь листву", loc: "Лесная тропа" },
+  { src: "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=600&q=80", name: "Горная долина", loc: "Швейцария" },
+  { src: "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?w=600&q=80", name: "Туманное озеро", loc: "Канада" },
+  { src: "https://images.unsplash.com/photo-1533240332313-0db49b459ad6?w=600&q=80", name: "Закат над морем", loc: "Греция" },
+];
+
+const stack = document.getElementById('stack');
+const dotsEl = document.getElementById('dots');
+let current = 0;
+let dragging = false;
+let startX = 0, startY = 0, curX = 0;
+let cardEls = [];
+
+function buildDots() {
+  dotsEl.innerHTML = '';
+  photos.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === current ? ' active' : '');
+    dotsEl.appendChild(d);
+  });
+}
+
+function updateDots() {
+  [...dotsEl.children].forEach((d, i) => {
+    d.classList.toggle('active', i === current);
+  });
+}
+
+function buildStack() {
+  stack.innerHTML = '';
+  cardEls = [];
+
+  const visible = [current, (current+1)%photos.length, (current+2)%photos.length];
+
+  visible.slice().reverse().forEach((idx, ri) => {
+    const pos = visible.length - 1 - ri;
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.dataset.idx = idx;
+
+    const scale = 1 - pos * 0.05;
+    const ty = pos * 14;
+    card.style.transform = `translateY(${ty}px) scale(${scale})`;
+    card.style.zIndex = visible.length - pos;
+    card.style.transition = 'transform 0.35s cubic-bezier(.22,.68,0,1.2)';
+
+    card.innerHTML = `
+      <img src="${photos[idx].src}" alt="${photos[idx].name}" draggable="false"/>
+      <div class="overlay">
+        <div class="loc">${photos[idx].loc}</div>
+        <div class="name">${photos[idx].name}</div>
+      </div>
+    `;
+
+    if (pos === 0) {
+      attachDrag(card);
+    }
+
+    stack.appendChild(card);
+    cardEls.push({ card, pos, baseScale: scale, baseTy: ty });
+  });
+}
+
+function attachDrag(card) {
+  card.addEventListener('mousedown', onStart);
+  card.addEventListener('touchstart', onStart, { passive: true });
+}
+
+function onStart(e) {
+  dragging = true;
+  startX = e.touches ? e.touches[0].clientX : e.clientX;
+  startY = e.touches ? e.touches[0].clientY : e.clientY;
+  curX = 0;
+  card_el = e.currentTarget;
+  card_el.style.transition = 'none';
+  card_el.style.cursor = 'grabbing';
+
+  window.addEventListener('mousemove', onMove);
+  window.addEventListener('mouseup', onEnd);
+  window.addEventListener('touchmove', onMove, { passive: false });
+  window.addEventListener('touchend', onEnd);
+}
+
+let card_el = null;
+
+function onMove(e) {
+  if (!dragging || !card_el) return;
+  if (e.cancelable) e.preventDefault();
+  const x = e.touches ? e.touches[0].clientX : e.clientX;
+  const y = e.touches ? e.touches[0].clientY : e.clientY;
+  curX = x - startX;
+  const curY = y - startY;
+  const rot = curX * 0.12;
+
+  card_el.style.transform = `translate(${curX}px, ${curY * 0.3}px) rotate(${rot}deg)`;
+
+  updateBehindCards(curX);
+}
+
+function updateBehindCards(dx) {
+  const ratio = Math.min(Math.abs(dx) / 120, 1);
+  cardEls.forEach(({ card, pos, baseScale, baseTy }) => {
+    if (pos === 0) return;
+    const newScale = baseScale + (0.05 * ratio);
+    const newTy = baseTy - (14 * ratio);
+    card.style.transition = 'none';
+    card.style.transform = `translateY(${newTy}px) scale(${Math.min(newScale, 1)})`;
+  });
+}
+
+function onEnd() {
+  if (!dragging || !card_el) return;
+  dragging = false;
+
+  window.removeEventListener('mousemove', onMove);
+  window.removeEventListener('mouseup', onEnd);
+  window.removeEventListener('touchmove', onMove);
+  window.removeEventListener('touchend', onEnd);
+
+  card_el.style.cursor = 'grab';
+
+  if (Math.abs(curX) > 100) {
+    const dir = curX > 0 ? 1 : -1;
+    flyOut(card_el, dir);
+  } else {
+    card_el.style.transition = 'transform 0.4s cubic-bezier(.22,.68,0,1.2)';
+    card_el.style.transform = 'translateY(0px) scale(1)';
+    resetBehind();
+  }
+
+  card_el = null;
+}
+
+function resetBehind() {
+  cardEls.forEach(({ card, pos, baseScale, baseTy }) => {
+    if (pos === 0) return;
+    card.style.transition = 'transform 0.4s cubic-bezier(.22,.68,0,1.2)';
+    card.style.transform = `translateY(${baseTy}px) scale(${baseScale})`;
+  });
+}
+
+function flyOut(card, dir) {
+  card.style.transition = 'transform 0.42s cubic-bezier(.55,.055,.675,.19), opacity 0.35s';
+  card.style.transform = `translateX(${dir * 520}px) rotate(${dir * 28}deg)`;
+  card.style.opacity = '0';
+  current = (current + 1) % photos.length;
+  updateDots();
+  setTimeout(() => buildStack(), 350);
+}
+
+function swipe(dir) {
+  const topCard = stack.querySelector('.card[style*="z-index: 3"]') ||
+    [...stack.querySelectorAll('.card')].find(c => parseInt(c.style.zIndex) === cardEls.length);
+  if (!topCard) return;
+  const d = dir === 'right' ? 1 : -1;
+  flyOut(topCard, d);
+}
+
+document.getElementById('btnLeft').addEventListener('click', () => swipe('left'));
+document.getElementById('btnRight').addEventListener('click', () => swipe('right'));
+
+buildDots();
+buildStack();
+</script>
+
+</body>
+</html>
