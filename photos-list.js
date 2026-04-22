@@ -1,5 +1,10 @@
 ﻿window.PHOTOS_DATA = [
     {
+        "title":  "(whatsapp)2119fb0727da466ea7accada1d86ce68.mp4",
+        "src":  "img/(whatsapp)2119fb0727da466ea7accada1d86ce68.mp4.mp4",
+        "srcVideo":  "img/(whatsapp)2119fb0727da466ea7accada1d86ce68.mp4.mp4"
+    },
+    {
         "title":  "(whatsapp)70c5f1055b5c4811859c92543a3896b9.mp4",
         "src":  "img/(whatsapp)70c5f1055b5c4811859c92543a3896b9.mp4.mp4",
         "srcVideo":  "img/(whatsapp)70c5f1055b5c4811859c92543a3896b9.mp4.mp4"

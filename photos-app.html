@@ -303,12 +303,20 @@ function showCurrent() {
         lightboxImg.style.display = "none";
         lightboxVideo.style.display = "block";
         lightboxVideo.src = item.src;
+        // Приостановить фоновую музыку при просмотре видео
+        if (parent && parent.music) {
+            parent.music.pause();
+        }
     } else {
         lightboxVideo.pause();
         lightboxVideo.removeAttribute("src");
         lightboxVideo.style.display = "none";
         lightboxImg.style.display = "block";
         lightboxImg.src = item.src;
+        // Возобновить музыку, если не видео
+        if (parent && parent.music) {
+            parent.music.play();
+        }
     }
     lightboxTitle.innerText = item.title;
     renderList();
@@ -334,6 +342,10 @@ function openLightbox() {
 function closeLightbox() {
     lightboxVideo.pause();
     lightbox.classList.remove("show");
+    // Возобновить фоновую музыку при выходе из просмотра
+    if (parent && parent.music) {
+        parent.music.play();
+    }
 }
 
 async function loadPhotos() {
