@@ -53,10 +53,16 @@ body {
     margin: 14px 0 8px;
     font-size: 20px;
     font-weight: bold;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 .artist {
     margin: 0 0 12px;
     opacity: 0.85;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 .progress-wrap {
     margin: 10px 0 14px;
@@ -152,6 +158,11 @@ body {
     padding: 10px 12px;
     text-align: left;
     cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    overflow: hidden;
 }
 .track.active {
     background: rgba(255, 79, 129, 0.35);
@@ -160,6 +171,7 @@ body {
 .track .fav {
     float: right;
     opacity: 0.9;
+    flex-shrink: 0;
 }
 </style>
 </head>
@@ -257,7 +269,7 @@ function renderPlaylist() {
         const btn = document.createElement("button");
         btn.className = "track" + (t._i === index ? " active" : "");
         const isFav = favorites.includes(t.src);
-        btn.innerHTML = `${t._i + 1}. ${t.title} - ${t.artist}<span class="fav">${isFav ? "★" : "☆"}</span>`;
+        btn.innerHTML = `<span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1;">${t._i + 1}. ${t.title} - ${t.artist}</span><span class="fav">${isFav ? "★" : "☆"}</span>`;
         btn.onclick = () => {
             index = t._i;
             loadTrack();
