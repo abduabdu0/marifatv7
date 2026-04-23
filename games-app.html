@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<link rel="stylesheet" href="style.css">
+<title>Games</title>
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    color: white;
+    background: url('img/background1.jpeg') no-repeat center center;
+    background-size: cover;
+    min-height: 100vh;
+}
+.container {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    width: 100%;
+    box-sizing: border-box;
+}
+.close-btn {
+    background: rgba(255,255,255,0.18);
+    border: none;
+    border-radius: 16px;
+    color: white;
+    padding: 10px 14px;
+    cursor: pointer;
+}
+.game-section {
+    width: 100%;
+    max-width: 540px;
+    text-align: center;
+}
+.game-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 18px;
+}
+.game-card, .action-button {
+    background: rgba(10, 14, 28, 0.35);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 18px;
+    padding: 16px;
+    cursor: pointer;
+    color: white;
+    font-size: 16px;
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+.game-card:hover, .action-button:hover {
+    transform: translateY(-2px);
+    background: rgba(255,255,255,0.2);
+}
+.section-wrapper {
+    width: 100%;
+    max-width: 540px;
+    text-align: center;
+    padding: 0 12px;
+}
+.section-wrapper button,
+.section-wrapper input {
+    width: 100%;
+    max-width: 320px;
+    margin: 10px auto;
+}
+.section-wrapper input {
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.25);
+    background: rgba(255,255,255,0.08);
+    color: white;
+}
+#gameArea {
+    min-height: 320px;
+    width: 100%;
+    position: relative;
+    border: 3px solid rgba(255,100,150,0.5);
+    border-radius: 18px;
+    background: rgba(0,0,0,0.25);
+    overflow: hidden;
+}
+#grid {
+    display: grid;
+    grid-template-columns: repeat(3, 76px);
+    gap: 14px;
+    justify-content: center;
+    margin: 0 auto;
+}
+.answer-button {
+    display: block;
+    width: 100%;
+    max-width: 320px;
+    margin: 10px auto;
+    padding: 12px 18px;
+    border-radius: 14px;
+    border: none;
+    background: rgba(255,255,255,0.9);
+    color: #ff4f81;
+    cursor: pointer;
+    font-size: 16px;
+}
+.small-button {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 22px;
+    border: none;
+    border-radius: 16px;
+    background: rgba(255,255,255,0.18);
+    color: white;
+    cursor: pointer;
+}
+.hidden {
+    display: none;
+}
+.screen-section {
+    opacity: 0;
+    transform: translateY(15px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.screen-section.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+</style>
+</head>
+<body>
+<div class="container">
+    
+    <div id="games-menu" class="game-section screen-section">
+        <h2>Выбери игру</h2>
+        <div class="game-grid">
+            <button class="game-card" onclick="showSection('love')">❤️ Наша любовь</button>
+            <button class="game-card" onclick="showSection('section-hearts'); initHearts()">❤️ Падающие сердечки</button>
+            <button class="game-card" onclick="showSection('section-reaction'); initReaction()">⚡ Тест реакции</button>
+            <button class="game-card" onclick="showSection('section-collect'); initCollect()">💖 Собери сердце</button>
+            <button class="game-card" onclick="showSection('section-quiz')">📝 Викторина</button>
+            <button class="game-card" onclick="showSection('section-guess')">🎯 Угадай число</button>
+            <button class="game-card" onclick="showSection('section-loveclick')">❤️ Кликер любви</button>
+        </div>
+    </div>
+
+    <div id="section-hearts" class="section-wrapper screen-section hidden">
+        <button class="small-button" onclick="backToMenu()">← Назад в меню</button>
+        <h2>❤️ Падающие сердечки</h2>
+        <div id="gameArea"></div>
+        <p style="font-size:20px; margin-top:14px;">Очки: <span id="score">0</span></p>
+    </div>
+
+    <div id="section-reaction" class="section-wrapper screen-section hidden">
+        <button class="small-button" onclick="backToMenu()">← Назад в меню</button>
+        <h2>⚡ Тест реакции</h2>
+        <button id="reactBtn" class="game-card" onclick="tap()">Жди...</button>
+        <p id="reactResult" style="font-size:18px; min-height:26px;"></p>
+    </div>
+
+    <div id="section-collect" class="section-wrapper screen-section hidden">
+        <button class="small-button" onclick="backToMenu()">← Назад в меню</button>
+        <h2>💖 Собери сердце</h2>
+        <div id="grid"></div>
+        <p id="collectResult" style="font-size:18px; min-height:26px;"></p>
+    </div>
+
+    <div id="section-quiz" class="section-wrapper screen-section hidden">
+        <button class="small-button" onclick="backToMenu()">← Назад в меню</button>
+        <h2>📝 Викторина</h2>
+        <p>Где мы впервые встретились?</p>
+        <button class="answer-button" onclick="wrong()">В школе</button>
+        <button class="answer-button" onclick="correct()">В университете</button>
+        <button class="answer-button" onclick="wrong()">В магазине</button>
+        <p id="gameResult" style="font-size:18px; min-height:26px;"></p>
+    </div>
+
+    <div id="section-guess" class="section-wrapper screen-section hidden">
+        <button class="small-button" onclick="backToMenu()">← Назад в меню</button>
+        <h2>🎯 Угадай число</h2>
+        <input id="guessInput" placeholder="Введите число">
+        <button class="answer-button" onclick="guess()">Проверить</button>
+        <p id="guessResult" style="font-size:18px; min-height:26px;"></p>
+    </div>
+
+    <div id="section-loveclick" class="section-wrapper screen-section hidden">
+        <button class="small-button" onclick="backToMenu()">← Назад в меню</button>
+        <h2>❤️ Кликер любви</h2>
+        <button class="game-card" style="font-size:32px; padding:18px 24px;" onclick="clickLove()">❤️</button>
+        <p id="loveScore" style="font-size:24px; margin-top:14px;">0</p>
+    </div>
+
+    <div id="final" class="section-wrapper screen-section hidden">
+        <h2>Ты — самое лучшее, что у меня есть ❤️</h2>
+        <p>Я тебя люблю 💖</p>
+        <a class="small-button" href="index1.html" style="text-decoration:none; display:inline-block;">🎁 Сюрприз<br>Нажми</a>
+    </div>
+
+    <div id="love" class="section-wrapper screen-section hidden">
+        <button class="small-button" onclick="backToMenu()">← Назад в меню</button>
+        <h2>❤️ Наша любовь</h2>
+        <div id="loveTimer" style="font-size:18px; margin:20px 0; padding:14px; background:rgba(255,255,255,0.1); border-radius:16px;"></div>
+        <button class="answer-button" onclick="openGift()">Открыть подарок 🎁</button>
+        <p id="giftText" style="font-size:18px; min-height:26px;"></p>
+    </div>
+</div>
+
+<script>
+let score = 0;
+let gameHeartInterval = null;
+let startTime = null;
+let reactTimeout = null;
+let guessNumber = Math.floor(Math.random() * 10);
+let loveScore = 0;
+const startDate = new Date("2026-01-11");
+const gifts = [
+    "Ты моя самая любимая ❤️",
+    "Я счастлив с тобой 💖",
+    "Ты делаешь мою жизнь лучше 🌸",
+    "Я люблю тебя бесконечно 💫"
+];
+
+function closeApp() {
+    if (parent && parent.closeAllFullscreen) parent.closeAllFullscreen();
+    if (parent && parent.showSection) parent.showSection('app-gallery');
+}
+
+function showSection(section) {
+    const sections = document.querySelectorAll('[id^="section-"], #final, #love, #games-menu');
+    sections.forEach(el => {
+        el.classList.add('hidden');
+        el.classList.remove('visible');
+    });
+
+    const element = document.getElementById(section);
+    if (element) {
+        element.classList.remove('hidden');
+        element.classList.add('visible');
+    }
+}
+
+function backToMenu() {
+    showSection('games-menu');
+}
+
+function initHearts() {
+    score = 0;
+    document.getElementById('score').innerText = '0';
+    const gameArea = document.getElementById('gameArea');
+    gameArea.innerHTML = '';
+    if (gameHeartInterval) clearInterval(gameHeartInterval);
+
+    gameHeartInterval = setInterval(() => {
+        const heart = document.createElement('div');
+        heart.innerText = '❤️';
+        heart.style.position = 'absolute';
+        heart.style.left = Math.random() * 90 + '%';
+        heart.style.top = '0px';
+        heart.style.fontSize = '30px';
+        heart.style.cursor = 'pointer';
+        heart.style.userSelect = 'none';
+
+        heart.onclick = () => {
+            score++;
+            document.getElementById('score').innerText = score;
+            heart.remove();
+            navigator.vibrate && navigator.vibrate(30);
+        };
+
+        gameArea.appendChild(heart);
+
+        const fall = setInterval(() => {
+            heart.style.top = (heart.offsetTop + 5) + 'px';
+            if (heart.offsetTop > gameArea.clientHeight) {
+                heart.remove();
+                clearInterval(fall);
+            }
+        }, 40);
+    }, 700);
+}
+
+function initReaction() {
+    document.getElementById('reactBtn').innerText = 'Жди...';
+    document.getElementById('reactResult').innerText = '';
+    startTime = null;
+    if (reactTimeout) clearTimeout(reactTimeout);
+    reactTimeout = setTimeout(() => {
+        document.getElementById('reactBtn').innerText = '🔴 ЖМИ!';
+        startTime = Date.now();
+    }, Math.random() * 3000 + 1500);
+}
+
+function tap() {
+    if (!startTime) return;
+    const time = Date.now() - startTime;
+    document.getElementById('reactResult').innerText = 'Твоя реакция: ' + time + ' мс 😱';
+    navigator.vibrate && navigator.vibrate(30);
+    setTimeout(() => initReaction(), 1500);
+}
+
+function initCollect() {
+    const grid = document.getElementById('grid');
+    grid.innerHTML = '';
+    document.getElementById('collectResult').innerText = '';
+    let count = 0;
+
+    for (let i = 0; i < 9; i++) {
+        const cell = document.createElement('div');
+        cell.style.width = '76px';
+        cell.style.height = '76px';
+        cell.style.background = 'white';
+        cell.style.borderRadius = '14px';
+        cell.style.fontSize = '34px';
+        cell.style.display = 'flex';
+        cell.style.alignItems = 'center';
+        cell.style.justifyContent = 'center';
+        cell.style.cursor = 'pointer';
+        cell.style.transition = 'transform 0.2s ease';
+
+        cell.onmouseover = () => cell.style.transform = 'scale(1.05)';
+        cell.onmouseout = () => cell.style.transform = 'scale(1)';
+
+        cell.onclick = () => {
+            if (!cell.innerHTML.includes('❤️')) {
+                cell.innerHTML = '❤️';
+                count++;
+                navigator.vibrate && navigator.vibrate(20);
+                if (count === 9) {
+                    document.getElementById('collectResult').innerText = '🎉 Ты собрала моё сердце! ❤️';
+                }
+            }
+        };
+
+        grid.appendChild(cell);
+    }
+}
+
+function correct() {
+    document.getElementById('gameResult').innerText = 'Правильно 😍';
+    unlockAchievement('🎉 Викторина пройдена!');
+    localStorage.setItem('quizCompleted', 'true');
+    setTimeout(() => showSection('final'), 2000);
+}
+
+function wrong() {
+    document.getElementById('gameResult').innerText = 'Неправильно 😢 попробуй ещё';
+    setTimeout(() => {
+        document.getElementById('gameResult').innerText = '';
+    }, 2000);
+}
+
+function guess() {
+    const input = document.getElementById('guessInput').value.trim();
+    if (!input) {
+        document.getElementById('guessResult').innerText = 'Введите число';
+        return;
+    }
+    const val = Number(input);
+    if (val === guessNumber) {
+        document.getElementById('guessResult').innerText = 'Ты угадала ❤️';
+        unlockAchievement('🎯 Угадала число');
+        guessNumber = Math.floor(Math.random() * 10);
+    } else {
+        document.getElementById('guessResult').innerText = 'Нет 😢';
+    }
+}
+
+function clickLove() {
+    loveScore++;
+    document.getElementById('loveScore').innerText = loveScore;
+    if (loveScore === 50) {
+        unlockAchievement('💖 50 кликов любви');
+    }
+}
+
+function unlockAchievement(text) {
+    const existing = document.getElementById('pageNotif');
+    if (existing) existing.remove();
+    const notif = document.createElement('div');
+    notif.id = 'pageNotif';
+    notif.style.position = 'fixed';
+    notif.style.left = '50%';
+    notif.style.bottom = '22px';
+    notif.style.transform = 'translateX(-50%)';
+    notif.style.background = 'white';
+    notif.style.color = 'black';
+    notif.style.padding = '12px 18px';
+    notif.style.borderRadius = '16px';
+    notif.style.boxShadow = '0 10px 24px rgba(0,0,0,0.25)';
+    notif.style.zIndex = '1000';
+    notif.innerText = text;
+    document.body.appendChild(notif);
+    setTimeout(() => notif.remove(), 3000);
+}
+
+function openGift() {
+    const random = Math.floor(Math.random() * gifts.length);
+    document.getElementById('giftText').innerText = gifts[random];
+    navigator.vibrate && navigator.vibrate([50, 50, 50]);
+}
+
+function updateLoveTimer() {
+    const now = new Date();
+    const diff = now - startDate;
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor(diff / (1000 * 60 * 60)) % 24;
+    const minutes = Math.floor(diff / (1000 * 60)) % 60;
+    const seconds = Math.floor(diff / 1000) % 60;
+    document.getElementById('loveTimer').innerText = `Мы вместе: ${days} дней ${hours} ч ${minutes} мин ${seconds} сек ❤️`;
+}
+
+showSection('games-menu');
+updateLoveTimer();
+setInterval(updateLoveTimer, 1000);
+</script>
+</body>
+</html>

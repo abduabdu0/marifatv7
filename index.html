@@ -622,7 +622,7 @@ img {
       <button onclick="clearDateMoment()" style="padding:12px 18px; background:#ffffff; color:#ff4f81;">Очистить</button>
     </div>
 
-    <button onclick="showSection('games-menu')" style="background:#ff4f81; color:white; padding:12px 24px; border-radius:10px; border:none; cursor:pointer; margin-top:20px; font-size:16px;">🎮 Меню игр</button>
+<button onclick="openGamesApp()" style="background:#ff4f81; color:white; padding:12px 24px; border-radius:10px; border:none; cursor:pointer; margin-top:20px; font-size:16px;">🎮 Меню игр</button>
 </div>
 
 <div id="app-gallery" class="hidden screen-section app-gallery-wrap">
@@ -648,13 +648,9 @@ img {
                 <span class="app-icon" style="background:linear-gradient(135deg,#ffb45f,#ff8642);">📅</span>
                 <span class="app-name">Calendar</span>
             </button>
-            <button class="app-tile" onclick="showSection('games-menu')">
+            <button class="app-tile" onclick="openGamesApp()">
                 <span class="app-icon" style="background:linear-gradient(135deg,#a58cff,#6f58ff);">🎮</span>
                 <span class="app-name">Games</span>
-            </button>
-            <button class="app-tile" onclick="showSection('love')">
-                <span class="app-icon" style="background:linear-gradient(135deg,#ff95b1,#ff5f8f);">❤️</span>
-                <span class="app-name">Love</span>
             </button>
             <button class="app-tile" onclick="openNotesApp()">
                 <span class="app-icon" style="background:linear-gradient(135deg,#ffd24f,#ffae00);">📝</span>
@@ -716,97 +712,13 @@ img {
     <iframe id="cardsFullscreenFrame" class="music-fullscreen-frame" src="about:blank" title="Cards app fullscreen" loading="lazy"></iframe>
 </div>
 
+<div id="games-fullscreen" class="hidden screen-section music-fullscreen">
+    <iframe id="gamesFullscreenFrame" class="music-fullscreen-frame" src="about:blank" title="Games app fullscreen" loading="lazy"></iframe>
+</div>
+
 <div id="messages-fullscreen" class="hidden screen-section music-fullscreen">
     <iframe id="messagesFullscreenFrame" class="music-fullscreen-frame" src="about:blank" title="Messages app fullscreen" loading="lazy"></iframe>
 </div>
-
-    <!-- 🎮 Меню игр -->
-    <div id="games-menu" class="hidden screen-section" style="text-align:center; width:100%; max-width:500px;">
-        <h2 style="font-size:32px; margin-bottom:30px;">🎮 Выбери игру</h2>
-        <div style="display:flex; flex-direction:column; gap:15px;">
-            <button onclick="showSection('section-hearts'); initHearts();" style="padding:15px; font-size:18px; background:rgba(255,100,150,0.8); border:2px solid white; border-radius:15px; color:white; cursor:pointer; transition:0.3s; font-weight:bold;">❤️ Падающие сердечки</button>
-            <button onclick="showSection('section-reaction'); initReaction();" style="padding:15px; font-size:18px; background:rgba(100,150,255,0.8); border:2px solid white; border-radius:15px; color:white; cursor:pointer; transition:0.3s; font-weight:bold;">⚡ Тест реакции</button>
-            <button onclick="showSection('section-collect'); initCollect();" style="padding:15px; font-size:18px; background:rgba(150,100,255,0.8); border:2px solid white; border-radius:15px; color:white; cursor:pointer; transition:0.3s; font-weight:bold;">💖 Собери сердце</button>
-            <button onclick="showSection('section-quiz');" style="padding:15px; font-size:18px; background:rgba(255,150,100,0.8); border:2px solid white; border-radius:15px; color:white; cursor:pointer; transition:0.3s; font-weight:bold;">📝 Викторина</button>
-            <button onclick="showSection('section-guess');" style="padding:15px; font-size:18px; background:rgba(255,200,100,0.8); border:2px solid white; border-radius:15px; color:white; cursor:pointer; transition:0.3s; font-weight:bold;">🎯 Угадай число</button>
-            <button onclick="showSection('section-loveclick');" style="padding:15px; font-size:18px; background:rgba(255,100,200,0.8); border:2px solid white; border-radius:15px; color:white; cursor:pointer; transition:0.3s; font-weight:bold;">❤️ Кликер любви</button>
-        </div>
-    </div>
-
-    <!-- Игра 1: Падающие сердечки -->
-    <div id="section-hearts" class="hidden screen-section" style="width:100%; text-align:center;">
-        <button onclick="backToMenu()" style="margin:10px; padding:10px 20px; background:#999; color:white; border:none; border-radius:8px; cursor:pointer; font-size:16px; margin-top:20px;">← Назад в меню</button>
-        <h2 style="font-size:28px; margin:20px 0;">❤️ Падающие сердечки</h2>
-        <div id="gameArea" style="height:400px; position:relative; border:3px solid rgba(255,100,150,0.5); border-radius:10px; margin:20px 0; background:rgba(0,0,0,0.2); overflow:hidden;"></div>
-        <p style="font-size:22px; font-weight:bold;">Очки: <span id="score">0</span></p>
-    </div>
-
-    <!-- Игра 2: Тест реакции -->
-    <div id="section-reaction" class="hidden screen-section" style="width:100%; text-align:center;">
-        <button onclick="backToMenu()" style="margin:10px; padding:10px 20px; background:#999; color:white; border:none; border-radius:8px; cursor:pointer; font-size:16px; margin-top:20px;">← Назад в меню</button>
-        <h2 style="font-size:28px; margin:20px 0;">⚡ Тест реакции</h2>
-        <button id="reactBtn" onclick="tap()" style="padding:25px 50px; font-size:26px; background:white; color:#ff4f81; border:none; border-radius:10px; cursor:pointer; margin:30px 0; font-weight:bold; width:80%; max-width:300px;">Жди...</button>
-        <p id="reactResult" style="font-size:20px; margin-top:20px; min-height:30px;"></p>
-    </div>
-
-    <!-- Игра 3: Собери сердце -->
-    <div id="section-collect" class="hidden screen-section" style="width:100%; text-align:center;">
-        <button onclick="backToMenu()" style="margin:10px; padding:10px 20px; background:#999; color:white; border:none; border-radius:8px; cursor:pointer; font-size:16px; margin-top:20px;">← Назад в меню</button>
-        <h2 style="font-size:28px; margin:20px 0;">💖 Собери сердце</h2>
-        <div id="grid" style="display:grid; grid-template-columns:repeat(3, 70px); gap:15px; justify-content:center; margin:30px 0;"></div>
-        <p id="collectResult" style="font-size:18px; margin-top:20px; min-height:30px;"></p>
-    </div>
-
-    <!-- Игра 4: Викторина -->
-    <div id="section-quiz" class="hidden screen-section" style="width:100%;">
-        <button onclick="backToMenu()" style="margin:10px; padding:10px 20px; background:#999; color:white; border:none; border-radius:8px; cursor:pointer; font-size:16px; margin-top:20px;">← Назад в меню</button>
-        <h2>📝 Викторина</h2>
-        <h3>Вопрос 😏</h3>
-        <p>Где мы впервые встретились?</p>
-
-        <button class="answer" onclick="wrong()" style="display:block; margin:10px auto; padding:12px 20px; background:white; color:#ff4f81; border:none; border-radius:8px; cursor:pointer;">В школе</button>
-        <button class="answer" onclick="correct()" style="display:block; margin:10px auto; padding:12px 20px; background:white; color:#ff4f81; border:none; border-radius:8px; cursor:pointer;">В университете</button>
-        <button class="answer" onclick="wrong()" style="display:block; margin:10px auto; padding:12px 20px; background:white; color:#ff4f81; border:none; border-radius:8px; cursor:pointer;">В магазине</button>
-
-        <p id="gameResult"></p>
-    </div>
-
-    <!-- Игра 5: Угадай число -->
-    <div id="section-guess" class="hidden screen-section" style="width:100%; text-align:center;">
-        <button onclick="backToMenu()" style="margin:10px; padding:10px 20px; background:#999; color:white; border:none; border-radius:8px; cursor:pointer; font-size:16px; margin-top:20px;">← Назад в меню</button>
-        <h2 style="font-size:28px; margin:20px 0;">🎯 Угадай число</h2>
-        <input id="guessInput" style="width:60%; max-width:260px; padding:12px; border-radius:10px; border:1px solid #ffd0e2; margin:10px auto; display:block;">
-        <button onclick="guess()" style="padding:12px 24px; font-size:16px; background:white; color:#ff4f81; border:none; border-radius:10px; cursor:pointer;">Проверить</button>
-        <p id="guessResult" style="font-size:18px; margin-top:20px;"></p>
-    </div>
-
-    <!-- Игра 6: Кликер любви -->
-    <div id="section-loveclick" class="hidden screen-section" style="width:100%; text-align:center;">
-        <button onclick="backToMenu()" style="margin:10px; padding:10px 20px; background:#999; color:white; border:none; border-radius:8px; cursor:pointer; font-size:16px; margin-top:20px;">← Назад в меню</button>
-        <h2 style="font-size:28px; margin:20px 0;">❤️ Кликер любви</h2>
-        <button onclick="clickLove()" style="padding:20px 30px; font-size:32px; background:white; color:#ff4f81; border:none; border-radius:15px; cursor:pointer;">❤️</button>
-        <p id="loveScore" style="font-size:24px; margin-top:20px;">0</p>
-    </div>
-
-    <!-- 🎁 Финал -->
-    <div id="final" class="hidden screen-section">
-        <p>Ты — самое лучшее, что у меня есть ❤️</p>
-        <p>Я тебя люблю 💖</p>
-        <a href="index1.html" id="surpButton">🎁 Сюрприз<br>Нажми</a>
-    </div>
-
-    <!-- ❤️ Разделы любви -->
-    <div id="love" class="hidden screen-section" style="width:100%; text-align:center;">
-        <button onclick="backToMain()" style="margin:10px; padding:10px 20px; background:#999; color:white; border:none; border-radius:8px; cursor:pointer; font-size:16px; margin-top:20px;">← Назад</button>
-        
-        <h2 style="font-size:32px; margin:20px 0;">❤️ Наша любовь</h2>
-        
-        <div id="loveTimer" style="font-size:20px; margin:20px 0; padding:15px; background:rgba(255,100,150,0.2); border-radius:10px;"></div>
-        
-        <button onclick="openGift()" style="background:linear-gradient(135deg, #ff6b9d 0%, #ff4f81 50%, #ff84a9 100%); padding:16px 32px; border:none; border-radius:25px; color:white; font-size:18px; font-weight:bold; cursor:pointer; margin:20px 0; box-shadow:0 8px 25px rgba(255, 79, 129, 0.4); transition:all 0.3s ease;">Открыть подарок 🎁</button>
-        <p id="giftText" style="font-size:18px; margin-top:20px; min-height:30px;"></p>
-    </div>
-
 </div>
 
 <audio id="music" loop>
@@ -1117,7 +1029,7 @@ function updateBackgroundMusic(section) {
 }
 
 function closeAllFullscreen() {
-    const fullscreens = document.querySelectorAll('#music-fullscreen, #photos-fullscreen, #calendar-fullscreen, #notes-fullscreen, #weather-fullscreen, #messages-fullscreen, #cards-fullscreen');
+    const fullscreens = document.querySelectorAll('#music-fullscreen, #photos-fullscreen, #calendar-fullscreen, #notes-fullscreen, #weather-fullscreen, #messages-fullscreen, #cards-fullscreen, #games-fullscreen');
     fullscreens.forEach(el => {
         el.classList.add('hidden');
         el.classList.remove('visible');
@@ -1125,7 +1037,7 @@ function closeAllFullscreen() {
 }
 
 function showSection(section) {
-    const sections = document.querySelectorAll('[id^="section-"], #final, #games-menu, #love, #main, #app-gallery, #music-fullscreen, #photos-fullscreen, #calendar-fullscreen, #notes-fullscreen, #weather-fullscreen, #messages-fullscreen, #cards-fullscreen');
+    const sections = document.querySelectorAll('[id^="section-"], #final, #games-menu, #love, #main, #app-gallery, #music-fullscreen, #photos-fullscreen, #calendar-fullscreen, #notes-fullscreen, #weather-fullscreen, #messages-fullscreen, #cards-fullscreen, #games-fullscreen');
     sections.forEach(s => {
         s.classList.add("hidden");
         s.classList.remove("visible");
@@ -1190,6 +1102,12 @@ function openCardsApp() {
     const frame = document.getElementById("cardsFullscreenFrame");
     if (frame) frame.src = "cards-app.html";
     showSection("cards-fullscreen");
+}
+
+function openGamesApp() {
+    const frame = document.getElementById("gamesFullscreenFrame");
+    if (frame) frame.src = "games-app.html?v=" + Date.now();
+    showSection("games-fullscreen");
 }
 
 function openMessagesApp() {
@@ -1267,148 +1185,3 @@ function openGift() {
   <div id="installStatus" class="hint-text">Готово к установке</div>
 </div>
 <script>
-// Глобальные переменные для игр
-let score = 0;
-let gameHeartInterval = null;
-let startTime = null;
-let reactTimeout = null;
-
-// Игра 1: Падающие сердечки
-function initHearts() {
-    score = 0;
-    document.getElementById("score").innerText = "0";
-    if (gameHeartInterval) clearInterval(gameHeartInterval);
-    
-    gameHeartInterval = setInterval(() => {
-        const heart = document.createElement("div");
-        heart.innerHTML = "❤️";
-        heart.style.position = "absolute";
-        heart.style.left = Math.random() * 90 + "%";
-        heart.style.top = "0px";
-        heart.style.fontSize = "30px";
-        heart.style.cursor = "pointer";
-
-        heart.onclick = () => {
-            score++;
-            document.getElementById("score").innerText = score;
-            heart.remove();
-            navigator.vibrate && navigator.vibrate(30);
-        };
-
-        document.getElementById("gameArea").appendChild(heart);
-
-        let fall = setInterval(() => {
-            heart.style.top = (heart.offsetTop + 5) + "px";
-
-            if (heart.offsetTop > 400) {
-                heart.remove();
-                clearInterval(fall);
-            }
-        }, 40);
-    }, 700);
-}
-
-// Игра 2: Тест реакции
-function initReaction() {
-    document.getElementById("reactBtn").innerText = "Жди...";
-    document.getElementById("reactResult").innerText = "";
-    startTime = null;
-    
-    if (reactTimeout) clearTimeout(reactTimeout);
-    
-    reactTimeout = setTimeout(() => {
-        document.getElementById("reactBtn").innerText = "🔴 ЖМИ!";
-        startTime = new Date().getTime();
-    }, Math.random() * 3000 + 2000);
-}
-
-function tap() {
-    if (!startTime) return;
-
-    let time = new Date().getTime() - startTime;
-    document.getElementById("reactResult").innerText =
-        "Твоя реакция: " + time + " мс 😱";
-
-    navigator.vibrate && navigator.vibrate(30);
-    
-    setTimeout(() => {
-        initReaction();
-    }, 1500);
-}
-
-// Игра 3: Собери сердце
-function initCollect() {
-    const grid = document.getElementById("grid");
-    grid.innerHTML = "";
-    document.getElementById("collectResult").innerText = "";
-    let count = 0;
-
-    for (let i = 0; i < 9; i++) {
-        const cell = document.createElement("div");
-        cell.style.width = "70px";
-        cell.style.height = "70px";
-        cell.style.background = "white";
-        cell.style.borderRadius = "10px";
-        cell.style.fontSize = "35px";
-        cell.style.display = "flex";
-        cell.style.alignItems = "center";
-        cell.style.justifyContent = "center";
-        cell.style.cursor = "pointer";
-        cell.style.transition = "0.2s";
-
-        cell.onmouseover = () => {
-            cell.style.transform = "scale(1.1)";
-        };
-        cell.onmouseout = () => {
-            cell.style.transform = "scale(1)";
-        };
-
-        cell.onclick = () => {
-            if (!cell.innerHTML.includes("❤️")) {
-                cell.innerHTML = "❤️";
-                count++;
-                navigator.vibrate && navigator.vibrate(20);
-
-                if (count === 9) {
-                    document.getElementById("collectResult").innerText = "🎉 Ты собрала моё сердце! ❤️";
-                }
-            }
-        };
-
-        grid.appendChild(cell);
-    }
-}
-</script>
-<script>
-let guessNumber = Math.floor(Math.random() * 10);
-
-function guess() {
-    const val = document.getElementById("guessInput").value.trim();
-
-    if (val === "") {
-        document.getElementById("guessResult").innerText = "Введите число";
-        return;
-    }
-
-    if (Number(val) === guessNumber) {
-        document.getElementById("guessResult").innerText = "Ты угадала ❤️";
-        unlockAchievement("🎯 Угадала число");
-        guessNumber = Math.floor(Math.random() * 10);
-    } else {
-        document.getElementById("guessResult").innerText = "Нет 😢";
-    }
-}
-
-let loveScore = 0;
-
-function clickLove() {
-    loveScore++;
-    document.getElementById("loveScore").innerText = loveScore;
-
-    if (loveScore === 50) {
-        unlockAchievement("💖 50 кликов любви");
-    }
-}
-</script>
-</body>
-</html>
