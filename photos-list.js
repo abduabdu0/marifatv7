@@ -35,16 +35,6 @@
         "srcVideo":  "img/1775064638496.jpg"
     },
     {
-        "title":  "1775841648951",
-        "src":  "img/1775841648951.jpeg",
-        "srcVideo":  "img/1775841648951.jpeg"
-    },
-    {
-        "title":  "1775841854349",
-        "src":  "img/1775841854349.jpeg",
-        "srcVideo":  "img/1775841854349.jpeg"
-    },
-    {
         "title":  "1775842139680",
         "src":  "img/1775842139680.png",
         "srcVideo":  "img/1775842139680.png"
@@ -75,11 +65,6 @@
         "srcVideo":  "img/1775843277598.png"
     },
     {
-        "title":  "1775960926212",
-        "src":  "img/1775960926212.jpeg",
-        "srcVideo":  "img/1775960926212.jpeg"
-    },
-    {
         "title":  "1775961135008",
         "src":  "img/1775961135008.png",
         "srcVideo":  "img/1775961135008.png"
@@ -93,11 +78,6 @@
         "title":  "1776270168612",
         "src":  "img/1776270168612.jpg",
         "srcVideo":  "img/1776270168612.jpg"
-    },
-    {
-        "title":  "1776271051914",
-        "src":  "img/1776271051914.jpg",
-        "srcVideo":  "img/1776271051914.jpg"
     },
     {
         "title":  "1776271245433",
@@ -145,11 +125,6 @@
         "srcVideo":  "img/20240528_074534.jpg"
     },
     {
-        "title":  "20240902_104511",
-        "src":  "img/20240902_104511.jpg",
-        "srcVideo":  "img/20240902_104511.jpg"
-    },
-    {
         "title":  "20250830_071353",
         "src":  "img/20250830_071353.jpg",
         "srcVideo":  "img/20250830_071353.jpg"
@@ -165,19 +140,9 @@
         "srcVideo":  "img/20260201_163629.png"
     },
     {
-        "title":  "20260202_103149",
-        "src":  "img/20260202_103149.jpg",
-        "srcVideo":  "img/20260202_103149.jpg"
-    },
-    {
         "title":  "20260205_191119",
         "src":  "img/20260205_191119.jpg",
         "srcVideo":  "img/20260205_191119.jpg"
-    },
-    {
-        "title":  "20260222_092950",
-        "src":  "img/20260222_092950.jpg",
-        "srcVideo":  "img/20260222_092950.jpg"
     },
     {
         "title":  "20260223_095854",
@@ -195,11 +160,6 @@
         "srcVideo":  "img/20260304_134631.jpg"
     },
     {
-        "title":  "20260312_212652",
-        "src":  "img/20260312_212652.jpg",
-        "srcVideo":  "img/20260312_212652.jpg"
-    },
-    {
         "title":  "20260315_161744",
         "src":  "img/20260315_161744.jpg",
         "srcVideo":  "img/20260315_161744.jpg"
@@ -208,16 +168,6 @@
         "title":  "20260319_101938",
         "src":  "img/20260319_101938.jpg",
         "srcVideo":  "img/20260319_101938.jpg"
-    },
-    {
-        "title":  "20260321_140127",
-        "src":  "img/20260321_140127.jpg",
-        "srcVideo":  "img/20260321_140127.jpg"
-    },
-    {
-        "title":  "20260323_124927",
-        "src":  "img/20260323_124927.jpg",
-        "srcVideo":  "img/20260323_124927.jpg"
     },
     {
         "title":  "20260323_183345",
@@ -233,11 +183,6 @@
         "title":  "20260324_144118",
         "src":  "img/20260324_144118.mp4",
         "srcVideo":  "img/20260324_144118.mp4"
-    },
-    {
-        "title":  "20260330_054728",
-        "src":  "img/20260330_054728.jpg",
-        "srcVideo":  "img/20260330_054728.jpg"
     },
     {
         "title":  "20260405_172411",
@@ -315,16 +260,6 @@
         "srcVideo":  "img/IMG-20250826-WA0021.jpg"
     },
     {
-        "title":  "IMG-20260118-WA0000",
-        "src":  "img/IMG-20260118-WA0000.jpg",
-        "srcVideo":  "img/IMG-20260118-WA0000.jpg"
-    },
-    {
-        "title":  "IMG-20260118-WA0000",
-        "src":  "img/IMG-20260118-WA0000.png",
-        "srcVideo":  "img/IMG-20260118-WA0000.png"
-    },
-    {
         "title":  "IMG-20260203-WA0000",
         "src":  "img/IMG-20260203-WA0000.jpg",
         "srcVideo":  "img/IMG-20260203-WA0000.jpg"
@@ -398,11 +333,6 @@
         "title":  "Screenshot_20260303_173844_WhatsApp",
         "src":  "img/Screenshot_20260303_173844_WhatsApp.jpg",
         "srcVideo":  "img/Screenshot_20260303_173844_WhatsApp.jpg"
-    },
-    {
-        "title":  "Screenshot_20260306_112853_Firefox",
-        "src":  "img/Screenshot_20260306_112853_Firefox.jpg",
-        "srcVideo":  "img/Screenshot_20260306_112853_Firefox.jpg"
     },
     {
         "title":  "Screenshot_20260402_223004_WhatsApp",
