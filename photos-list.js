@@ -260,11 +260,6 @@
         "srcVideo":  "img/IMG-20250826-WA0021.jpg"
     },
     {
-        "title":  "IMG-20260203-WA0000",
-        "src":  "img/IMG-20260203-WA0000.jpg",
-        "srcVideo":  "img/IMG-20260203-WA0000.jpg"
-    },
-    {
         "title":  "IMG-20260203-WA0001",
         "src":  "img/IMG-20260203-WA0001.jpg",
         "srcVideo":  "img/IMG-20260203-WA0001.jpg"
@@ -273,11 +268,6 @@
         "title":  "IMG-20260203-WA0002",
         "src":  "img/IMG-20260203-WA0002.jpg",
         "srcVideo":  "img/IMG-20260203-WA0002.jpg"
-    },
-    {
-        "title":  "IMG-20260203-WA0003",
-        "src":  "img/IMG-20260203-WA0003.jpg",
-        "srcVideo":  "img/IMG-20260203-WA0003.jpg"
     },
     {
         "title":  "IMG-20260217-WA0010",
@@ -303,16 +293,6 @@
         "title":  "IMG-20260312-WA0066",
         "src":  "img/IMG-20260312-WA0066.jpg",
         "srcVideo":  "img/IMG-20260312-WA0066.jpg"
-    },
-    {
-        "title":  "IMG-20260331-WA0083",
-        "src":  "img/IMG-20260331-WA0083.jpg",
-        "srcVideo":  "img/IMG-20260331-WA0083.jpg"
-    },
-    {
-        "title":  "IMG-20260331-WA0084",
-        "src":  "img/IMG-20260331-WA0084.jpg",
-        "srcVideo":  "img/IMG-20260331-WA0084.jpg"
     },
     {
         "title":  "lv_0_20260313053300",
