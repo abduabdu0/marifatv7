@@ -582,7 +582,7 @@ img {
 <div id="nav">
     <button onclick="closeAllFullscreen(); showSection('main')">🏠</button>
     <button onclick="closeAllFullscreen(); showSection('app-gallery')">📱</button>
-    
+    <button id="musicToggle" onclick="toggleMusic()" title="Включить музыку">⏸️</button>
 </div>
 
 <div class="container">
@@ -630,7 +630,7 @@ img {
 
     <div class="phone-home">
         <div class="home-time" id="homeClock">12:30</div>
-
+            
         <div class="apps-grid">
             <button class="app-tile" onclick="openMessagesApp()">
                 <span class="app-icon" style="background:linear-gradient(135deg,#59d660,#28b643);">💬</span>
@@ -1002,7 +1002,12 @@ function loadDateMoment() {
 let musicPausedForApp = false;
 
 window.addEventListener("load", () => {
-    document.getElementById("music").play(); // музыка сразу после загрузки
+    const bgMusic = document.getElementById("music");
+    if (bgMusic) {
+        bgMusic.play().catch(() => {});
+        setTimeout(updateMusicToggleButton, 100);
+    }
+
     setTimeout(() => {
         const splash = document.getElementById("splash");
         splash.style.opacity = "0";
@@ -1012,6 +1017,30 @@ window.addEventListener("load", () => {
         showInstallHint();
     }, 2000);
 });
+
+function updateMusicToggleButton() {
+    const toggle = document.getElementById("musicToggle");
+    const bgMusic = document.getElementById("music");
+    if (!toggle || !bgMusic) return;
+    if (bgMusic.paused) {
+        toggle.innerText = "▶️";
+        toggle.title = "Включить музыку";
+    } else {
+        toggle.innerText = "⏸️";
+        toggle.title = "Остановить музыку";
+    }
+}
+
+function toggleMusic() {
+    const bgMusic = document.getElementById("music");
+    if (!bgMusic) return;
+    if (bgMusic.paused) {
+        bgMusic.play().catch(() => {});
+    } else {
+        bgMusic.pause();
+    }
+    updateMusicToggleButton();
+}
 
 function updateBackgroundMusic(section) {
     const bgMusic = document.getElementById("music");
@@ -1026,6 +1055,8 @@ function updateBackgroundMusic(section) {
         bgMusic.play().catch(() => {});
         musicPausedForApp = false;
     }
+
+    updateMusicToggleButton();
 }
 
 function closeAllFullscreen() {

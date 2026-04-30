@@ -4,50 +4,534 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Calendar App</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:#000;color:#fff}
-.wrap{max-width:430px;margin:0 auto;min-height:100vh;padding:10px}
-.top{display:flex;justify-content:space-between;font-size:12px;opacity:.92;margin-bottom:8px}
-.card{background:#111;border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:12px}
-h1{margin:0;font-size:32px}.sub{opacity:.7;margin:2px 0 10px;font-size:13px}
-.head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-.btn{border:0;border-radius:10px;background:rgba(255,255,255,.14);color:#fff;padding:8px 10px}
-.month{font-weight:700;text-transform:capitalize}
-.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
-.w{font-size:11px;opacity:.65;text-align:center}
-.d{aspect-ratio:1/1;border-radius:10px;background:#1a1a1a;border:1px solid rgba(255,255,255,.08);display:grid;place-items:center;font-size:13px}
-.d.today{background:#ff453a;font-weight:700}
-.d.sel{outline:2px solid #0a84ff}
-.events{margin-top:10px;background:#1a1a1a;border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:8px}
-.events input{width:90%;margin-top:6px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:#111;color:#fff;padding:8px}
-.events button{margin-top:6px;border:0;border-radius:8px;background:#0a84ff;color:#fff;padding:8px 10px}
-.ev{font-size:13px;margin-top:6px;padding:6px;background:#121212;border-radius:8px}
+:root {
+  --bg: #0a0812;
+  --surface: #13102a;
+  --surface2: #1b1638;
+  --accent: #ff4f81;
+  --accent2: #c45aff;
+  --today-bg: #ff4f81;
+  --selected-ring: #c45aff;
+  --text: #f0eaf8;
+  --muted: rgba(240,234,248,0.45);
+  --border: rgba(255,255,255,0.07);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+.phone {
+  max-width: 430px;
+  margin: 0 auto;
+  min-height: 100vh;
+  padding: 14px 14px 30px;
+  background: radial-gradient(ellipse at 80% 0%, rgba(196,90,255,0.12) 0%, transparent 55%),
+              radial-gradient(ellipse at 10% 90%, rgba(255,79,129,0.09) 0%, transparent 50%),
+              var(--bg);
+}
+
+.statusbar {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  opacity: 0.65;
+  margin-bottom: 18px;
+}
+
+/* Header */
+.page-header {
+  margin-bottom: 22px;
+}
+
+.page-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 40px;
+  line-height: 1;
+  background: linear-gradient(135deg, #fff 30%, var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.page-sub {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 3px;
+}
+
+/* Calendar card */
+.cal-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  padding: 18px;
+  margin-bottom: 14px;
+  position: relative;
+  overflow: hidden;
+}
+
+.cal-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  border-radius: 22px 22px 0 0;
+}
+
+/* Month nav */
+.month-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.month-label {
+  font-family: 'DM Serif Display', serif;
+  font-size: 20px;
+  text-transform: capitalize;
+  letter-spacing: 0.01em;
+}
+
+.nav-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  color: var(--text);
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.nav-btn:hover { background: rgba(255,255,255,0.12); }
+.nav-btn:active { transform: scale(0.9); }
+
+/* Week days header */
+.week-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.week-day {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+  padding: 4px 0;
+}
+
+/* Days grid */
+.days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.day-cell {
+  aspect-ratio: 1/1;
+  border-radius: 12px;
+  background: var(--surface2);
+  border: 1px solid transparent;
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  position: relative;
+}
+
+.day-cell:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.day-cell.today {
+  background: var(--today-bg);
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(255,79,129,0.4);
+}
+
+.day-cell.selected {
+  border-color: var(--selected-ring);
+  box-shadow: 0 0 0 1.5px var(--selected-ring);
+  background: rgba(196,90,255,0.2);
+}
+
+.day-cell.today.selected {
+  background: var(--today-bg);
+  border-color: #fff;
+  box-shadow: 0 4px 12px rgba(255,79,129,0.4), 0 0 0 1.5px #fff;
+}
+
+.day-cell.has-event::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--accent2);
+}
+
+.day-cell.today.has-event::after { background: #fff; }
+
+.day-cell.empty {
+  background: transparent;
+  border: none;
+  cursor: default;
+}
+
+/* Events section */
+.events-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 16px;
+  margin-bottom: 14px;
+}
+
+.events-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.events-date-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.events-date-label span {
+  color: var(--accent);
+}
+
+.event-input-row {
+  display: flex;
+  gap: 8px;
+}
+
+.ev-input {
+  flex: 1;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  padding: 10px 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.ev-input::placeholder { color: var(--muted); }
+.ev-input:focus { border-color: rgba(196,90,255,0.4); }
+
+.save-btn {
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--accent), #ff7da2);
+  color: #fff;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 10px 16px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(255,79,129,0.3);
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.save-btn:active { transform: scale(0.95); }
+
+.ev-list {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ev-item {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ev-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  flex-shrink: 0;
+}
+
+.ev-empty {
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+  padding: 16px 0 4px;
+}
+
+/* Upcoming section */
+.upcoming-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 16px;
+}
+
+.section-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+
+.upcoming-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.upcoming-item:last-child { border-bottom: none; }
+
+.upcoming-date-badge {
+  min-width: 44px;
+  text-align: center;
+  background: var(--surface2);
+  border-radius: 10px;
+  padding: 6px;
+  font-size: 11px;
+  line-height: 1.3;
+}
+
+.upcoming-date-badge .day-num {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.upcoming-text {
+  font-size: 13px;
+  flex: 1;
+}
+
+.upcoming-month {
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
 </style>
 </head>
 <body>
-<div class="wrap">
-<div class="top"><span id="clock">00:00</span><span>📶 🔋</span></div>
-<div class="card">
-<h1>Calendar</h1><p class="sub">Месяц</p>
-<div class="head"><button class="btn" id="prev">‹</button><span class="month" id="monthLabel"></span><button class="btn" id="next">›</button></div>
-<div class="grid" id="week"></div><div class="grid" id="days"></div>
-<div class="events"><div id="selLabel">Выбери дату</div><input id="evInput" placeholder="Событие"><button id="saveEv">Сохранить событие</button><div id="evList"></div></div>
-</div></div>
+<div class="phone">
+  <div class="statusbar">
+    <span id="clock">00:00</span>
+    <span>📶 🔋</span>
+  </div>
+
+  <div class="page-header">
+    <h1 class="page-title">Calendar</h1>
+    <p class="page-sub">Твои события</p>
+  </div>
+
+  <div class="cal-card">
+    <div class="month-nav">
+      <button class="nav-btn" id="prevBtn">‹</button>
+      <span class="month-label" id="monthLabel"></span>
+      <button class="nav-btn" id="nextBtn">›</button>
+    </div>
+
+    <div class="week-grid" id="weekGrid"></div>
+    <div class="days-grid" id="daysGrid"></div>
+  </div>
+
+  <div class="events-card">
+    <div class="events-header">
+      <span class="events-date-label" id="selectedLabel">Выбери дату</span>
+    </div>
+    <div class="event-input-row">
+      <input class="ev-input" id="evInput" placeholder="Добавить событие...">
+      <button class="save-btn" id="saveEvBtn">+ Добавить</button>
+    </div>
+    <div class="ev-list" id="evList"></div>
+  </div>
+
+  <div class="upcoming-card">
+    <div class="section-label">Ближайшие события</div>
+    <div id="upcomingList"></div>
+  </div>
+</div>
+
 <script>
-const week=["Пн","Вт","Ср","Чт","Пт","Сб","Вс"];const weekEl=document.getElementById("week");week.forEach(w=>{const e=document.createElement("div");e.className="w";e.textContent=w;weekEl.appendChild(e);});
-const daysEl=document.getElementById("days"),label=document.getElementById("monthLabel");let cur=new Date();
-const key="calendarEventsV1";const events=JSON.parse(localStorage.getItem(key)||"{}");let selected=null;
-function dateKey(y,m,d){return `${y}-${String(m+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;}
-function renderEvents(){const box=document.getElementById("evList"),lab=document.getElementById("selLabel");box.innerHTML="";if(!selected){lab.textContent="Выбери дату";return;}lab.textContent="Дата: "+selected; (events[selected]||[]).forEach(v=>{const d=document.createElement("div");d.className="ev";d.textContent=v;box.appendChild(d);});}
-function draw(){daysEl.innerHTML="";const y=cur.getFullYear(),m=cur.getMonth();label.textContent=cur.toLocaleDateString("ru-RU",{month:"long",year:"numeric"});
-const first=(new Date(y,m,1).getDay()+6)%7, cnt=new Date(y,m+1,0).getDate();for(let i=0;i<first;i++){daysEl.appendChild(document.createElement("div"));}
-const t=new Date();for(let d=1;d<=cnt;d++){const e=document.createElement("div");e.className="d";const k=dateKey(y,m,d);if(d===t.getDate()&&m===t.getMonth()&&y===t.getFullYear())e.classList.add("today");if(k===selected)e.classList.add("sel");e.textContent=d;e.onclick=()=>{selected=k;draw();renderEvents();};daysEl.appendChild(e);}
+// Week days
+const WEEKS = ["Пн","Вт","Ср","Чт","Пт","Сб","Вс"];
+const STORE = "calendarEventsV1";
+const events = JSON.parse(localStorage.getItem(STORE) || "{}");
+let cur = new Date();
+let selected = null;
+
+const weekGrid = document.getElementById("weekGrid");
+WEEKS.forEach(w => {
+  const d = document.createElement("div");
+  d.className = "week-day";
+  d.textContent = w;
+  weekGrid.appendChild(d);
+});
+
+function dateKey(y,m,d) {
+  return `${y}-${String(m+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
 }
-document.getElementById("prev").onclick=()=>{cur.setMonth(cur.getMonth()-1);draw();};
-document.getElementById("next").onclick=()=>{cur.setMonth(cur.getMonth()+1);draw();};
-document.getElementById("saveEv").onclick=()=>{if(!selected)return;const v=document.getElementById("evInput").value.trim();if(!v)return;(events[selected]??=[]).push(v);localStorage.setItem(key,JSON.stringify(events));document.getElementById("evInput").value="";renderEvents();};
-function tick(){const n=new Date();document.getElementById("clock").textContent=String(n.getHours()).padStart(2,"0")+":"+String(n.getMinutes()).padStart(2,"0");}
-setInterval(tick,1000);tick();draw();renderEvents();
+
+function renderEvents() {
+  const list = document.getElementById("evList");
+  const label = document.getElementById("selectedLabel");
+  list.innerHTML = "";
+
+  if (!selected) {
+    label.innerHTML = "Выбери дату";
+    return;
+  }
+
+  const parts = selected.split("-");
+  const dateObj = new Date(+parts[0], +parts[1]-1, +parts[2]);
+  const formatted = dateObj.toLocaleDateString("ru-RU", {day:"numeric", month:"long"});
+  label.innerHTML = `События: <span>${formatted}</span>`;
+
+  const evs = events[selected] || [];
+  if (!evs.length) {
+    list.innerHTML = `<div class="ev-empty">Нет событий на эту дату</div>`;
+    return;
+  }
+
+  evs.forEach(v => {
+    const el = document.createElement("div");
+    el.className = "ev-item";
+    el.innerHTML = `<div class="ev-dot"></div><span>${v}</span>`;
+    list.appendChild(el);
+  });
+}
+
+function renderUpcoming() {
+  const ul = document.getElementById("upcomingList");
+  ul.innerHTML = "";
+  const now = new Date();
+  const upcoming = [];
+
+  Object.keys(events).forEach(key => {
+    const parts = key.split("-");
+    const d = new Date(+parts[0], +parts[1]-1, +parts[2]);
+    if (d >= now) {
+      events[key].forEach(ev => upcoming.push({ date: d, key, text: ev }));
+    }
+  });
+
+  upcoming.sort((a,b) => a.date - b.date);
+  const top = upcoming.slice(0,5);
+
+  if (!top.length) {
+    ul.innerHTML = `<div class="ev-empty">Нет предстоящих событий</div>`;
+    return;
+  }
+
+  top.forEach(item => {
+    const el = document.createElement("div");
+    el.className = "upcoming-item";
+    const monthShort = item.date.toLocaleDateString("ru-RU", {month:"short"});
+    el.innerHTML = `
+      <div class="upcoming-date-badge">
+        <div class="day-num">${item.date.getDate()}</div>
+        <div class="upcoming-month">${monthShort}</div>
+      </div>
+      <div class="upcoming-text">${item.text}</div>
+    `;
+    ul.appendChild(el);
+  });
+}
+
+function draw() {
+  const daysGrid = document.getElementById("daysGrid");
+  daysGrid.innerHTML = "";
+  const y = cur.getFullYear(), m = cur.getMonth();
+  document.getElementById("monthLabel").textContent =
+    cur.toLocaleDateString("ru-RU", {month:"long", year:"numeric"});
+
+  const first = (new Date(y,m,1).getDay() + 6) % 7;
+  const cnt = new Date(y,m+1,0).getDate();
+  const t = new Date();
+
+  for (let i=0; i<first; i++) {
+    const e = document.createElement("div");
+    e.className = "day-cell empty";
+    daysGrid.appendChild(e);
+  }
+
+  for (let d=1; d<=cnt; d++) {
+    const k = dateKey(y,m,d);
+    const e = document.createElement("div");
+    e.className = "day-cell";
+    if (d===t.getDate() && m===t.getMonth() && y===t.getFullYear()) e.classList.add("today");
+    if (k===selected) e.classList.add("selected");
+    if (events[k] && events[k].length) e.classList.add("has-event");
+    e.textContent = d;
+    e.onclick = () => { selected=k; draw(); renderEvents(); };
+    daysGrid.appendChild(e);
+  }
+}
+
+document.getElementById("prevBtn").onclick = () => { cur.setMonth(cur.getMonth()-1); draw(); };
+document.getElementById("nextBtn").onclick = () => { cur.setMonth(cur.getMonth()+1); draw(); };
+
+document.getElementById("saveEvBtn").onclick = () => {
+  if (!selected) return;
+  const v = document.getElementById("evInput").value.trim();
+  if (!v) return;
+  (events[selected] = events[selected] || []).push(v);
+  localStorage.setItem(STORE, JSON.stringify(events));
+  document.getElementById("evInput").value = "";
+  renderEvents();
+  renderUpcoming();
+  draw();
+};
+
+function tick() {
+  const n = new Date();
+  document.getElementById("clock").textContent =
+    String(n.getHours()).padStart(2,"0") + ":" + String(n.getMinutes()).padStart(2,"0");
+}
+
+setInterval(tick, 1000);
+tick();
+draw();
+renderEvents();
+renderUpcoming();
 </script>
 </body>
 </html>
