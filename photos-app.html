@@ -4,430 +4,230 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Photos App</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-* { box-sizing: border-box; }
-body {
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-    min-height: 100vh;
-    background: #000;
-    color: #fff;
+:root{
+  --bg:#0a0812;--surface:#13102a;--surface2:#1b1638;
+  --accent:#ff4f81;--accent2:#c45aff;
+  --text:#f0eaf8;--muted:rgba(240,234,248,.45);--border:rgba(255,255,255,.07);
 }
-.phone {
-    max-width: 430px;
-    margin: 0 auto;
-    min-height: 100vh;
-    padding: 10px 10px 20px;
-}
-.top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    opacity: 0.95;
-    font-size: 12px;
-    margin-bottom: 8px;
-    padding: 0 4px;
-}
-.card {
-    background: #0b0b0b;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 18px;
-    padding: 12px;
-}
-.title {
-    margin: 0;
-    font-size: 31px;
-    font-weight: 700;
-}
-
-.toolbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
-}
-
-.actions {
-    display: flex;
-    gap: 10px;
-}
-.search {
-    width: 120px;
-    border: 1px solid rgba(255,255,255,0.25);
-    border-radius: 8px;
-    background: rgba(255,255,255,0.1);
-    color: #fff;
-    padding: 7px 8px;
-    font-size: 12px;
-}
-.btn {
-    border: 0;
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.14);
-    color: #fff;
-    padding: 7px 10px;
-    font-size: 13px;
-    cursor: pointer;
-}
-.list-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
-}
-.count {
-    font-size: 12px;
-    opacity: 0.85;
-}
-.gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 6px;
-    max-height: 64vh;
-    overflow: auto;
-    padding-right: 2px;
-}
-.thumb {
-    border: 0;
-    padding: 0;
-    border-radius: 8px;
-    overflow: hidden;
-    aspect-ratio: 1 / 1;
-    background: rgba(255, 255, 255, 0.1);
-    cursor: pointer;
-    position: relative;
-}
-.thumb img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
-.thumb video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
-.thumb.active::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border: 2px solid #7fc2ff;
-    border-radius: 8px;
-}
-.status {
-    margin-top: 8px;
-    min-height: 16px;
-    font-size: 12px;
-    opacity: 0.85;
-}
-
-.lightbox {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.96);
-    display: none;
-    flex-direction: column;
-    z-index: 50;
-}
-.lightbox.show {
-    display: flex;
-}
-.lightbox-top {
-    height: 52px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 12px;
-}
-.lightbox-title {
-    font-size: 14px;
-    opacity: 0.95;
-    display: none;
-}
-.lightbox-img {
-    flex: 1;
-    width: 100%;
-    object-fit: contain;
-    background: #000;
-}
-.lightbox-video {
-    flex: 1;
-    width: 100%;
-    background: #000;
-    display: none;
-}
-.lightbox-controls {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    height: auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
-    pointer-events: none;
-    z-index: 10;
-    transform: translateY(-50%);
-}
-.lightbox-controls .btn {
-    pointer-events: auto;
-    width: 50px;
-    height: 50px;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    background: rgba(255, 255, 255, 0.25);
-    border-radius: 50%;
-    backdrop-filter: blur(10px);
-    transition: all 0.2s ease;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
-.lightbox-controls .btn:hover {
-    background: rgba(255, 255, 255, 0.4);
-    transform: scale(1.1);
-}
-.lightbox-controls .btn:active {
-    transform: scale(0.95);
-    background: rgba(255, 255, 255, 0.3);
-}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+.phone{max-width:430px;margin:0 auto;min-height:100vh;padding:14px 14px 24px;
+  background:radial-gradient(ellipse at 80% 0%,rgba(196,90,255,.12) 0%,transparent 55%),
+             radial-gradient(ellipse at 10% 90%,rgba(255,79,129,.09) 0%,transparent 50%),var(--bg);}
+.statusbar{display:flex;justify-content:space-between;font-size:12px;opacity:.65;margin-bottom:18px;}
+.page-title{font-family:'DM Serif Display',serif;font-size:40px;line-height:1;
+  background:linear-gradient(135deg,#fff 30%,var(--accent2));-webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;background-clip:text;}
+.page-sub{font-size:12px;color:var(--muted);margin-top:3px;margin-bottom:18px;}
+.toolbar{display:flex;gap:8px;margin-bottom:14px;align-items:center;}
+.search-input{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:12px;
+  color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;padding:9px 14px;outline:none;}
+.search-input::placeholder{color:var(--muted);}
+.search-input:focus{border-color:rgba(196,90,255,.4);}
+.tool-btn{border:1px solid var(--border);border-radius:12px;background:var(--surface);
+  color:var(--text);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;
+  padding:9px 14px;cursor:pointer;white-space:nowrap;transition:all .2s;}
+.tool-btn:hover{background:var(--surface2);}
+.tool-btn:active{transform:scale(.95);}
+.tool-btn.slide-on{background:linear-gradient(135deg,var(--accent),#ff7da2);border-color:transparent;color:#fff;}
+.stats-bar{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
+.stat-chip{background:var(--surface);border:1px solid var(--border);border-radius:10px;
+  padding:6px 12px;font-size:11px;color:var(--muted);cursor:pointer;transition:all .2s;}
+.stat-chip span{color:var(--accent);font-weight:700;}
+.stat-chip.active{border-color:rgba(255,79,129,.4);color:var(--accent);}
+.gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;
+  overflow:auto;border-radius:14px;}
+.thumb{border:none;padding:0;border-radius:7px;overflow:hidden;aspect-ratio:1/1;
+  background:var(--surface2);cursor:pointer;position:relative;transition:transform .15s;}
+.thumb:hover{transform:scale(1.04);}
+.thumb img,.thumb video{width:100%;height:100%;object-fit:cover;display:block;}
+.thumb.active::after{content:'';position:absolute;inset:0;
+  border:2px solid var(--accent);border-radius:7px;}
+.fav-badge{position:absolute;top:4px;right:5px;font-size:13px;
+  filter:drop-shadow(0 1px 3px rgba(0,0,0,.7));display:none;}
+.is-fav .fav-badge{display:block;}
+.status-line{margin-top:8px;font-size:12px;color:var(--muted);}
+/* Lightbox */
+.lightbox{position:fixed;inset:0;background:rgba(5,3,14,.97);display:none;flex-direction:column;z-index:100;}
+.lightbox.show{display:flex;}
+.lb-top{height:58px;display:flex;align-items:center;justify-content:flex-end;
+  padding:0 16px;border-bottom:1px solid var(--border);gap:10px;}
+<!-- .lb-title{font-size:13px;color:var(--muted);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;} -->
+.lb-actions{display:flex;gap:8px;flex-shrink:0;}
+.lb-btn{border:1px solid var(--border);border-radius:10px;background:var(--surface);
+  color:var(--text);font-size:12px;font-weight:600;padding:7px 12px;cursor:pointer;
+  font-family:'DM Sans',sans-serif;transition:all .15s;white-space:nowrap;}
+.lb-btn:active{transform:scale(.92);}
+.lb-btn.fav-on{border-color:rgba(255,79,129,.4);color:var(--accent);}
+.lb-btn.close-btn{color:#ff6b6b;border-color:rgba(255,59,59,.2);}
+.lb-img{flex:1;width:100%;object-fit:contain;background:#000;}
+.lb-video{flex:1;width:100%;background:#000;display:none;}
+.lb-controls{position:absolute;top:50%;left:0;right:0;display:flex;
+  justify-content:space-between;padding:0 12px;pointer-events:none;
+  transform:translateY(-50%);z-index:10;}
+.lb-nav{pointer-events:auto;width:46px;height:46px;border-radius:50%;border:none;
+  background:rgba(255,255,255,.15);backdrop-filter:blur(10px);color:#fff;
+  font-size:22px;cursor:pointer;transition:all .2s;}
+.lb-nav:hover{background:rgba(255,255,255,.28);}
+.lb-counter{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);
+  font-size:11px;color:rgba(255,255,255,.5);
+  background:rgba(0,0,0,.5);padding:4px 12px;border-radius:999px;}
 </style>
 </head>
 <body>
 <div class="phone">
-    <div class="top">
-        <span id="clock">00:00</span>
-        <span>📶 🔋</span>
-    </div>
-
-    <div class="card">
-        <h1 class="title">Photos</h1>
-        
-        <div class="toolbar">
-            
-            <div class="actions">
-                <input id="searchInput" class="search" placeholder="Поиск">
-                <button class="btn" id="slideBtn">Слайд-шоу</button>
-                <button class="btn" id="refreshBtn">Обновить</button>
-            </div>
-        </div>
-
-        <div class="list-head">
-            <strong>Недавние</strong>
-            <span id="photoCount" class="count">0 фото</span>
-        </div>
-        <div id="galleryGrid" class="gallery-grid"></div>
-        <div id="status" class="status"></div>
-    </div>
+  <div class="statusbar"><span id="clock">00:00</span><span>📶 🔋</span></div>
+  <h1 class="page-title">Photos</h1>
+  <p class="page-sub">Наши моменты</p>
+  <div class="toolbar">
+    <input id="searchInput" class="search-input" placeholder="Поиск...">
+    <button class="tool-btn" id="slideBtn">▶ Слайд-шоу</button>
+    <button class="tool-btn" id="refreshBtn">↻</button>
+  </div>
+  <div class="stats-bar">
+    <div class="stat-chip">Всего: <span id="totalCount">0</span></div>
+    <div class="stat-chip">Избранное: <span id="favCount">0</span></div>
+    <div class="stat-chip" id="filterChip">★ Только избранное</div>
+  </div>
+  <div id="galleryGrid" class="gallery-grid"></div>
+  <div id="statusLine" class="status-line"></div>
 </div>
-
 <div id="lightbox" class="lightbox">
-    <div class="lightbox-top">
-        <span id="lightboxTitle" class="lightbox-title">Фото</span>
-        <button class="btn" onclick="closeLightbox()">Закрыть</button>
+  <div class="lb-top">
+    <!-- <span id="lbTitle" class="lb-title">Фото</span> -->
+    <div class="lb-actions">
+      <button class="lb-btn" id="favToggleBtn">☆ Избранное</button>
+      <button class="lb-btn close-btn" onclick="closeLightbox()">✕</button>
     </div>
-    <img id="lightboxImg" class="lightbox-img" alt="Просмотр фото">
-    <video id="lightboxVideo" class="lightbox-video" controls playsinline></video>
-    <div class="lightbox-controls">
-        <button class="btn" id="prevBtn">←</button>
-        <button class="btn" id="nextBtn">→</button>
-    </div>
+  </div>
+  <img id="lbImg" class="lb-img" alt="">
+  <video id="lbVideo" class="lb-video" controls playsinline></video>
+  <div class="lb-controls">
+    <button class="lb-nav" id="prevBtn">‹</button>
+    <button class="lb-nav" id="nextBtn">›</button>
+  </div>
+  <div class="lb-counter" id="lbCounter">1 / 1</div>
 </div>
-
 <script src="photos-list.js"></script>
 <script>
-const fallbackPhotos = [];
-
-let photos = [];
-let index = 0;
-let filtered = [];
-let slideshow = null;
-const favKey = "photoFavoritesV1";
-let favorites = JSON.parse(localStorage.getItem(favKey) || "[]");
-
-const galleryGrid = document.getElementById("galleryGrid");
-const photoCount = document.getElementById("photoCount");
-const statusEl = document.getElementById("status");
-const lightbox = document.getElementById("lightbox");
-const lightboxImg = document.getElementById("lightboxImg");
-const lightboxVideo = document.getElementById("lightboxVideo");
-const lightboxTitle = document.getElementById("lightboxTitle");
-const searchInput = document.getElementById("searchInput");
-const slideBtn = document.getElementById("slideBtn");
-
-function isVideo(src) {
-    return /\.(mp4|webm|ogg|mov)$/i.test(src || "");
+const fallbackPhotos=[];
+let photos=[],filtered=[],index=0,slideshow=null,showFavOnly=false;
+const FAV_KEY="photoFavoritesV1";
+let favorites=JSON.parse(localStorage.getItem(FAV_KEY)||"[]");
+const galleryGrid=document.getElementById("galleryGrid");
+const lbImg=document.getElementById("lbImg");
+const lbVideo=document.getElementById("lbVideo");
+//const lbTitle=document.getElementById("lbTitle");
+const lbCounter=document.getElementById("lbCounter");
+const favToggleBtn=document.getElementById("favToggleBtn");
+const lightbox=document.getElementById("lightbox");
+function isVideo(src){return/\.(mp4|webm|ogg|mov)$/i.test(src||"");}
+function setStatus(t){document.getElementById("statusLine").textContent=t;}
+function updateStats(){
+  document.getElementById("totalCount").textContent=photos.length;
+  document.getElementById("favCount").textContent=favorites.length;
+  document.getElementById("filterChip").classList.toggle("active",showFavOnly);
 }
-
-function setStatus(text) {
-    statusEl.innerText = text;
-}
-
-function renderList() {
-    galleryGrid.innerHTML = "";
-    const q = (searchInput.value || "").toLowerCase().trim();
-    filtered = photos
-        .map((p, i) => ({ ...p, _i: i }))
-        .filter(p => !q || p.title.toLowerCase().includes(q) || p.src.toLowerCase().includes(q));
-    photoCount.innerText = filtered.length + " / " + photos.length;
-    filtered.forEach((item) => {
-        const btn = document.createElement("button");
-        btn.className = "thumb" + (item._i === index ? " active" : "");
-        btn.onclick = () => {
-            index = item._i;
-            openLightbox();
-        };
-        const favMark = favorites.includes(item.src) ? "★" : "";
-        if (isVideo(item.src)) {
-            btn.innerHTML = `<video src="${item.src}" muted preload="metadata" title="${item.title} ${favMark}"></video>`;
-        } else {
-            btn.innerHTML = `<img src="${item.src}" alt="${item.title}" title="${item.title} ${favMark}">`;
-        }
-        galleryGrid.appendChild(btn);
-    });
-}
-
-function showCurrent() {
-    if (!photos.length) {
-        renderList();
-        return;
+function renderList(){
+  galleryGrid.innerHTML="";
+  const q=(document.getElementById("searchInput").value||"").toLowerCase().trim();
+  let pool=photos.map((p,i)=>({...p,_i:i}));
+  if(showFavOnly)pool=pool.filter(p=>favorites.includes(p.src));
+  filtered=pool.filter(p=>!q||p.title.toLowerCase().includes(q)||p.src.toLowerCase().includes(q));
+  filtered.forEach(item=>{
+    const btn=document.createElement("button");
+    const isFav=favorites.includes(item.src);
+    btn.className="thumb"+(item._i===index?" active":"")+(isFav?" is-fav":"");
+    btn.onclick=()=>{index=item._i;openLightbox();};
+    if(isVideo(item.src)){
+      btn.innerHTML=`<video src="${item.src}" muted preload="metadata"></video><span class="fav-badge">★</span>`;
+    }else{
+      btn.innerHTML=`<img src="${item.src}" alt="${item.title}" loading="lazy"><span class="fav-badge">★</span>`;
     }
-
-    const item = photos[index];
-    if (isVideo(item.src)) {
-        lightboxImg.style.display = "none";
-        lightboxVideo.style.display = "block";
-        lightboxVideo.src = item.src;
-        // Приостановить фоновую музыку при просмотре видео
-        if (parent && parent.music) {
-            parent.music.pause();
-        }
-    } else {
-        lightboxVideo.pause();
-        lightboxVideo.removeAttribute("src");
-        lightboxVideo.style.display = "none";
-        lightboxImg.style.display = "block";
-        lightboxImg.src = item.src;
-        // Возобновить музыку, если не видео
-        if (parent && parent.music) {
-            parent.music.play();
-        }
-    }
-    lightboxTitle.innerText = item.title;
-    renderList();
+    galleryGrid.appendChild(btn);
+  });
+  updateStats();
 }
-
-function nextPhoto() {
-    if (!photos.length) return;
-    index = (index + 1) % photos.length;
-    showCurrent();
+function showCurrent(){
+  if(!photos.length)return;
+  const item=photos[index];
+  //lbTitle.textContent=item.title||"Фото";
+  const pos=filtered.findIndex(f=>f._i===index)+1;
+  lbCounter.textContent=`${pos>0?pos:index+1} / ${photos.length}`;
+  const isFav=favorites.includes(item.src);
+  favToggleBtn.textContent=isFav?"★ Избранное":"☆ Избранное";
+  favToggleBtn.classList.toggle("fav-on",isFav);
+  if(isVideo(item.src)){
+    lbImg.style.display="none";lbVideo.style.display="block";lbVideo.src=item.src;
+  }else{
+    lbVideo.pause();lbVideo.removeAttribute("src");
+    lbVideo.style.display="none";lbImg.style.display="block";lbImg.src=item.src;
+  }
+  renderList();
 }
-
-function prevPhoto() {
-    if (!photos.length) return;
-    index = (index - 1 + photos.length) % photos.length;
-    showCurrent();
-}
-
-function openLightbox() {
-    showCurrent();
-    lightbox.classList.add("show");
-}
-
-function closeLightbox() {
-    lightboxVideo.pause();
-    lightbox.classList.remove("show");
-    // Возобновить фоновую музыку при выходе из просмотра
-    if (parent && parent.music) {
-        parent.music.play();
-    }
-}
-
-async function loadPhotos() {
-    setStatus("Загрузка фото...");
-    if (Array.isArray(window.PHOTOS_DATA) && window.PHOTOS_DATA.length) {
-        photos = window.PHOTOS_DATA;
-        index = 0;
-        renderList();
-        setStatus("Готово: " + photos.length + " фото.");
-        return;
-    }
-
-    try {
-        const response = await fetch("photos-list.json?ts=" + Date.now(), { cache: "no-store" });
-        if (!response.ok) throw new Error("no photos list");
-        const data = await response.json();
-        photos = Array.isArray(data) && data.length ? data : fallbackPhotos;
-    } catch (error) {
-        photos = fallbackPhotos;
-    }
-    index = 0;
-    renderList();
-    setStatus(photos.length ? ("Готово: " + photos.length + " фото.") : "Нет фото. Проверь папку img и обнови список.");
-}
-
-document.getElementById("nextBtn").addEventListener("click", nextPhoto);
-document.getElementById("prevBtn").addEventListener("click", prevPhoto);
-document.getElementById("refreshBtn").addEventListener("click", loadPhotos);
-searchInput.addEventListener("input", renderList);
-slideBtn.addEventListener("click", () => {
-    if (slideshow) {
-        clearInterval(slideshow);
-        slideshow = null;
-        slideBtn.innerText = "Слайд-шоу";
-        return;
-    }
-    openLightbox();
-    slideBtn.innerText = "Стоп";
-    slideshow = setInterval(nextPhoto, 2200);
+function nextPhoto(){if(!photos.length)return;index=(index+1)%photos.length;showCurrent();}
+function prevPhoto(){if(!photos.length)return;index=(index-1+photos.length)%photos.length;showCurrent();}
+function openLightbox(){showCurrent();lightbox.classList.add("show");}
+function closeLightbox(){lbVideo.pause();lightbox.classList.remove("show");}
+favToggleBtn.addEventListener("click",()=>{
+  if(!photos.length)return;
+  const src=photos[index].src;
+  favorites=favorites.includes(src)?favorites.filter(x=>x!==src):[...favorites,src];
+  localStorage.setItem(FAV_KEY,JSON.stringify(favorites));
+  showCurrent();
 });
-lightboxImg.addEventListener("dblclick", () => {
-    if (!photos.length) return;
-    const src = photos[index].src;
-    if (favorites.includes(src)) favorites = favorites.filter(x => x !== src);
-    else favorites.push(src);
-    localStorage.setItem(favKey, JSON.stringify(favorites));
-    setStatus(favorites.includes(src) ? "Добавлено в избранное" : "Удалено из избранного");
-    renderList();
+document.getElementById("nextBtn").addEventListener("click",nextPhoto);
+document.getElementById("prevBtn").addEventListener("click",prevPhoto);
+document.getElementById("refreshBtn").addEventListener("click",loadPhotos);
+document.getElementById("searchInput").addEventListener("input",renderList);
+document.getElementById("filterChip").addEventListener("click",()=>{showFavOnly=!showFavOnly;renderList();});
+document.getElementById("slideBtn").addEventListener("click",()=>{
+  if(slideshow){clearInterval(slideshow);slideshow=null;
+    document.getElementById("slideBtn").textContent="▶ Слайд-шоу";
+    document.getElementById("slideBtn").classList.remove("slide-on");return;}
+  openLightbox();
+  document.getElementById("slideBtn").textContent="⏹ Стоп";
+  document.getElementById("slideBtn").classList.add("slide-on");
+  slideshow=setInterval(nextPhoto,2500);
 });
-
-function updateClock() {
-    const now = new Date();
-    document.getElementById("clock").innerText =
-        String(now.getHours()).padStart(2, "0") + ":" +
-        String(now.getMinutes()).padStart(2, "0");
+async function loadPhotos(){
+  setStatus("Загрузка...");
+  if(Array.isArray(window.PHOTOS_DATA)&&window.PHOTOS_DATA.length){
+    photos=window.PHOTOS_DATA;index=0;renderList();setStatus("Готово: "+photos.length+" фото.");return;
+  }
+  try{
+    const r=await fetch("photos-list.json?ts="+Date.now(),{cache:"no-store"});
+    if(!r.ok)throw new Error();
+    photos=Array.isArray(await r.json())?await(await fetch("photos-list.json?ts="+Date.now())).json():fallbackPhotos;
+  }catch{photos=fallbackPhotos;}
+  index=0;renderList();
+  setStatus(photos.length?"Готово: "+photos.length+" фото.":"Нет фото.");
 }
-
-setInterval(updateClock, 1000);
-updateClock();
-loadPhotos();
-
-// Свайп для переключения фотографий
-let touchStartX = 0;
-let touchEndX = 0;
-
-function handleSwipe() {
-    if (touchEndX < touchStartX - 50) {
-        nextPhoto();
-    }
-    if (touchEndX > touchStartX + 50) {
-        prevPhoto();
-    }
+async function loadPhotosFixed(){
+  setStatus("Загрузка...");
+  if(Array.isArray(window.PHOTOS_DATA)&&window.PHOTOS_DATA.length){
+    photos=window.PHOTOS_DATA;index=0;renderList();setStatus("Готово: "+photos.length+" фото.");return;
+  }
+  try{
+    const r=await fetch("photos-list.json?ts="+Date.now(),{cache:"no-store"});
+    if(!r.ok)throw new Error();
+    const d=await r.json();
+    photos=Array.isArray(d)&&d.length?d:fallbackPhotos;
+  }catch{photos=fallbackPhotos;}
+  index=0;renderList();
+  setStatus(photos.length?"Готово: "+photos.length+" фото.":"Нет фото. Проверь папку img и обнови список.");
 }
-
-lightbox.addEventListener('touchstart', e => {
-    touchStartX = e.changedTouches[0].screenX;
-}, false);
-
-lightbox.addEventListener('touchend', e => {
-    touchEndX = e.changedTouches[0].screenX;
-    handleSwipe();
-}, false);
+function tick(){const n=new Date();document.getElementById("clock").textContent=String(n.getHours()).padStart(2,"0")+":"+String(n.getMinutes()).padStart(2,"0");}
+setInterval(tick,1000);tick();
+loadPhotosFixed();
+let touchStartX=0;
+lightbox.addEventListener("touchstart",e=>{touchStartX=e.changedTouches[0].screenX;},{passive:true});
+lightbox.addEventListener("touchend",e=>{
+  const dx=e.changedTouches[0].screenX-touchStartX;
+  if(dx<-50)nextPhoto();else if(dx>50)prevPhoto();
+});
 </script>
 </body>
 </html>
