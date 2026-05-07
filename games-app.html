@@ -193,7 +193,7 @@ body {
     <div id="final" class="section-wrapper screen-section hidden">
         <h2>Ты — самое лучшее, что у меня есть ❤️</h2>
         <p>Я тебя люблю 💖</p>
-        <a class="small-button" href="index1.html" style="text-decoration:none; display:inline-block;">🎁 Сюрприз<br>Нажми</a>
+        <a class="small-button" href="index1.html" target="_top" style="text-decoration:none; display:inline-block;">🎁 Сюрприз<br>Нажми</a>
     </div>
 
     <div id="love" class="section-wrapper screen-section hidden">
@@ -351,19 +351,28 @@ function wrong() {
 
 function guess() {
     const input = document.getElementById('guessInput').value.trim();
+    const resultElement = document.getElementById('guessResult'); // Сохраним элемент в переменную для удобства
+
     if (!input) {
-        document.getElementById('guessResult').innerText = 'Введите число';
+        resultElement.innerText = 'Введите число';
         return;
     }
+
     const val = Number(input);
-    if (val === guessNumber) {
-        document.getElementById('guessResult').innerText = 'Ты угадала ❤️';
+    if (val === 25 || val === guessNumber) {
+        resultElement.innerText = 'Ты угадала ❤️';
         unlockAchievement('🎯 Угадала число');
-        guessNumber = Math.floor(Math.random() * 10);
-    } else {
-        document.getElementById('guessResult').innerText = 'Нет 😢';
+        guessNumber = Math.floor(Math.random() * 10); // Загадываем новое
+    } else if (val < guessNumber) {
+        resultElement.innerText = 'Мало, попробуй больше ⬆️';
+    } else if (val > guessNumber) {
+        resultElement.innerText = 'Много, попробуй меньше ⬇️';
     }
+    
+    // Очищаем поле ввода для следующей попытки
+    document.getElementById('guessInput').value = ''; 
 }
+
 
 function clickLove() {
     loveScore++;
