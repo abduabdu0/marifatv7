@@ -62,8 +62,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .lb-btn:active{transform:scale(.92);}
 .lb-btn.fav-on{border-color:rgba(255,79,129,.4);color:var(--accent);}
 .lb-btn.close-btn{color:#ff6b6b;border-color:rgba(255,59,59,.2);}
-.lb-img{flex:1;width:100%;object-fit:contain;background:#000;}
-.lb-video{flex:1;width:100%;background:#000;display:none;}
+.lb-media-wrap{position:relative;flex:1;width:100%;background:#000;overflow:hidden;}
+.lb-img,.lb-video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000;opacity:0;transform:translateX(0);transition:opacity .32s ease,transform .32s ease;pointer-events:none;}
+.lb-img.visible,.lb-video.visible{opacity:1;pointer-events:auto;}
+.lb-img.from-left,.lb-video.from-left{transform:translateX(-20px);}
+.lb-img.from-right,.lb-video.from-right{transform:translateX(20px);}
+.lb-img.move-left,.lb-video.move-left{opacity:0;transform:translateX(-30px);}
+.lb-img.move-right,.lb-video.move-right{opacity:0;transform:translateX(30px);}
 .lb-controls{position:absolute;top:50%;left:0;right:0;display:flex;
   justify-content:space-between;padding:0 12px;pointer-events:none;
   transform:translateY(-50%);z-index:10;}
@@ -102,8 +107,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
       <button class="lb-btn close-btn" onclick="closeLightbox()">✕</button>
     </div>
   </div>
-  <img id="lbImg" class="lb-img" alt="">
-  <video id="lbVideo" class="lb-video" controls playsinline></video>
+  <div class="lb-media-wrap">
+    <img id="lbImg" class="lb-img" alt="">
+    <video id="lbVideo" class="lb-video" controls playsinline></video>
+  </div>
   <div class="lb-controls">
     <button class="lb-nav" id="prevBtn">‹</button>
     <button class="lb-nav" id="nextBtn">›</button>
@@ -139,6 +146,8 @@ function renderList(){
   filtered.forEach(item=>{
     const btn=document.createElement("button");
     const isFav=favorites.includes(item.src);
+    btn.type="button";
+    btn.dataset.index=item._i;
     btn.className="thumb"+(item._i===index?" active":"")+(isFav?" is-fav":"");
     btn.onclick=()=>{index=item._i;openLightbox();};
     if(isVideo(item.src)){
@@ -150,7 +159,75 @@ function renderList(){
   });
   updateStats();
 }
-function showCurrent(){
+function updateThumbSelection(){
+  const buttons=galleryGrid.querySelectorAll(".thumb");
+  buttons.forEach(btn=>{
+    btn.classList.toggle("active", Number(btn.dataset.index)===index);
+  });
+}
+function transitionMedia(media, src, direction){
+  const outClass = direction==="left" ? "move-left" : "move-right";
+  const inClass = direction==="left" ? "from-right" : "from-left";
+  const cleanup = event => {
+    if(event.propertyName !== "opacity") return;
+    media.removeEventListener("transitionend", cleanup);
+    media.classList.remove(outClass, "visible");
+    media.classList.add(inClass);
+    media.src = src;
+    requestAnimationFrame(() => {
+      media.classList.add("visible");
+      media.classList.remove(inClass);
+    });
+  };
+  media.addEventListener("transitionend", cleanup);
+  media.classList.remove("from-left", "from-right");
+  media.classList.add(outClass);
+  media.classList.remove("visible");
+}
+function setLightboxMedia(item, isVid, direction){
+  const current = lbImg.classList.contains("visible") ? lbImg : lbVideo;
+  const next = isVid ? lbVideo : lbImg;
+  if(!direction || (!lbImg.classList.contains("visible") && !lbVideo.classList.contains("visible"))){
+    lbImg.classList.toggle("visible", !isVid);
+    lbVideo.classList.toggle("visible", isVid);
+    if(isVid){
+      lbVideo.src = item.src;
+      lbImg.removeAttribute("src");
+    } else {
+      lbVideo.pause();
+      lbVideo.removeAttribute("src");
+      lbImg.src = item.src;
+    }
+    return;
+  }
+  if(current === next){
+    transitionMedia(current, item.src, direction);
+    if(isVid){
+      lbVideo.pause();
+    }
+  } else {
+    current.classList.remove("from-left", "from-right", "move-left", "move-right");
+    current.classList.add(direction==="left" ? "move-left" : "move-right");
+    next.classList.remove("from-left", "from-right", "move-left", "move-right", "visible");
+    next.src = item.src;
+    next.classList.add(direction==="left" ? "from-right" : "from-left");
+    requestAnimationFrame(() => {
+      next.classList.add("visible");
+      next.classList.remove(direction==="left" ? "from-right" : "from-left");
+    });
+    current.addEventListener("transitionend", function cleanup(e){
+      if(e.propertyName !== "opacity") return;
+      current.removeEventListener("transitionend", cleanup);
+      current.classList.remove("move-left", "move-right", "visible");
+    });
+    if(isVid){
+      lbImg.classList.remove("visible");
+    } else {
+      lbVideo.pause();
+    }
+  }
+}
+function showCurrent(direction){
   if(!photos.length)return;
   const item=photos[index];
   //lbTitle.textContent=item.title||"Фото";
@@ -159,16 +236,11 @@ function showCurrent(){
   const isFav=favorites.includes(item.src);
   favToggleBtn.textContent=isFav?"★ Избранное":"☆ Избранное";
   favToggleBtn.classList.toggle("fav-on",isFav);
-  if(isVideo(item.src)){
-    lbImg.style.display="none";lbVideo.style.display="block";lbVideo.src=item.src;
-  }else{
-    lbVideo.pause();lbVideo.removeAttribute("src");
-    lbVideo.style.display="none";lbImg.style.display="block";lbImg.src=item.src;
-  }
-  renderList();
+  setLightboxMedia(item,isVideo(item.src),direction);
+  updateThumbSelection();
 }
-function nextPhoto(){if(!photos.length)return;index=(index+1)%photos.length;showCurrent();}
-function prevPhoto(){if(!photos.length)return;index=(index-1+photos.length)%photos.length;showCurrent();}
+function nextPhoto(){if(!photos.length)return;index=(index+1)%photos.length;showCurrent("left");}
+function prevPhoto(){if(!photos.length)return;index=(index-1+photos.length)%photos.length;showCurrent("right");}
 function openLightbox(){showCurrent();lightbox.classList.add("show");}
 function closeLightbox(){lbVideo.pause();lightbox.classList.remove("show");}
 favToggleBtn.addEventListener("click",()=>{
@@ -176,6 +248,12 @@ favToggleBtn.addEventListener("click",()=>{
   const src=photos[index].src;
   favorites=favorites.includes(src)?favorites.filter(x=>x!==src):[...favorites,src];
   localStorage.setItem(FAV_KEY,JSON.stringify(favorites));
+  if(showFavOnly && !favorites.includes(src)){
+    renderList();
+    closeLightbox();
+    return;
+  }
+  renderList();
   showCurrent();
 });
 document.getElementById("nextBtn").addEventListener("click",nextPhoto);
@@ -200,7 +278,8 @@ async function loadPhotos(){
   try{
     const r=await fetch("photos-list.json?ts="+Date.now(),{cache:"no-store"});
     if(!r.ok)throw new Error();
-    photos=Array.isArray(await r.json())?await(await fetch("photos-list.json?ts="+Date.now())).json():fallbackPhotos;
+    const d=await r.json();
+    photos=Array.isArray(d)&&d.length?d:fallbackPhotos;
   }catch{photos=fallbackPhotos;}
   index=0;renderList();
   setStatus(photos.length?"Готово: "+photos.length+" фото.":"Нет фото.");

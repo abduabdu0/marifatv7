@@ -568,7 +568,10 @@ input[type=range]#progress {
 <audio id="audio"></audio>
 <script src="song/playlist.js"></script>
 <script>
-let tracks = [], filtered = [], index = 0, isPlaying = false;
+let tracks = [];
+let filtered = [];
+let index = 0;
+let isPlaying = false;
 const favKey = "musicFavoritesV1";
 let favorites = JSON.parse(localStorage.getItem(favKey) || "[]");
 
@@ -578,6 +581,19 @@ const playBtn = document.getElementById("playBtn");
 const playIcon = document.getElementById("playIcon");
 const trackFill = document.getElementById("trackFill");
 const bars = document.querySelectorAll(".bar");
+const playlistEl = document.getElementById("playlist");
+const searchInput = document.getElementById("searchInput");
+const playlistCount = document.getElementById("playlistCount");
+const playlistStatus = document.getElementById("playlistStatus");
+const favBtn = document.getElementById("favBtn");
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
+const stopBtn = document.getElementById("stopBtn");
+const currentTimeEl = document.getElementById("currentTime");
+const durationEl = document.getElementById("duration");
+const progressInput = document.getElementById("progress");
+const songTitleEl = document.getElementById("songTitle");
+const songArtistEl = document.getElementById("songArtist");
 
 function fmt(sec) {
   if (!isFinite(sec)) return "0:00";
@@ -610,40 +626,69 @@ function rippleEffect(btn) {
   setTimeout(() => r.remove(), 600);
 }
 
-function renderPlaylist() {
-  const pl = document.getElementById("playlist");
-  pl.innerHTML = "";
-  const q = (document.getElementById("searchInput").value||"").toLowerCase().trim();
-  filtered = tracks.map((t,i)=>({...t,_i:i})).filter(t=>!q||t.title.toLowerCase().includes(q)||t.artist.toLowerCase().includes(q));
-  document.getElementById("playlistCount").textContent = "· "+filtered.length;
-  filtered.forEach((t,ri) => {
-    const btn = document.createElement("button");
-    btn.className = "track-item"+(t._i===index?" active":"");
-    btn.style.animationDelay = (ri*0.03)+"s";
-    const isFav = favorites.includes(t.src);
-    btn.innerHTML = `
-      <div class="track-num">${t._i+1}</div>
+function createTrackButton(track, delay) {
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.dataset.index = track._i;
+  btn.className = `track-item${track._i === index ? " active" : ""}`;
+  btn.style.animationDelay = `${delay}s`;
+  const isFav = favorites.includes(track.src);
+  btn.innerHTML = `
+      <div class="track-num">${track._i + 1}</div>
       <div class="track-info">
-        <div class="track-name">${t.title}</div>
-        <div class="track-art">${t.artist}</div>
+        <div class="track-name">${track.title}</div>
+        <div class="track-art">${track.artist}</div>
       </div>
-      <div class="track-fav">${isFav?"♥":"♡"}</div>`;
-    btn.onclick = ()=>{ index=t._i; loadTrack(); play(); };
-    pl.appendChild(btn);
+      <div class="track-fav">${isFav ? "♥" : "♡"}</div>`;
+  return btn;
+}
+
+function renderPlaylist() {
+  const q = (searchInput.value || "").toLowerCase().trim();
+  filtered = tracks.map((t, i) => ({ ...t, _i: i }))
+    .filter(t => !q || t.title.toLowerCase().includes(q) || t.artist.toLowerCase().includes(q));
+
+  playlistCount.textContent = `· ${filtered.length}`;
+  playlistEl.innerHTML = "";
+
+  const fragment = document.createDocumentFragment();
+  filtered.forEach((t, ri) => {
+    fragment.appendChild(createTrackButton(t, ri * 0.03));
+  });
+  playlistEl.appendChild(fragment);
+}
+
+function setTrackInfo(track) {
+  songTitleEl.textContent = track.title;
+  songArtistEl.textContent = track.artist;
+  favBtn.classList.toggle("active", favorites.includes(track.src));
+  currentTimeEl.textContent = "0:00";
+  durationEl.textContent = "0:00";
+  trackFill.style.width = "0%";
+  progressInput.value = 0;
+}
+
+function loadTrack(updatePlaylist = true) {
+  if (!tracks.length) {
+    renderPlaylist();
+    return;
+  }
+  const t = tracks[index];
+  setTrackInfo(t);
+  audio.src = t.src;
+  if (updatePlaylist) updatePlaylistSelection();
+}
+
+function updatePlaylistSelection() {
+  playlistEl.querySelectorAll(".track-item").forEach(item => {
+    item.classList.toggle("active", Number(item.dataset.index) === index);
   });
 }
 
-function loadTrack() {
-  if (!tracks.length) { renderPlaylist(); return; }
-  const t = tracks[index];
-  document.getElementById("songTitle").textContent = t.title;
-  document.getElementById("songArtist").textContent = t.artist;
-  audio.src = t.src;
-  trackFill.style.width = "0%";
-  document.getElementById("currentTime").textContent = "0:00";
-  document.getElementById("duration").textContent = "0:00";
-  document.getElementById("favBtn").classList.toggle("active", favorites.includes(t.src));
-  renderPlaylist();
+function selectTrack(trackIndex) {
+  index = trackIndex;
+  loadTrack();
+  play();
 }
 
 function play() {
@@ -657,65 +702,113 @@ function stop() {
   audio.pause(); audio.currentTime = 0; isPlaying = false; updatePlayIcon(false);
 }
 
-playBtn.onclick = e => { rippleEffect(playBtn); isPlaying ? pause() : play(); };
-document.getElementById("prevBtn").onclick = ()=>{ if(!tracks.length)return; index=(index-1+tracks.length)%tracks.length; loadTrack(); play(); };
-document.getElementById("nextBtn").onclick = ()=>{ if(!tracks.length)return; index=(index+1)%tracks.length; loadTrack(); play(); };
-document.getElementById("stopBtn").onclick = stop;
-document.getElementById("favBtn").onclick = ()=>{
-  if(!tracks.length)return;
-  const src = tracks[index].src;
-  favorites.includes(src) ? favorites=favorites.filter(x=>x!==src) : favorites.push(src);
-  localStorage.setItem(favKey, JSON.stringify(favorites));
-  document.getElementById("favBtn").classList.toggle("active", favorites.includes(src));
-  renderPlaylist();
-};
-document.getElementById("searchInput").oninput = renderPlaylist;
+playBtn.addEventListener("click", () => {
+  rippleEffect(playBtn);
+  isPlaying ? pause() : play();
+});
 
-audio.onloadedmetadata = ()=>{ document.getElementById("duration").textContent = fmt(audio.duration); };
-audio.ontimeupdate = ()=>{
-  if(!audio.duration)return;
-  const pct = (audio.currentTime/audio.duration)*100;
-  trackFill.style.width = pct+"%";
-  document.getElementById("currentTime").textContent = fmt(audio.currentTime);
-};
-document.getElementById("progress").oninput = e=>{
-  if(!audio.duration)return;
-  audio.currentTime = (e.target.value/100)*audio.duration;
-};
-audio.onended = ()=>{ index=(index+1)%tracks.length; loadTrack(); play(); };
+prevBtn.addEventListener("click", () => {
+  if (!tracks.length) return;
+  index = (index - 1 + tracks.length) % tracks.length;
+  loadTrack();
+  play();
+});
+
+nextBtn.addEventListener("click", () => {
+  if (!tracks.length) return;
+  index = (index + 1) % tracks.length;
+  loadTrack();
+  play();
+});
+
+stopBtn.addEventListener("click", stop);
+
+favBtn.addEventListener("click", () => {
+  if (!tracks.length) return;
+  const src = tracks[index].src;
+  if (favorites.includes(src)) {
+    favorites = favorites.filter(x => x !== src);
+  } else {
+    favorites.push(src);
+  }
+  localStorage.setItem(favKey, JSON.stringify(favorites));
+  favBtn.classList.toggle("active", favorites.includes(src));
+  renderPlaylist();
+});
+
+playlistEl.addEventListener("click", event => {
+  const button = event.target.closest(".track-item");
+  if (!button) return;
+  const clickedIndex = Number(button.dataset.index);
+  if (!Number.isFinite(clickedIndex)) return;
+  selectTrack(clickedIndex);
+});
+
+searchInput.addEventListener("input", renderPlaylist);
+
+audio.addEventListener("loadedmetadata", () => {
+  durationEl.textContent = fmt(audio.duration);
+});
+
+audio.addEventListener("timeupdate", () => {
+  if (!audio.duration) return;
+  const pct = (audio.currentTime / audio.duration) * 100;
+  trackFill.style.width = `${pct}%`;
+  currentTimeEl.textContent = fmt(audio.currentTime);
+  progressInput.value = pct;
+});
+
+progressInput.addEventListener("input", event => {
+  if (!audio.duration) return;
+  audio.currentTime = (event.target.value / 100) * audio.duration;
+});
+
+audio.addEventListener("ended", () => {
+  if (!tracks.length) return;
+  index = (index + 1) % tracks.length;
+  loadTrack();
+  play();
+});
 
 async function loadPlaylist() {
-  document.getElementById("playlistStatus").textContent = "загрузка...";
-  if (Array.isArray(window.PLAYLIST_DATA)&&window.PLAYLIST_DATA.length) {
-    tracks=window.PLAYLIST_DATA; index=0; loadTrack();
-    document.getElementById("playlistStatus").textContent = "";
-    return;
+  playlistStatus.textContent = "загрузка...";
+  if (Array.isArray(window.PLAYLIST_DATA) && window.PLAYLIST_DATA.length) {
+    tracks = window.PLAYLIST_DATA;
+  } else {
+    try {
+      const response = await fetch("song/playlist.json", { cache: "no-store" });
+      tracks = response.ok ? await response.json() : [];
+    } catch {
+      tracks = [];
+    }
   }
-  try {
-    const r = await fetch("song/playlist.json",{cache:"no-store"});
-    tracks = r.ok ? await r.json() : [];
-  } catch(e) { tracks=[]; }
-  index=0; loadTrack();
-  document.getElementById("playlistStatus").textContent = tracks.length ? "" : "добавь треки в папку song";
+  index = 0;
+  renderPlaylist();
+  loadTrack(false);
+  playlistStatus.textContent = tracks.length ? "" : "добавь треки в папку song";
 }
 
 async function refreshPlaylist() {
-  document.getElementById("playlistStatus").textContent = "обновление...";
+  playlistStatus.textContent = "обновление...";
   try {
-    const r = await fetch("song/playlist.json?ts="+Date.now(),{cache:"no-store"});
-    tracks = r.ok ? await r.json() : [];
-    index=0; loadTrack();
-    document.getElementById("playlistStatus").textContent = "";
-  } catch(e) {
-    document.getElementById("playlistStatus").textContent = "ошибка загрузки";
+    const response = await fetch("song/playlist.json?ts=" + Date.now(), { cache: "no-store" });
+    tracks = response.ok ? await response.json() : [];
+    index = 0;
+    renderPlaylist();
+    loadTrack(false);
+    playlistStatus.textContent = tracks.length ? "" : "добавь треки в папку song";
+  } catch {
+    playlistStatus.textContent = "ошибка загрузки";
   }
 }
 
-setInterval(()=>{
-  const n=new Date();
-  document.getElementById("clock").textContent=String(n.getHours()).padStart(2,"0")+":"+String(n.getMinutes()).padStart(2,"0");
-},1000);
-document.getElementById("clock").textContent=(()=>{const n=new Date();return String(n.getHours()).padStart(2,"0")+":"+String(n.getMinutes()).padStart(2,"0");})();
+const clockEl = document.getElementById("clock");
+function updateClock() {
+  const n = new Date();
+  clockEl.textContent = String(n.getHours()).padStart(2, "0") + ":" + String(n.getMinutes()).padStart(2, "0");
+}
+setInterval(updateClock, 1000);
+updateClock();
 
 loadPlaylist();
 </script>
