@@ -1,28 +1,13 @@
 ﻿window.PHOTOS_DATA = [
     {
-        "title":  "(whatsapp)2119fb0727da466ea7accada1d86ce68.mp4",
-        "src":  "img/(whatsapp)2119fb0727da466ea7accada1d86ce68.mp4.mp4",
-        "srcVideo":  "img/(whatsapp)2119fb0727da466ea7accada1d86ce68.mp4.mp4"
+        "title":  "photo2",
+        "src":  "img/photo2.jpeg",
+        "srcVideo":  "img/photo2.jpeg"
     },
     {
-        "title":  "(whatsapp)70c5f1055b5c4811859c92543a3896b9.mp4",
-        "src":  "img/(whatsapp)70c5f1055b5c4811859c92543a3896b9.mp4.mp4",
-        "srcVideo":  "img/(whatsapp)70c5f1055b5c4811859c92543a3896b9.mp4.mp4"
-    },
-    {
-        "title":  "(whatsapp)84aa0d6d05534b1f8e5c0a73f3d86083.mp4",
-        "src":  "img/(whatsapp)84aa0d6d05534b1f8e5c0a73f3d86083.mp4.mp4",
-        "srcVideo":  "img/(whatsapp)84aa0d6d05534b1f8e5c0a73f3d86083.mp4.mp4"
-    },
-    {
-        "title":  "(whatsapp)f775561b3ba543b4ae8d6100048f62c5.mp4",
-        "src":  "img/(whatsapp)f775561b3ba543b4ae8d6100048f62c5.mp4.mp4",
-        "srcVideo":  "img/(whatsapp)f775561b3ba543b4ae8d6100048f62c5.mp4.mp4"
-    },
-    {
-        "title":  "(whatsapp)f8a8879f41e5441da5c641cbe5132bb7.mp4",
-        "src":  "img/(whatsapp)f8a8879f41e5441da5c641cbe5132bb7.mp4.mp4",
-        "srcVideo":  "img/(whatsapp)f8a8879f41e5441da5c641cbe5132bb7.mp4.mp4"
+        "title":  "photo1",
+        "src":  "img/photo1.jpeg",
+        "srcVideo":  "img/photo1.jpeg"
     },
     {
         "title":  "1775063516685",
@@ -40,11 +25,6 @@
         "srcVideo":  "img/1775842139680.png"
     },
     {
-        "title":  "1775842322663",
-        "src":  "img/1775842322663.png",
-        "srcVideo":  "img/1775842322663.png"
-    },
-    {
         "title":  "1775842809006",
         "src":  "img/1775842809006.png",
         "srcVideo":  "img/1775842809006.png"
@@ -53,11 +33,6 @@
         "title":  "1775843002208",
         "src":  "img/1775843002208.jpeg",
         "srcVideo":  "img/1775843002208.jpeg"
-    },
-    {
-        "title":  "1775843181098",
-        "src":  "img/1775843181098.png",
-        "srcVideo":  "img/1775843181098.png"
     },
     {
         "title":  "1775843277598",
@@ -110,11 +85,6 @@
         "srcVideo":  "img/20230518_162258.jpg"
     },
     {
-        "title":  "20230602_100006",
-        "src":  "img/20230602_100006.jpg",
-        "srcVideo":  "img/20230602_100006.jpg"
-    },
-    {
         "title":  "20231115_155050",
         "src":  "img/20231115_155050.jpg",
         "srcVideo":  "img/20231115_155050.jpg"
@@ -128,11 +98,6 @@
         "title":  "20260201_163629",
         "src":  "img/20260201_163629.png",
         "srcVideo":  "img/20260201_163629.png"
-    },
-    {
-        "title":  "20260205_191119",
-        "src":  "img/20260205_191119.jpg",
-        "srcVideo":  "img/20260205_191119.jpg"
     },
     {
         "title":  "20260223_095854",
@@ -170,11 +135,6 @@
         "srcVideo":  "img/20260323_183359.jpg"
     },
     {
-        "title":  "20260324_144118",
-        "src":  "img/20260324_144118.mp4",
-        "srcVideo":  "img/20260324_144118.mp4"
-    },
-    {
         "title":  "20260405_172411",
         "src":  "img/20260405_172411.jpg",
         "srcVideo":  "img/20260405_172411.jpg"
@@ -210,16 +170,6 @@
         "srcVideo":  "img/background1.jpeg"
     },
     {
-        "title":  "hailuo_1775041010",
-        "src":  "img/hailuo_1775041010.mp4",
-        "srcVideo":  "img/hailuo_1775041010.mp4"
-    },
-    {
-        "title":  "hailuo_1775065704",
-        "src":  "img/hailuo_1775065704.mp4",
-        "srcVideo":  "img/hailuo_1775065704.mp4"
-    },
-    {
         "title":  "icon",
         "src":  "img/icon.png",
         "srcVideo":  "img/icon.png"
@@ -250,21 +200,6 @@
         "srcVideo":  "img/IMG-20250826-WA0021.jpg"
     },
     {
-        "title":  "IMG-20260203-WA0001",
-        "src":  "img/IMG-20260203-WA0001.jpg",
-        "srcVideo":  "img/IMG-20260203-WA0001.jpg"
-    },
-    {
-        "title":  "IMG-20260203-WA0002",
-        "src":  "img/IMG-20260203-WA0002.jpg",
-        "srcVideo":  "img/IMG-20260203-WA0002.jpg"
-    },
-    {
-        "title":  "IMG-20260217-WA0010",
-        "src":  "img/IMG-20260217-WA0010.jpg",
-        "srcVideo":  "img/IMG-20260217-WA0010.jpg"
-    },
-    {
         "title":  "IMG-20260312-WA0060",
         "src":  "img/IMG-20260312-WA0060.jpg",
         "srcVideo":  "img/IMG-20260312-WA0060.jpg"
@@ -285,26 +220,6 @@
         "srcVideo":  "img/IMG-20260312-WA0066.jpg"
     },
     {
-        "title":  "lv_0_20260313053300",
-        "src":  "img/lv_0_20260313053300.mp4",
-        "srcVideo":  "img/lv_0_20260313053300.mp4"
-    },
-    {
-        "title":  "photo1",
-        "src":  "img/photo1.jpeg",
-        "srcVideo":  "img/photo1.jpeg"
-    },
-    {
-        "title":  "photo2",
-        "src":  "img/photo2.jpeg",
-        "srcVideo":  "img/photo2.jpeg"
-    },
-    {
-        "title":  "Screenshot_20260303_173844_WhatsApp",
-        "src":  "img/Screenshot_20260303_173844_WhatsApp.jpg",
-        "srcVideo":  "img/Screenshot_20260303_173844_WhatsApp.jpg"
-    },
-    {
         "title":  "Screenshot_20260402_223004_WhatsApp",
         "src":  "img/Screenshot_20260402_223004_WhatsApp.jpg",
         "srcVideo":  "img/Screenshot_20260402_223004_WhatsApp.jpg"
@@ -318,11 +233,6 @@
         "title":  "VID-20260422-WA0011",
         "src":  "img/VID-20260422-WA0011.mp4",
         "srcVideo":  "img/VID-20260422-WA0011.mp4"
-    },
-    {
-        "title":  "VID-20260422-WA0012",
-        "src":  "img/VID-20260422-WA0012.mp4",
-        "srcVideo":  "img/VID-20260422-WA0012.mp4"
     },
     {
         "title":  "video",
