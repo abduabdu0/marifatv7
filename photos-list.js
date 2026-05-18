@@ -1,5 +1,15 @@
 ﻿window.PHOTOS_DATA = [
     {
+        "title":  "video4",
+        "src":  "img/video4.mp4",
+        "srcVideo":  "img/video4.mp4"
+    },
+    {
+        "title":  "photo8",
+        "src":  "img/photo8.jpg",
+        "srcVideo":  "img/photo8.jpg"
+    },
+    {
         "title":  "photo2",
         "src":  "img/photo2.jpeg",
         "srcVideo":  "img/photo2.jpeg"
@@ -8,151 +18,6 @@
         "title":  "photo1",
         "src":  "img/photo1.jpeg",
         "srcVideo":  "img/photo1.jpeg"
-    },
-    {
-        "title":  "1775063516685",
-        "src":  "img/1775063516685.jpg",
-        "srcVideo":  "img/1775063516685.jpg"
-    },
-    {
-        "title":  "1775064638496",
-        "src":  "img/1775064638496.jpg",
-        "srcVideo":  "img/1775064638496.jpg"
-    },
-    {
-        "title":  "1775842139680",
-        "src":  "img/1775842139680.png",
-        "srcVideo":  "img/1775842139680.png"
-    },
-    {
-        "title":  "1775842809006",
-        "src":  "img/1775842809006.png",
-        "srcVideo":  "img/1775842809006.png"
-    },
-    {
-        "title":  "1775843002208",
-        "src":  "img/1775843002208.jpeg",
-        "srcVideo":  "img/1775843002208.jpeg"
-    },
-    {
-        "title":  "1775843277598",
-        "src":  "img/1775843277598.png",
-        "srcVideo":  "img/1775843277598.png"
-    },
-    {
-        "title":  "1775961135008",
-        "src":  "img/1775961135008.png",
-        "srcVideo":  "img/1775961135008.png"
-    },
-    {
-        "title":  "1775961577763",
-        "src":  "img/1775961577763.png",
-        "srcVideo":  "img/1775961577763.png"
-    },
-    {
-        "title":  "1776270168612",
-        "src":  "img/1776270168612.jpg",
-        "srcVideo":  "img/1776270168612.jpg"
-    },
-    {
-        "title":  "1776271245433",
-        "src":  "img/1776271245433.jpg",
-        "srcVideo":  "img/1776271245433.jpg"
-    },
-    {
-        "title":  "1776271289119",
-        "src":  "img/1776271289119.jpg",
-        "srcVideo":  "img/1776271289119.jpg"
-    },
-    {
-        "title":  "20221227_161102",
-        "src":  "img/20221227_161102.jpg",
-        "srcVideo":  "img/20221227_161102.jpg"
-    },
-    {
-        "title":  "20230518_161638",
-        "src":  "img/20230518_161638.jpg",
-        "srcVideo":  "img/20230518_161638.jpg"
-    },
-    {
-        "title":  "20230518_162258",
-        "src":  "img/20230518_162258.jpg",
-        "srcVideo":  "img/20230518_162258.jpg"
-    },
-    {
-        "title":  "20231115_155050",
-        "src":  "img/20231115_155050.jpg",
-        "srcVideo":  "img/20231115_155050.jpg"
-    },
-    {
-        "title":  "2026_04_01_230632",
-        "src":  "img/2026_04_01_230632.mp4",
-        "srcVideo":  "img/2026_04_01_230632.mp4"
-    },
-    {
-        "title":  "20260201_163629",
-        "src":  "img/20260201_163629.png",
-        "srcVideo":  "img/20260201_163629.png"
-    },
-    {
-        "title":  "20260223_095854",
-        "src":  "img/20260223_095854.jpg",
-        "srcVideo":  "img/20260223_095854.jpg"
-    },
-    {
-        "title":  "20260226_172153",
-        "src":  "img/20260226_172153.jpg",
-        "srcVideo":  "img/20260226_172153.jpg"
-    },
-    {
-        "title":  "20260304_134631",
-        "src":  "img/20260304_134631.jpg",
-        "srcVideo":  "img/20260304_134631.jpg"
-    },
-    {
-        "title":  "20260315_161744",
-        "src":  "img/20260315_161744.jpg",
-        "srcVideo":  "img/20260315_161744.jpg"
-    },
-    {
-        "title":  "20260319_101938",
-        "src":  "img/20260319_101938.jpg",
-        "srcVideo":  "img/20260319_101938.jpg"
-    },
-    {
-        "title":  "20260323_183345",
-        "src":  "img/20260323_183345.jpg",
-        "srcVideo":  "img/20260323_183345.jpg"
-    },
-    {
-        "title":  "20260323_183359",
-        "src":  "img/20260323_183359.jpg",
-        "srcVideo":  "img/20260323_183359.jpg"
-    },
-    {
-        "title":  "20260405_172411",
-        "src":  "img/20260405_172411.jpg",
-        "srcVideo":  "img/20260405_172411.jpg"
-    },
-    {
-        "title":  "20260405_172420",
-        "src":  "img/20260405_172420.jpg",
-        "srcVideo":  "img/20260405_172420.jpg"
-    },
-    {
-        "title":  "20260405_172430",
-        "src":  "img/20260405_172430.jpg",
-        "srcVideo":  "img/20260405_172430.jpg"
-    },
-    {
-        "title":  "20260405_172437",
-        "src":  "img/20260405_172437.jpg",
-        "srcVideo":  "img/20260405_172437.jpg"
-    },
-    {
-        "title":  "AiCatch_d2458a90ee9e330caa93ae9e4e32b9b2",
-        "src":  "img/AiCatch_d2458a90ee9e330caa93ae9e4e32b9b2.jpg",
-        "srcVideo":  "img/AiCatch_d2458a90ee9e330caa93ae9e4e32b9b2.jpg"
     },
     {
         "title":  "background",
@@ -165,9 +30,44 @@
         "srcVideo":  "img/background1.jpeg"
     },
     {
-        "title":  "icon",
-        "src":  "img/icon.png",
-        "srcVideo":  "img/icon.png"
+        "title":  "photo11",
+        "src":  "img/photo11.png",
+        "srcVideo":  "img/photo11.png"
+    },
+    {
+        "title":  "photo7",
+        "src":  "img/photo7.png",
+        "srcVideo":  "img/photo7.png"
+    },
+    {
+        "title":  "photo6",
+        "src":  "img/photo6.png",
+        "srcVideo":  "img/photo6.png"
+    },
+    {
+        "title":  "photo10",
+        "src":  "img/photo10.jpg",
+        "srcVideo":  "img/photo10.jpg"
+    },
+    {
+        "title":  "photo9",
+        "src":  "img/photo9.jpg",
+        "srcVideo":  "img/photo9.jpg"
+    },
+    {
+        "title":  "20260323_183345",
+        "src":  "img/20260323_183345.jpg",
+        "srcVideo":  "img/20260323_183345.jpg"
+    },
+    {
+        "title":  "20260323_183359",
+        "src":  "img/20260323_183359.jpg",
+        "srcVideo":  "img/20260323_183359.jpg"
+    },
+    {
+        "title":  "photo12",
+        "src":  "img/photo12.jpg",
+        "srcVideo":  "img/photo12.jpg"
     },
     {
         "title":  "image",
@@ -175,59 +75,29 @@
         "srcVideo":  "img/image.jpeg"
     },
     {
-        "title":  "image",
-        "src":  "img/image.jpg",
-        "srcVideo":  "img/image.jpg"
+        "title":  "photo5",
+        "src":  "img/photo5.jpg",
+        "srcVideo":  "img/photo5.jpg"
     },
     {
-        "title":  "IMG_20260322_171547",
-        "src":  "img/IMG_20260322_171547.png",
-        "srcVideo":  "img/IMG_20260322_171547.png"
+        "title":  "photo4",
+        "src":  "img/photo4.jpg",
+        "srcVideo":  "img/photo4.jpg"
     },
     {
-        "title":  "IMG-20250825-WA0004",
-        "src":  "img/IMG-20250825-WA0004.jpg",
-        "srcVideo":  "img/IMG-20250825-WA0004.jpg"
+        "title":  "photo3",
+        "src":  "img/photo3.jpg",
+        "srcVideo":  "img/photo3.jpg"
     },
     {
-        "title":  "IMG-20250826-WA0021",
-        "src":  "img/IMG-20250826-WA0021.jpg",
-        "srcVideo":  "img/IMG-20250826-WA0021.jpg"
+        "title":  "video3",
+        "src":  "img/video3.mp4",
+        "srcVideo":  "img/video3.mp4"
     },
     {
-        "title":  "IMG-20260312-WA0060",
-        "src":  "img/IMG-20260312-WA0060.jpg",
-        "srcVideo":  "img/IMG-20260312-WA0060.jpg"
-    },
-    {
-        "title":  "IMG-20260312-WA0064",
-        "src":  "img/IMG-20260312-WA0064.jpg",
-        "srcVideo":  "img/IMG-20260312-WA0064.jpg"
-    },
-    {
-        "title":  "IMG-20260312-WA0065",
-        "src":  "img/IMG-20260312-WA0065.jpg",
-        "srcVideo":  "img/IMG-20260312-WA0065.jpg"
-    },
-    {
-        "title":  "IMG-20260312-WA0066",
-        "src":  "img/IMG-20260312-WA0066.jpg",
-        "srcVideo":  "img/IMG-20260312-WA0066.jpg"
-    },
-    {
-        "title":  "Screenshot_20260402_223004_WhatsApp",
-        "src":  "img/Screenshot_20260402_223004_WhatsApp.jpg",
-        "srcVideo":  "img/Screenshot_20260402_223004_WhatsApp.jpg"
-    },
-    {
-        "title":  "VID-20260312-WA0063",
-        "src":  "img/VID-20260312-WA0063.mp4",
-        "srcVideo":  "img/VID-20260312-WA0063.mp4"
-    },
-    {
-        "title":  "VID-20260422-WA0011",
-        "src":  "img/VID-20260422-WA0011.mp4",
-        "srcVideo":  "img/VID-20260422-WA0011.mp4"
+        "title":  "video2",
+        "src":  "img/video2.mp4",
+        "srcVideo":  "img/video2.mp4"
     },
     {
         "title":  "video",
