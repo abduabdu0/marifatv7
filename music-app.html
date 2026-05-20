@@ -89,7 +89,7 @@ body {
   max-width: 420px;
   margin: 0 auto;
   min-height: 100vh;
-  padding: 18px 18px 120px;
+  padding: 18px 18px 10px;
 }
 
 .statusbar {
@@ -394,7 +394,7 @@ input[type=range]#progress {
 .refresh-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
 
 .playlist-list {
-  max-height: 260px;
+  max-height: 500px;
   overflow-y: auto;
   scrollbar-width: none;
   display: flex;
@@ -445,7 +445,7 @@ input[type=range]#progress {
   color: var(--muted);
 }
 .track-fav {
-  font-size: 13px;
+  font-size: 20px;
   opacity: 0.6;
   flex-shrink: 0;
 }
@@ -554,7 +554,7 @@ input[type=range]#progress {
   <!-- Playlist -->
   <div class="playlist-section">
     <div class="playlist-header">
-      <div class="playlist-title">Треки <span style="font-size:12px;color:var(--muted)" id="playlistCount"></span></div>
+      <div class="playlist-title">Треки <span style="color:var(--muted)" id="playlistCount"></span></div>
       <div class="search-wrap">
         <input class="search-input" id="searchInput" placeholder="поиск...">
         <button class="refresh-btn" onclick="refreshPlaylist()">↻</button>
