@@ -80,11 +80,6 @@
         "src":  "song/Rustam_Azimi_-_Mastam_80434551.mp3"
     },
     {
-        "title":  "Rustam_Azimi_-_Mastam_80473743",
-        "artist":  "Рустам Азими",
-        "src":  "song/Rustam_Azimi_-_Mastam_80473743.mp3"
-    },
-    {
         "title":  "Rustam_Azimi_-_Modar_79519428",
         "artist":  "Рустам Азими",
         "src":  "song/Rustam_Azimi_-_Modar_79519428.mp3"
@@ -168,5 +163,10 @@
         "title":  "Rustam_Azimi_-_Zam-Zama_80473745",
         "artist":  "Рустам Азими",
         "src":  "song/Rustam_Azimi_-_Zam-Zama_80473745.mp3"
+    },
+    {
+        "title":  "Эрони ту фарк мекарди восе ман",
+        "artist":  "Unknown Artist",
+        "src":  "song/Эрони ту фарк мекарди восе ман.mp3"
     }
 ]
