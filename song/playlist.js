@@ -168,5 +168,10 @@
         "title":  "Эрони ту фарк мекарди восе ман",
         "artist":  "Unknown Artist",
         "src":  "song/Эрони ту фарк мекарди восе ман.mp3"
+    },
+    {
+        "title":  "Manizha-Dovlatova-behuda-horam-mekuni",
+        "artist":  "Манижа Довлатова",
+        "src":  "song/Manizha-Dovlatova-behuda-horam-mekuni.mp3"
     }
 ];
