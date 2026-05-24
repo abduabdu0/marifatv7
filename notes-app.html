@@ -225,6 +225,7 @@ textarea::placeholder { color: var(--muted); }
   display: flex;
   flex-direction: column;
   gap: 10px;
+  margin-top: 10px;
 }
 
 .note-item {
@@ -330,7 +331,7 @@ textarea::placeholder { color: var(--muted); }
     <div class="header-top">
       <div class="title-block">
         <h1>Notes</h1>
-        <p>Личные заметки</p>
+        <p>Личные заметки Маърифатхон!</p>
       </div>
       <div class="header-actions">
         <button class="icon-btn" title="Новая заметка" onclick="newNote()">✏️</button>
@@ -353,7 +354,14 @@ textarea::placeholder { color: var(--muted); }
 
   <div class="list-header">
     <span class="list-title">Все заметки</span>
-    <span class="notes-count" id="notesCount">0</span>
+    <span class="notes-count" id="notesCount">0</span><br>
+  </div>
+  <!-- Потом надо удалить это -->
+  <div class="note-item active-item">
+    <div class="note-preview">Happy birthday to you MARIFATKHON❤️🥳🎂</div>
+    <div class="note-meta">
+      <span class="note-dot"></span>
+    </div>
   </div>
 
   <div class="notes-list" id="notesList"></div>

@@ -141,14 +141,14 @@ body {
 <div class="container">
     
     <div id="games-menu" class="game-section screen-section">
-        <h2>Выбери игру</h2>
+        <h2>Выберите игру</h2>
         <div class="game-grid">
             <button class="game-card" onclick="showSection('love')">❤️ Наша любовь</button>
             <button class="game-card" onclick="showSection('section-hearts'); initHearts()">❤️ Падающие сердечки</button>
             <button class="game-card" onclick="showSection('section-reaction'); initReaction()">⚡ Тест реакции</button>
-            <button class="game-card" onclick="showSection('section-collect'); initCollect()">💖 Собери сердце</button>
+            <button class="game-card" onclick="showSection('section-collect'); initCollect()">💖 Соберите сердце</button>
             <button class="game-card" onclick="showSection('section-quiz')">📝 Викторина</button>
-            <button class="game-card" onclick="showSection('section-guess')">🎯 Угадай число</button>
+            <button class="game-card" onclick="showSection('section-guess')">🎯 Угадайте число</button>
             <button class="game-card" onclick="showSection('section-loveclick')">❤️ Кликер любви</button>
         </div>
     </div>
@@ -200,8 +200,8 @@ body {
     </div>
 
     <div id="final" class="section-wrapper screen-section hidden">
-        <h2>Ты — самое лучшее, что у меня есть ❤️</h2>
-        <p><h1>Я тебя люблю 💖</h1></p>
+        <h2>Вы — самое лучшее, что у меня есть ❤️</h2>
+        <p><h1>I LOVE YOU 💖</h1></p>
         <a class="game-card" href="index1.html" target="_top" style="text-decoration:none; display:inline-block;"><h1>🎁</h1> Сюрприз Нажмите</a>
     </div>
 
@@ -366,7 +366,7 @@ function initReaction() {
 function tap() {
     if (!startTime) return;
     const time = Date.now() - startTime;
-    document.getElementById('reactResult').innerText = 'Твоя реакция: ' + time + ' мс 😱';
+    document.getElementById('reactResult').innerText = 'Ваша реакция: ' + time + ' мс 😱';
     navigator.vibrate && navigator.vibrate(30);
     setTimeout(() => initReaction(), 1500);
 }
@@ -399,7 +399,7 @@ function initCollect() {
                 count++;
                 navigator.vibrate && navigator.vibrate(20);
                 if (count === 9) {
-                    document.getElementById('collectResult').innerText = '🎉 Ты собрала моё сердце! ❤️';
+                    document.getElementById('collectResult').innerText = '🎉 Вы забрали моё сердце! ❤️🥰    ';
                 }
             }
         };
@@ -417,7 +417,7 @@ function correct() {
 }
 
 function wrong() {
-    document.getElementById('gameResult').innerText = 'Неправильно 😢 попробуй ещё';
+    document.getElementById('gameResult').innerText = 'Неправильно 😢 попробуйте ещё раз';
     setTimeout(() => {
         document.getElementById('gameResult').innerText = '';
     }, 2000);
@@ -434,7 +434,7 @@ function guess() {
 
     const val = Number(input);
     if (val === 25 || val === guessNumber) {
-        resultElement.innerText = 'Ты угадала ❤️';
+        resultElement.innerText = 'Вы угадали ❤️';
         unlockAchievement('🎯 Угадала число');
         guessNumber = Math.floor(Math.random() * 10); // Загадываем новое
     } else if (val < guessNumber) {
