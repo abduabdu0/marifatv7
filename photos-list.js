@@ -5,6 +5,16 @@
         "srcVideo":  "img/video4.mp4"
     },
     {
+        "title":  "video5",
+        "src":  "img/video5.mp4",
+        "srcVideo":  "img/video5.mp4"
+    },
+    {
+        "title":  "video6",
+        "src":  "img/video6.mp4",
+        "srcVideo":  "img/video6.mp4"
+    },
+    {
         "title":  "photo8",
         "src":  "img/photo8.jpg",
         "srcVideo":  "img/photo8.jpg"

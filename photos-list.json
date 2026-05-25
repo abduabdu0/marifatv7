@@ -103,5 +103,15 @@
         "title":  "video",
         "src":  "img/video.mp4",
         "srcVideo":  "img/video.mp4"
+    },
+    {
+        "title":  "video5",
+        "src":  "img/video5.mp4",
+        "srcVideo":  "img/video5.mp4"
+    },
+    {
+        "title":  "video6",
+        "src":  "img/video6.mp4",
+        "srcVideo":  "img/video6.mp4"
     }
 ]
